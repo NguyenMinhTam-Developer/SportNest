@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "979201409282",
+    "project_id": "sport-nest",
+    "storage_bucket": "sport-nest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979201409282:android:70db7e99c9e964dd79021b",
+        "android_client_info": {
+          "package_name": "com.erikasoft.sportnest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk4f1-jj3REp6Epza2252dV0aYsJY4ty0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "979201409282-1abujprk4t03boiptd0r6anh35c2dksd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.erikasoft.sportNest"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979201409282:android:a0c67d3899bd296879021b",
+        "android_client_info": {
+          "package_name": "com.s"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk4f1-jj3REp6Epza2252dV0aYsJY4ty0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "979201409282-1abujprk4t03boiptd0r6anh35c2dksd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.erikasoft.sportNest"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979201409282:android:4a649c658390599679021b",
+        "android_client_info": {
+          "package_name": "com.sportnest.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk4f1-jj3REp6Epza2252dV0aYsJY4ty0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979201409282-l93pt2s4h9uujefjmfcupug5onosovc9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "979201409282-1abujprk4t03boiptd0r6anh35c2dksd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.erikasoft.sportNest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
