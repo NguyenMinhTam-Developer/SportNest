@@ -30,8 +30,7 @@ class _BookingsViewState extends State<BookingsView> with AutomaticKeepAliveClie
       floatingActionButton: FloatingActionButton(
         heroTag: "booking_fab",
         onPressed: () => Get.toNamed(
-          Routes.bookingCreate,
-          parameters: {"venueId": widget.venueId},
+          Routes.bookingCreate.replaceFirst(':venueId', widget.venueId),
         ),
         child: const Icon(Symbols.calendar_add_on_rounded),
       ),

@@ -50,11 +50,15 @@ class _DetailsViewState extends State<DetailsView> with AutomaticKeepAliveClient
                   Text(
                     venue.name,
                     style: AppTypography.heading6.bold.copyWith(color: AppColor.neutralColor.shade100),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 8.h),
                   Text(
                     venue.address,
                     style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 16.h),
                   EKAutoLayout(

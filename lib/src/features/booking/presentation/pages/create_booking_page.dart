@@ -3,7 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/src/core/design/color.dart';
 import '../../../../core/design/shadow.dart';
+import '../../../../data/models/unit_model.dart';
+import '../../../../data/models/venue_model.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
 import '../../../../shared/extensions/hardcode.dart';
@@ -38,41 +41,51 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                     InputLabel(
                       labelText: "Venue".isHardcoded,
                       isRequired: true,
-                      child: FormBuilderDropdown<String>(
-                        name: "venueId",
-                        enabled: false,
-                        decoration: InputDecoration(
-                          hintText: "Select venue".isHardcoded,
-                        ),
-                        items: controller.venues
-                            .map((venue) => DropdownMenuItem(
-                                  value: venue.id,
-                                  child: Text(venue.name),
-                                ))
-                            .toList(),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                        onChanged: (value) => controller.onVenueChanged(value),
-                      ),
+                      child: FutureBuilder<List<VenueModel>>(
+                          future: controller.venues,
+                          builder: (context, snapshot) {
+                            return FormBuilderDropdown<String>(
+                              name: "venueId",
+                              icon: snapshot.connectionState == ConnectionState.waiting ? const CircularProgressIndicator() : null,
+                              decoration: InputDecoration(
+                                hintText: "Select venue".isHardcoded,
+                              ),
+                              items: (snapshot.data ?? [])
+                                  .map((venue) => DropdownMenuItem(
+                                        value: venue.id,
+                                        child: Text(venue.name),
+                                      ))
+                                  .toList(),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(),
+                              ]),
+                              onChanged: (value) => controller.onVenueChanged(value),
+                            );
+                          }),
                     ),
                     InputLabel(
                       labelText: "Unit".isHardcoded,
                       isRequired: true,
-                      child: FormBuilderDropdown<String>(
-                        name: "unitId",
-                        decoration: InputDecoration(
-                          hintText: "Select unit".isHardcoded,
-                        ),
-                        items: controller.units
-                            .map((unit) => DropdownMenuItem(
-                                  value: unit.id,
-                                  child: Text(unit.name),
-                                ))
-                            .toList(),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
+                      child: FutureBuilder<List<UnitModel>>(
+                        future: controller.units,
+                        builder: (context, snapshot) {
+                          return FormBuilderDropdown<String>(
+                            name: "unitId",
+                            icon: snapshot.connectionState == ConnectionState.waiting ? const CircularProgressIndicator() : null,
+                            decoration: InputDecoration(
+                              hintText: "Select unit".isHardcoded,
+                            ),
+                            items: (snapshot.data ?? [])
+                                .map((unit) => DropdownMenuItem(
+                                      value: unit.id,
+                                      child: Text(unit.name),
+                                    ))
+                                .toList(),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(),
+                            ]),
+                          );
+                        },
                       ),
                     ),
                     InputLabel(
@@ -81,6 +94,7 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                       child: FormBuilderDateTimePicker(
                         name: "date",
                         inputType: InputType.date,
+                        firstDate: DateTime.now(),
                         decoration: InputDecoration(
                           hintText: "Select date".isHardcoded,
                         ),

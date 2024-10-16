@@ -4,6 +4,7 @@ import '../data/sources/firebase/firebase_firestore_source.dart';
 
 class AppService extends GetxService {
   final FirebaseFirestoreSource _firestoreSource = FirebaseFirestoreSource();
+
   List<UnitTypeModel> unitTypes = [];
 
   Future<AppService> init() async {

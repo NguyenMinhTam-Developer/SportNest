@@ -2,12 +2,16 @@ import 'package:get/get.dart';
 
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
+import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 
 class BookingListPageController extends GetxController {
   Future<List<BookingModel>>? fetchBookingsFuture;
 
   Future<void> fetchBookings(String venueId) async {
     fetchBookingsFuture = FirebaseFirestoreSource().fetchBookingList(venueId);
+
+    VenueDetailPageController.instance.fetchBookingList(venueId);
+
     update();
   }
 

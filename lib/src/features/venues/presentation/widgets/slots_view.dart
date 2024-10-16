@@ -27,7 +27,7 @@ class _SlotsViewState extends State<SlotsView> with AutomaticKeepAliveClientMixi
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "unit_fab",
-        onPressed: () => Get.toNamed(Routes.unitCreate, parameters: {"venueId": widget.venueId}),
+        onPressed: () => Get.toNamed(Routes.unitCreate.replaceFirst(':venueId', widget.venueId)),
         child: const Icon(Icons.add),
       ),
     );

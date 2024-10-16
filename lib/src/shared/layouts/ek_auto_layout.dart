@@ -29,17 +29,17 @@ class EKAutoLayout extends StatelessWidget {
       case EKAutoLayoutDirection.vertical:
         this.mainAxisAlignment = mainAxisAlignment ?? MainAxisAlignment.start;
         this.crossAxisAlignment = crossAxisAlignment ?? CrossAxisAlignment.center;
-        this.mainAxisSize = mainAxisSize ?? MainAxisSize.max;
+        this.mainAxisSize = mainAxisSize ?? MainAxisSize.min;
         break;
       case EKAutoLayoutDirection.horizontal:
         this.mainAxisAlignment = mainAxisAlignment ?? MainAxisAlignment.start;
         this.crossAxisAlignment = crossAxisAlignment ?? CrossAxisAlignment.center;
-        this.mainAxisSize = mainAxisSize ?? MainAxisSize.max;
+        this.mainAxisSize = mainAxisSize ?? MainAxisSize.min;
         break;
       case EKAutoLayoutDirection.wrap:
         this.mainAxisAlignment = mainAxisAlignment ?? MainAxisAlignment.start;
         this.crossAxisAlignment = crossAxisAlignment ?? CrossAxisAlignment.start;
-        this.mainAxisSize = mainAxisSize ?? MainAxisSize.max;
+        this.mainAxisSize = mainAxisSize ?? MainAxisSize.min;
         break;
     }
   }

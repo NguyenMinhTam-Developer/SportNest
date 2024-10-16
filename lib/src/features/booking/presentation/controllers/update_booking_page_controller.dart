@@ -12,51 +12,53 @@ import 'booking_detail_page_controller.dart';
 import 'booking_list_page_controller.dart';
 
 class UpdateBookingPageController extends GetxController {
-  late BookingModel initialBooking;
-  List<VenueModel> venues = [];
-  List<UnitModel> units = [];
+  BookingModel initialBooking = Get.arguments as BookingModel;
 
-  bool isLoading = false;
+  final String _venueId = Get.parameters['venueId']!;
+  final String _bookingId = Get.parameters['bookingId']!;
 
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
+  Future<List<VenueModel>>? venues;
+  Future<List<UnitModel>>? units;
+
+  bool isLoading = false;
+
   @override
-  void onInit() {
-    initialBooking = Get.arguments as BookingModel;
+  Future<void> onReady() async {
+    super.onReady();
 
-    fetchData();
+    venues = FirebaseFirestoreSource().fetchVenueList(AuthService().user!.uid);
+    formKey.currentState?.fields['venueId']?.didChange(initialBooking.venueId);
+    formKey.currentState?.patchValue({"venueId": initialBooking.venueId});
 
-    super.onInit();
+    units = FirebaseFirestoreSource().fetchUnitList(_venueId);
+
+    formKey.currentState?.fields['unitId']?.didChange(initialBooking.unitId);
+    formKey.currentState?.patchValue({"unitId": initialBooking.unitId});
+
+    update();
   }
 
-  Future<void> fetchData() async {
-    try {
-      isLoading = true;
-      update();
-      venues = await FirebaseFirestoreSource().fetchVenueList(AuthService().user!.uid);
-      units = await FirebaseFirestoreSource().fetchUnitList(initialBooking.venueId);
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch booking data');
-    } finally {
-      isLoading = false;
-      update();
-    }
-  }
+  Future<void> onVenueChanged(String? value) async {
+    if (value == null) return;
 
-  void onVenueChanged(String? venueId) {
-    if (venueId != null) {
-      // fetchUnits(venueId);
-    } else {
-      units.clear();
-    }
-    formKey.currentState?.patchValue({'unitId': null});
+    formKey.currentState?.patchValue({"unitId": null});
+
+    units = FirebaseFirestoreSource().fetchUnitList(value);
+
     update();
   }
 
   Future<void> onSubmitPressed() async {
     if (formKey.currentState!.saveAndValidate()) {
+      isLoading = true;
+      update();
+
       final formData = formKey.currentState!.value;
+      final venueId = formData['venueId'] as String;
+      final unitId = formData['unitId'] as String;
       final date = formData['date'] as DateTime;
       final startTime = formData['startTime'] as DateTime;
       final endTime = formData['endTime'] as DateTime;
@@ -68,6 +70,7 @@ class UpdateBookingPageController extends GetxController {
         startTime.hour,
         startTime.minute,
       );
+
       final endDateTime = DateTime(
         date.year,
         date.month,
@@ -77,8 +80,8 @@ class UpdateBookingPageController extends GetxController {
       );
 
       final updatedBooking = initialBooking.copyWith(
-        venueId: formData['venueId'] as String,
-        unitId: formData['unitId'] as String,
+        venueId: venueId,
+        unitId: unitId,
         startTime: startDateTime,
         endTime: endDateTime,
         contactName: formData['contactName'] as String,
@@ -87,19 +90,10 @@ class UpdateBookingPageController extends GetxController {
       );
 
       try {
-        isLoading = true;
-        update();
-
         await FirebaseFirestoreSource().updateBooking(updatedBooking);
-
-        await BookingDetailPageController.instance.fetchBooking(initialBooking.id);
-        await BookingListPageController.instance.fetchBookings(initialBooking.venueId);
-
-        isLoading = false;
-        update();
-
+        await BookingDetailPageController.instance.fetchBooking(_bookingId);
+        await BookingListPageController.instance.fetchBookings(_venueId);
         Get.back();
-
         Get.snackbar(
           'Success!'.isHardcoded,
           'Booking updated successfully'.isHardcoded,
@@ -114,7 +108,7 @@ class UpdateBookingPageController extends GetxController {
         update();
       }
     } else {
-      autovalidateMode = AutovalidateMode.onUserInteraction;
+      autovalidateMode = AutovalidateMode.always;
       update();
     }
   }

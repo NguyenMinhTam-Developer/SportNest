@@ -38,5 +38,10 @@ var kInputDecoration = InputDecorationTheme(
       width: 2,
     ),
   ),
-  disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8.r),
+    borderSide: BorderSide(
+      color: AppColor.neutralColor.shade30,
+    ),
+  ),
 );

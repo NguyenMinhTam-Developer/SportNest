@@ -1,14 +1,20 @@
 import 'package:get/get.dart';
-import '../../../../core/routes/pages.dart';
-import 'venue_list_page_controller.dart';
-import '../../../../data/models/venue_model.dart';
+import 'package:sport_nest_flutter/src/data/models/booking_model.dart';
 import '../../../../data/models/unit_model.dart';
+import '../../../../services/data_sync_service.dart';
+import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 
 class VenueDetailPageController extends GetxController {
   final String venueId = Get.parameters['venueId']!;
 
   Future<VenueModel>? fetchVenueFuture;
+
+  Future<List<UnitModel>>? fetchUnitListFuture;
+
+  Future<List<BookingModel>>? fetchBookingListFuture;
+
+  DateTime selectedDate = DateTime.now();
 
   Future<void> fetchVenue(String id) async {
     fetchVenueFuture = FirebaseFirestoreSource().fetchVenue(id);
@@ -18,9 +24,19 @@ class VenueDetailPageController extends GetxController {
   Future<void> deleteVenue(String id) async {
     await FirebaseFirestoreSource().deleteVenue(id);
 
-    await VenueListPageController.instance.fetchVenues();
+    await DataSyncService.instance.refreshVenueList();
 
     Get.back();
+  }
+
+  Future<void> fetchUnitList(String venueId) async {
+    fetchUnitListFuture = FirebaseFirestoreSource().fetchUnitList(venueId);
+    update();
+  }
+
+  Future<void> fetchBookingList(String venueId) async {
+    fetchBookingListFuture = FirebaseFirestoreSource().fetchBookingList(venueId);
+    update();
   }
 
   static VenueDetailPageController get instance {
@@ -34,6 +50,11 @@ class VenueDetailPageController extends GetxController {
   @override
   void onInit() {
     fetchVenue(venueId);
+
+    fetchUnitList(venueId);
+
+    fetchBookingList(venueId);
+
     super.onInit();
   }
 }

@@ -27,8 +27,6 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final controller = Get.find<SignInPageController>();
 
-  bool obscureText = true;
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignInPageController>(
@@ -134,12 +132,12 @@ class _SignInPageState extends State<SignInPage> {
                 suffixIcon: IconButton(
                   onPressed: controller.onPasswordVisibilityPressed,
                   icon: Icon(
-                    obscureText ? Symbols.visibility_off_rounded : Symbols.visibility_rounded,
+                    controller.obscureText ? Symbols.visibility_off_rounded : Symbols.visibility_rounded,
                     color: AppColor.neutralColor.shade60,
                   ),
                 ),
               ),
-              obscureText: obscureText,
+              obscureText: controller.obscureText,
               textInputAction: TextInputAction.done,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),

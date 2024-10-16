@@ -14,8 +14,14 @@ abstract class Routes {
   static const _venues = '/venues';
   static const venues = _venues;
   static const createVenue = '$_venues/create';
-  static const venueDetail = '$_venues/detail';
-  static const venueEdit = '$_venues/edit';
+  static const venueDetail = '$_venues/:venueId';
+  static const venueEdit = '$_venues/:venueId/edit';
+
+  static const _bookings = '$venueDetail/bookings';
+  static const bookings = _bookings;
+  static const bookingCreate = '$_bookings/create';
+  static const bookingDetail = '$_bookings/:bookingId';
+  static const bookingEdit = '$_bookings/:bookingId/edit';
 
   static const _schedules = '/schedules';
   static const schedules = _schedules;
@@ -23,15 +29,9 @@ abstract class Routes {
   static const scheduleDetail = '$_schedules/detail';
   static const scheduleEdit = '$_schedules/edit';
 
-  static const _bookings = '/bookings';
-  static const bookings = _bookings;
-  static const bookingCreate = '$_bookings/create';
-  static const bookingEdit = '$_bookings/edit';
-  static const bookingDetail = '$_bookings/detail';
-
-  static const _units = '/units';
+  static const _units = '$venueDetail/units';
   static const units = _units;
   static const unitCreate = '$_units/create';
-  static const unitEdit = '$_units/edit';
-  static const unitDetail = '$_units/detail';
+  static const unitDetail = '$_units/:unitId';
+  static const unitEdit = '$_units/:unitId/edit';
 }

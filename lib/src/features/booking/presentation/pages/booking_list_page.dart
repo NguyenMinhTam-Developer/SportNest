@@ -7,6 +7,7 @@ import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../data/models/booking_model.dart';
+import '../../../../services/app_service.dart';
 import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
@@ -83,26 +84,28 @@ class BookingListWidget extends StatelessWidget {
 
         var bookings = snapshot.data!;
 
-        return ListView.separated(
-          itemCount: bookings.length,
-          padding: EdgeInsets.all(16.w),
-          clipBehavior: Clip.none,
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(height: 16.h);
-          },
-          itemBuilder: (BuildContext context, int index) {
-            var booking = bookings[index];
+        return SafeArea(
+          child: ListView.separated(
+            itemCount: bookings.length,
+            padding: EdgeInsets.all(16.w),
+            clipBehavior: Clip.none,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(height: 16.h);
+            },
+            itemBuilder: (BuildContext context, int index) {
+              var booking = bookings[index];
 
-            return BookingItemWidget(booking: booking);
-          },
+              return VenueBookingItemWidget(booking: booking);
+            },
+          ),
         );
       },
     );
   }
 }
 
-class BookingItemWidget extends StatelessWidget {
-  const BookingItemWidget({
+class VenueBookingItemWidget extends StatelessWidget {
+  const VenueBookingItemWidget({
     super.key,
     required this.booking,
   });
@@ -113,11 +116,7 @@ class BookingItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Get.toNamed(
-        Routes.bookingDetail,
-        parameters: {
-          'bookingId': booking.id,
-          'venueId': booking.venueId,
-        },
+        Routes.bookingDetail.replaceFirst(':venueId', booking.venueId).replaceFirst(':bookingId', booking.id),
       ),
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
@@ -133,20 +132,6 @@ class BookingItemWidget extends StatelessWidget {
           direction: EKAutoLayoutDirection.vertical,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AspectRatio(
-              aspectRatio: 327.w / 209.h,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColor.primaryColor.surface,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Icon(
-                  Symbols.category_rounded,
-                  size: 48.w,
-                  color: AppColor.primaryColor.main,
-                ),
-              ),
-            ),
             EKAutoLayout(
               padding: EdgeInsets.all(12.w),
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,27 +141,28 @@ class BookingItemWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                        child: EKAutoLayout(
-                      direction: EKAutoLayoutDirection.vertical,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      gap: 4.h,
-                      children: [
-                        // Venue Name
-                        Text(
-                          booking.venue?.name ?? "Unknown Venue",
-                          style: AppTypography.bodyMedium.bold.copyWith(color: AppColor.neutralColor.shade100),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      child: EKAutoLayout(
+                        direction: EKAutoLayoutDirection.vertical,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        gap: 4.h,
+                        children: [
+                          // Venue Name
+                          Text(
+                            booking.unit?.name ?? "Unknown Unit",
+                            style: AppTypography.bodyMedium.bold.copyWith(color: AppColor.neutralColor.shade100),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
 
-                        Text(
-                          booking.unit?.name ?? "Unknown Unit",
-                          style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade80),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    )),
+                          Text(
+                            AppService.instance.unitTypes.firstWhere((element) => element.id == booking.unit?.type).name,
+                            style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
                     Chip(
                       label: Text(booking.status.isHardcoded),
                     ),

@@ -35,6 +35,26 @@ class BookingDetailPageController extends GetxController {
     fetchBooking(Get.parameters['bookingId']!);
     super.onInit();
   }
+
+  Future<void> onRejectPressed() async {
+    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Rejected");
+
+    fetchBooking(Get.parameters['bookingId']!);
+
+    await BookingListPageController.instance.fetchBookings(
+      Get.parameters['venueId']!,
+    );
+  }
+
+  Future<void> onConfirmPressed() async {
+    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Confirmed");
+
+    fetchBooking(Get.parameters['bookingId']!);
+
+    await BookingListPageController.instance.fetchBookings(
+      Get.parameters['venueId']!,
+    );
+  }
 }
 
 class BookingDetailPageBinding implements Bindings {

@@ -15,7 +15,9 @@ class UnitListPageController extends GetxController {
   }
 
   void onDetailPressed(UnitModel unit) async {
-    var result = await Get.toNamed(Routes.unitDetail, parameters: {"unitId": unit.id});
+    var result = await Get.toNamed(
+      Routes.unitDetail.replaceFirst(':venueId', venueId).replaceFirst(':unitId', unit.id),
+    );
 
     if (result == true) {
       fetchUnits(venueId);

@@ -115,7 +115,7 @@ class UnitItemWidget extends GetWidget<UnitListPageController> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.unitDetail, parameters: {"unitId": unit.id}),
+      onTap: () => controller.onDetailPressed(unit),
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
         clipBehavior: Clip.none,

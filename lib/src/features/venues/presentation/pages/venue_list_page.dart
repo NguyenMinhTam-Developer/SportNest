@@ -67,7 +67,7 @@ class VenueListPage extends GetView<VenueListPageController> {
                     var venue = venues[index];
 
                     return InkWell(
-                      onTap: () => Get.toNamed(Routes.venueDetail, parameters: {"venueId": venue.id}),
+                      onTap: () => Get.toNamed(Routes.venueDetail.replaceFirst(":venueId", venue.id)),
                       borderRadius: BorderRadius.circular(12.r),
                       child: Container(
                         clipBehavior: Clip.none,

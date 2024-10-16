@@ -10,6 +10,7 @@ import 'src/core/design/styles.dart';
 import 'src/core/design/typography.dart';
 import 'src/core/routes/pages.dart';
 import 'src/services/authentication_service.dart';
+import 'src/services/data_sync_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ Future<void> main() async {
 Future<void> initServices() async {
   await Get.putAsync(() => AuthService().init(), permanent: true);
   await Get.putAsync(() => AppService().init(), permanent: true);
+  await Get.putAsync(() => DataSyncService().init(), permanent: true);
 }
 
 class App extends StatelessWidget {

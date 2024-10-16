@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../services/authentication_service.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import 'venue_list_page_controller.dart';
+import '../../../../services/data_sync_service.dart';
 import '../../../../shared/extensions/hardcode.dart';
 
 class CreateVenuePageController extends GetxController {
@@ -41,7 +41,7 @@ class CreateVenuePageController extends GetxController {
           ),
         );
 
-        await VenueListPageController.instance.fetchVenues();
+        await DataSyncService.instance.refreshVenueList();
 
         isLoading = false;
         update();

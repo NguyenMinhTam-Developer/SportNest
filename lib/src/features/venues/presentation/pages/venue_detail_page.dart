@@ -46,7 +46,7 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                           onSelected: (value) {
                             switch (value) {
                               case "edit":
-                                Get.toNamed(Routes.venueEdit, arguments: snapshot.requireData);
+                                Get.toNamed(Routes.venueEdit.replaceFirst(":venueId", snapshot.requireData.id), arguments: snapshot.requireData);
                                 break;
                               case "delete":
                                 Get.dialog(AlertDialog(
@@ -110,6 +110,7 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                   var venue = snapshot.requireData;
 
                   return TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
                       const DetailsView(),
                       BookingsView(venueId: venue.id),

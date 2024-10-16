@@ -131,6 +131,10 @@ class FirebaseFirestoreSource {
     return _bookingsRef.doc(booking.id).update(booking.toJson());
   }
 
+  Future<void> updateBookingStatus(String id, String status) async {
+    return _bookingsRef.doc(id).update({"status": status});
+  }
+
   Future<void> deleteBooking(String id) async {
     return _bookingsRef.doc(id).delete();
   }

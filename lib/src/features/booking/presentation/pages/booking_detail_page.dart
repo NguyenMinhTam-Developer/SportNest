@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:sport_nest_flutter/src/shared/components/button.dart';
 import 'package:sport_nest_flutter/src/shared/layouts/ek_auto_layout.dart';
 
 import '../../../../core/design/color.dart';
@@ -44,8 +45,8 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                     switch (value) {
                       case "edit":
                         Get.toNamed(
-                          Routes.bookingEdit,
-                          arguments: snapshot.data,
+                          Routes.bookingEdit.replaceFirst(':bookingId', snapshot.requireData.id).replaceFirst(':venueId', snapshot.requireData.venueId),
+                          arguments: snapshot.requireData,
                         );
                         break;
                       case "delete":
@@ -223,6 +224,32 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                   ),
                 );
               },
+            ),
+            bottomNavigationBar: Opacity(
+              opacity: snapshot.data?.status == "Pending" ? 1 : 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: ButtonComponent.secondary(
+                          onPressed: controller.onRejectPressed,
+                          label: "Reject".isHardcoded,
+                        ),
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: ButtonComponent.primary(
+                          onPressed: controller.onConfirmPressed,
+                          label: "Confirm".isHardcoded,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         );
