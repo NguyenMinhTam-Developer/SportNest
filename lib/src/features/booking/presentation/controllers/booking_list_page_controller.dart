@@ -10,7 +10,7 @@ class BookingListPageController extends GetxController {
   Future<void> fetchBookings(String venueId) async {
     fetchBookingsFuture = FirebaseFirestoreSource().fetchBookingList(venueId);
 
-    VenueDetailPageController.instance.fetchBookingList(venueId);
+    await VenueDetailPageController.instance.fetchBookingList(venueId);
 
     update();
   }

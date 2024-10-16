@@ -135,7 +135,7 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                               itemBuilder: (BuildContext context, int index) {
                                                 var slot = slots[index];
 
-                                                return SizedBox(
+                                                var item = SizedBox(
                                                   width: slotWidth,
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -152,7 +152,7 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                           future: _.fetchBookingListFuture,
                                                           builder: (context, snapshot) {
                                                             List<BookingModel> bookings = snapshot.data?.where((booking) {
-                                                                  if (booking.status != "Confirmed") return false;
+                                                                  // if (booking.status != "Confirmed") return false;
 
                                                                   if (booking.unitId != slot.id) return false;
 
@@ -182,6 +182,22 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                                 ...List.generate(bookings.length, (index) {
                                                                   var booking = bookings[index];
 
+                                                                  Color backgroundColor, foregroundColor;
+
+                                                                  if (booking.status == "Confirmed") {
+                                                                    backgroundColor = const Color(0xFFECFDF3);
+                                                                    foregroundColor = const Color(0xFFABEFC6);
+                                                                  } else if (booking.status == "Pending") {
+                                                                    backgroundColor = const Color(0xFFF9F5FF);
+                                                                    foregroundColor = const Color(0xFFE9D7FE);
+                                                                  } else if (booking.status == "Cancelled") {
+                                                                    backgroundColor = const Color(0xFFFEF3F2);
+                                                                    foregroundColor = const Color(0xFFFECDCA);
+                                                                  } else {
+                                                                    backgroundColor = const Color(0xFFF8F8F8);
+                                                                    foregroundColor = const Color(0xFFE0E0E0);
+                                                                  }
+
                                                                   return Positioned(
                                                                     top: 60.h * booking.startTime.hour,
                                                                     height: booking.endTime.difference(booking.startTime).inMinutes.h,
@@ -195,9 +211,9 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                                         margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                                                                         padding: EdgeInsets.all(8.w),
                                                                         decoration: BoxDecoration(
-                                                                          color: const Color(0xFFEEF4FF),
+                                                                          color: backgroundColor,
                                                                           borderRadius: BorderRadius.circular(8.r),
-                                                                          border: Border.all(color: const Color(0xFFC7D7FE), strokeAlign: BorderSide.strokeAlignInside),
+                                                                          border: Border.all(color: foregroundColor, strokeAlign: BorderSide.strokeAlignInside),
                                                                         ),
                                                                         child: Column(
                                                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -225,6 +241,8 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                     ],
                                                   ),
                                                 );
+
+                                                return item;
                                               },
                                             ),
                                           ),

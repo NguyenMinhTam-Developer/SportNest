@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/models/venue_model.dart';
@@ -46,6 +45,7 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                           builder: (context, snapshot) {
                             return FormBuilderDropdown<String>(
                               name: "venueId",
+                              initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialVenueId)?.id,
                               icon: snapshot.connectionState == ConnectionState.waiting ? const CircularProgressIndicator() : null,
                               decoration: InputDecoration(
                                 hintText: "Select venue".isHardcoded,

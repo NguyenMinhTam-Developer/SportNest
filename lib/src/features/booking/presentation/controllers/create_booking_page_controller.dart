@@ -8,9 +8,10 @@ import '../../../../data/models/venue_model.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
+import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 
 class CreateBookingPageController extends GetxController {
-  final String _initialVenueId = Get.parameters['venueId']!;
+  final String initialVenueId = Get.parameters['venueId']!;
 
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
@@ -26,7 +27,7 @@ class CreateBookingPageController extends GetxController {
 
     venues = FirebaseFirestoreSource().fetchVenueList(AuthService().user!.uid);
 
-    units = FirebaseFirestoreSource().fetchUnitList(_initialVenueId);
+    units = FirebaseFirestoreSource().fetchUnitList(initialVenueId);
 
     update();
   }
@@ -82,7 +83,9 @@ class CreateBookingPageController extends GetxController {
 
       try {
         await FirebaseFirestoreSource().createBooking(newBooking);
-        await BookingListPageController().fetchBookings(venueId);
+
+        await BookingListPageController.instance.fetchBookings(venueId);
+
         Get.back();
       } catch (e) {
         Get.snackbar('Error', 'Failed to create booking');
