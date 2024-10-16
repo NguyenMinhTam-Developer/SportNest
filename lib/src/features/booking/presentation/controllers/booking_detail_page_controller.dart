@@ -37,7 +37,7 @@ class BookingDetailPageController extends GetxController {
   }
 
   Future<void> onRejectPressed() async {
-    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Rejected");
+    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Cancelled");
 
     fetchBooking(Get.parameters['bookingId']!);
 
