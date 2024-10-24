@@ -1,10 +1,15 @@
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/src/features/venues/presentation/controllers/venue_detail_page_controller.dart';
+import '../../../../data/params/update_booking_status_param.dart';
 
+import '../../../../data/enums/booking_status_enum.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import 'booking_list_page_controller.dart';
 
 class BookingDetailPageController extends GetxController {
+  late final String venueId;
+  late final String bookingId;
+
   Future<BookingModel>? fetchBookingFuture;
 
   Future<void> fetchBooking(String id) async {
@@ -14,12 +19,44 @@ class BookingDetailPageController extends GetxController {
 
   Future<void> deleteBooking(String id) async {
     await FirebaseFirestoreSource().deleteBooking(id);
-
-    await BookingListPageController.instance.fetchBookings(
-      Get.parameters['venueId']!,
-    );
+    await VenueDetailPageController.instance.fetchBookingList(venueId);
 
     Get.back();
+  }
+
+  Future<void> onRejectPressed() async {
+    fetchBookingFuture = FirebaseFirestoreSource().updateBookingStatus(
+      UpdateBookingStatusParam(
+        id: bookingId,
+        status: BookingStatusEnum.cancelled,
+      ),
+    );
+
+    VenueDetailPageController.instance.fetchBookingList(venueId);
+
+    update();
+  }
+
+  Future<void> onConfirmPressed() async {
+    fetchBookingFuture = FirebaseFirestoreSource().updateBookingStatus(
+      UpdateBookingStatusParam(
+        id: bookingId,
+        status: BookingStatusEnum.confirmed,
+      ),
+    );
+
+    VenueDetailPageController.instance.fetchBookingList(venueId);
+
+    update();
+  }
+
+  @override
+  void onInit() {
+    venueId = Get.parameters['venueId']!;
+    bookingId = Get.parameters['bookingId']!;
+
+    fetchBooking(bookingId);
+    super.onInit();
   }
 
   static BookingDetailPageController get instance {
@@ -28,32 +65,6 @@ class BookingDetailPageController extends GetxController {
     } catch (e) {
       return Get.put(BookingDetailPageController());
     }
-  }
-
-  @override
-  void onInit() {
-    fetchBooking(Get.parameters['bookingId']!);
-    super.onInit();
-  }
-
-  Future<void> onRejectPressed() async {
-    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Cancelled");
-
-    fetchBooking(Get.parameters['bookingId']!);
-
-    await BookingListPageController.instance.fetchBookings(
-      Get.parameters['venueId']!,
-    );
-  }
-
-  Future<void> onConfirmPressed() async {
-    await FirebaseFirestoreSource().updateBookingStatus(Get.parameters['bookingId']!, "Confirmed");
-
-    fetchBooking(Get.parameters['bookingId']!);
-
-    await BookingListPageController.instance.fetchBookings(
-      Get.parameters['venueId']!,
-    );
   }
 }
 

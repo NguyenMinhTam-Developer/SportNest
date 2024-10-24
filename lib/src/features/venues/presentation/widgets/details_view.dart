@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import '../../../../data/models/venue_model.dart';
+
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
+import '../../../../data/models/venue_model.dart';
 import '../../../../shared/extensions/hardcode.dart';
-
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/venue_detail_page_controller.dart';

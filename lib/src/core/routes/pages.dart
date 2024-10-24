@@ -13,7 +13,14 @@ import '../../features/booking/presentation/pages/booking_detail_page.dart';
 import '../../features/booking/presentation/pages/booking_list_page.dart';
 import '../../features/booking/presentation/pages/create_booking_page.dart';
 import '../../features/booking/presentation/pages/update_booking_page.dart';
-import '../../features/customer/presentation/controllers/customer_page_controller.dart';
+import '../../features/customer/presentation/controllers/create_customer_page_controller.dart';
+import '../../features/customer/presentation/controllers/customer_detail_page_controller.dart';
+import '../../features/customer/presentation/controllers/customer_list_page_controller.dart';
+import '../../features/customer/presentation/controllers/update_customer_page_controller.dart';
+import '../../features/customer/presentation/pages/create_customer_page.dart';
+import '../../features/customer/presentation/pages/customer_detail_page.dart';
+import '../../features/customer/presentation/pages/customer_list_page.dart';
+import '../../features/customer/presentation/pages/update_customer_page.dart';
 import '../../features/dashboard/presentation/controllers/dashboard_page_controller.dart';
 import '../../features/home/presentation/controllers/home_page_controller.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -67,7 +74,7 @@ abstract class AppPages {
         DashboardPageBinding(),
         BookingPageBinding(),
         SchedulePageBinding(),
-        CustomerPageBinding(),
+        CustomerListPageBinding(),
         ProfilePageBinding(),
       ],
     ),
@@ -137,5 +144,37 @@ abstract class AppPages {
       page: () => const UnitDetailPage(),
       binding: UnitDetailPageBinding(),
     ),
+
+    // Customers
+    GetPage(
+      name: Routes.customers,
+      page: () => const CustomerListPage(),
+      binding: CustomerListPageBinding(),
+      children: [
+        GetPage(
+          name: _trimString(Routes.customers, Routes.customerCreate),
+          page: () => const CreateCustomerPage(),
+          binding: CreateCustomerPageBinding(),
+        ),
+        GetPage(
+          name: _trimString(Routes.customers, Routes.customerDetail),
+          page: () => const CustomerDetailPage(),
+          binding: CustomerDetailPageBinding(),
+          children: [
+            GetPage(
+              name: _trimString(Routes.customerDetail, Routes.customerEdit),
+              page: () => const UpdateCustomerPage(),
+              binding: UpdateCustomerPageBinding(),
+            ),
+          ],
+        ),
+      ],
+    ),
   ];
+
+  /// Trims the [parent] string from the [child] string.
+  /// Returns the trimmed string.
+  static String _trimString(String parent, String child) {
+    return child.replaceFirst(parent, '');
+  }
 }

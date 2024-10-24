@@ -5,21 +5,21 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
-import '../../../../core/routes/pages.dart';
-import '../../../../data/models/unit_model.dart';
+import '../../../../data/models/customer_model.dart';
 import '../../../../shared/extensions/hardcode.dart';
+import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
-import '../controllers/unit_detail_page_controller.dart';
+import '../controllers/customer_detail_page_controller.dart';
 
-class UnitDetailPage extends GetView<UnitDetailPageController> {
-  const UnitDetailPage({super.key});
+class CustomerDetailPage extends GetView<CustomerDetailPageController> {
+  const CustomerDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<UnitDetailPageController>(
+    return GetBuilder<CustomerDetailPageController>(
       builder: (controller) {
-        return FutureBuilder<UnitModel>(
-          future: controller.fetchUnitFuture,
+        return FutureBuilder<CustomerModel>(
+          future: controller.fetchCustomerFuture,
           builder: (context, snapshot) => Scaffold(
             appBar: AppBar(
               title: Text(snapshot.data?.name ?? ""),
@@ -40,19 +40,16 @@ class UnitDetailPage extends GetView<UnitDetailPageController> {
                   onSelected: (value) {
                     switch (value) {
                       case "edit":
-                        Get.toNamed(
-                          Routes.unitEdit.replaceFirst(':id', snapshot.requireData.venueId).replaceFirst(':unitId', snapshot.requireData.id),
-                          arguments: snapshot.requireData,
-                        );
+                        controller.onEditPressed(snapshot.requireData);
                         break;
                       case "delete":
                         Get.dialog(AlertDialog(
                           title: Text(
-                            "Delete Unit".isHardcoded,
+                            "Delete Customer".isHardcoded,
                             style: AppTypography.heading5.semiBold,
                           ),
                           content: Text(
-                            "Are you sure you want to delete this unit?".isHardcoded,
+                            "Are you sure you want to delete this customer?".isHardcoded,
                             style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                           ),
                           actions: [
@@ -66,7 +63,7 @@ class UnitDetailPage extends GetView<UnitDetailPageController> {
                             FilledButton(
                               onPressed: () {
                                 Get.back();
-                                controller.deleteUnit();
+                                controller.deleteCustomer();
                               },
                               style: FilledButton.styleFrom(
                                 backgroundColor: AppColor.errorColor.main,
@@ -90,18 +87,18 @@ class UnitDetailPage extends GetView<UnitDetailPageController> {
                 if (snapshot.hasError) {
                   return ListIndicator(
                     icon: Symbols.error_rounded,
-                    label: "Failed to load unit detail".isHardcoded,
+                    label: "Failed to load customer detail".isHardcoded,
                   );
                 }
 
-                var unit = snapshot.requireData;
+                var customer = snapshot.requireData;
 
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(16.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildInformation(unit),
+                      _buildInformation(customer),
                     ],
                   ),
                 );
@@ -113,18 +110,31 @@ class UnitDetailPage extends GetView<UnitDetailPageController> {
     );
   }
 
-  Widget _buildInformation(UnitModel unit) {
+  Widget _buildInformation(CustomerModel customer) {
+    return EKAutoLayout(
+      gap: 16.h,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildInfoItem("Name".isHardcoded, customer.name),
+        _buildInfoItem("Phone".isHardcoded, customer.phoneNumber),
+        _buildInfoItem("Email".isHardcoded, customer.email),
+        _buildInfoItem("Address".isHardcoded, customer.address),
+      ],
+    );
+  }
+
+  Widget _buildInfoItem(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          unit.name,
-          style: AppTypography.heading6.bold.copyWith(color: AppColor.neutralColor.shade100),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          unit.price.toStringAsFixed(2),
+          label,
           style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          value,
+          style: AppTypography.bodyMedium.semiBold.copyWith(color: AppColor.neutralColor.shade100),
         ),
       ],
     );

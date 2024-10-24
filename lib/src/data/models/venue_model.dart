@@ -1,3 +1,5 @@
+import 'unit_model.dart';
+
 class VenueModel {
   final String id;
   final String name;
@@ -6,6 +8,8 @@ class VenueModel {
   final DateTime closeTime;
   final String description;
   final String createdBy;
+
+  List<UnitModel> unitList = [];
 
   VenueModel({
     this.id = "",

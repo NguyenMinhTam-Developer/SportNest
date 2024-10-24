@@ -93,7 +93,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       isRequired: true,
                       child: FormBuilderDateTimePicker(
                         name: "date",
-                        initialValue: controller.initialBooking.startTime,
+                        initialValue: controller.initialBooking.startTime!.toDate(),
                         inputType: InputType.date,
                         // firstDate: DateTime.now(),
                         decoration: InputDecoration(
@@ -114,7 +114,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "startTime",
-                              initialValue: controller.initialBooking.startTime,
+                              initialValue: controller.initialBooking.startTime!.toDate(),
                               inputType: InputType.time,
                               format: DateFormat("h:mm aa"),
                               decoration: InputDecoration(
@@ -133,7 +133,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "endTime",
-                              initialValue: controller.initialBooking.endTime,
+                              initialValue: controller.initialBooking.endTime!.toDate(),
                               inputType: InputType.time,
                               format: DateFormat("h:mm aa"),
                               decoration: InputDecoration(
@@ -149,50 +149,16 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       ],
                     ),
                     InputLabel(
-                      labelText: "Contact Name".isHardcoded,
+                      labelText: "Customer".isHardcoded,
                       isRequired: true,
                       child: FormBuilderTextField(
                         name: "contactName",
-                        initialValue: controller.initialBooking.contactName,
+                        readOnly: true,
+                        onTap: () => controller.onCustomerPressed(),
                         decoration: InputDecoration(
                           hintText: "Enter contact name".isHardcoded,
+                          suffixIcon: const Icon(Symbols.contacts_rounded),
                         ),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                    ),
-                    InputLabel(
-                      labelText: "Phone Number".isHardcoded,
-                      isRequired: true,
-                      child: FormBuilderTextField(
-                        name: "phoneNumber",
-                        initialValue: controller.initialBooking.phoneNumber,
-                        decoration: InputDecoration(
-                          hintText: "Enter phone number".isHardcoded,
-                        ),
-                        keyboardType: TextInputType.phone,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                        ]),
-                      ),
-                    ),
-                    InputLabel(
-                      labelText: "Status".isHardcoded,
-                      isRequired: true,
-                      child: FormBuilderDropdown<String>(
-                        name: "status",
-                        initialValue: controller.initialBooking.status,
-                        decoration: InputDecoration(
-                          hintText: "Select status".isHardcoded,
-                        ),
-                        items: ['Pending', 'Confirmed', 'Cancelled']
-                            .map((status) => DropdownMenuItem(
-                                  value: status,
-                                  child: Text(status),
-                                ))
-                            .toList(),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                         ]),

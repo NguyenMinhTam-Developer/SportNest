@@ -8,7 +8,8 @@ class VenueListPageController extends GetxController {
   Future<List<VenueModel>>? fetchVenueListFuture;
 
   Future<void> fetchVenues() async {
-    fetchVenueListFuture = FirebaseFirestoreSource().fetchVenueList(AuthService.instance.user!.uid);
+    fetchVenueListFuture = FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUser!.uid);
+
     update();
   }
 

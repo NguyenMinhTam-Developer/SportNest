@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AuthService extends GetxService {
-  User? get user => FirebaseAuth.instance.currentUser;
+  User? get currentUser => FirebaseAuth.instance.currentUser;
 
-  bool get isSignedIn => user != null;
+  bool get isSignedIn => currentUser != null;
 
   Future<AuthService> init() async {
     FirebaseAuth.instance.userChanges().listen((User? user) {

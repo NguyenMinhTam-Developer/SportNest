@@ -3,8 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sport_nest_flutter/src/core/design/color.dart';
-import 'package:sport_nest_flutter/src/core/design/typography.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import '../../../../core/design/color.dart';
+import '../../../../core/design/typography.dart';
 
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/booking_model.dart';
@@ -12,7 +13,11 @@ import '../../../../data/models/unit_model.dart';
 import '../controllers/venue_detail_page_controller.dart';
 
 class ScheduleView extends StatefulWidget {
-  const ScheduleView({super.key});
+  ScheduleView({super.key});
+
+  final double headingColumnWidth = 56.w;
+  final double slotHeight = 60.h * 1.25;
+  final double slotWidth = 150.w;
 
   @override
   State<ScheduleView> createState() => _ScheduleViewState();
@@ -25,29 +30,29 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
 
     return GetBuilder<VenueDetailPageController>(
       builder: (_) {
-        return SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: FormBuilderDateTimePicker(
-                  name: "date",
-                  initialValue: _.selectedDate,
-                  textAlign: TextAlign.center,
-                  inputType: InputType.date,
-                  format: DateFormat("EEEE, MMMM d, yyyy"),
-                  onChanged: (value) {
-                    if (value != null) {
-                      _.selectedDate = value;
-                      _.fetchBookingList(_.venueId);
-                    }
-                  },
+        return Scaffold(
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: FormBuilderDateTimePicker(
+                    name: "date",
+                    initialValue: _.selectedDate,
+                    textAlign: TextAlign.center,
+                    inputType: InputType.date,
+                    format: DateFormat("EEEE, MMMM d, yyyy"),
+                    onChanged: (value) {
+                      if (value != null) {
+                        _.selectedDate = value;
+                        _.fetchBookingList(_.venueId);
+                      }
+                    },
+                  ),
                 ),
-              ),
-              Divider(color: AppColor.neutralColor.shade50),
-              Expanded(
-                child: FutureBuilder<List<UnitModel>>(
+                Expanded(
+                  child: FutureBuilder<List<UnitModel>>(
                     future: _.fetchUnitListFuture,
                     builder: (context, snapshot) {
                       return Builder(
@@ -81,10 +86,9 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
 
                           List<UnitModel> slots = snapshot.data ?? [];
 
-                          double slotWidth = 150.w;
-
                           return Column(
                             children: [
+                              Divider(color: AppColor.neutralColor.shade50),
                               Expanded(
                                 child: SingleChildScrollView(
                                   physics: const ClampingScrollPhysics(),
@@ -96,16 +100,16 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                         Column(
                                           children: [
                                             SizedBox(
-                                              height: 60.h,
-                                              width: 56.w,
+                                              height: widget.slotHeight,
+                                              width: widget.headingColumnWidth,
                                             ),
-                                            SizedBox(width: 56.w, child: Divider(color: AppColor.neutralColor.shade50)),
+                                            SizedBox(width: widget.headingColumnWidth, child: Divider(color: AppColor.neutralColor.shade50)),
                                             ...List.generate(times.length, (index) {
                                               var time = times[index];
 
                                               return Container(
-                                                height: 60.h,
-                                                width: 56.w,
+                                                height: widget.slotHeight,
+                                                width: widget.headingColumnWidth,
                                                 padding: EdgeInsets.only(right: 8.w),
                                                 child: Align(
                                                   alignment: Alignment.topRight,
@@ -124,26 +128,18 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                         VerticalDivider(color: AppColor.neutralColor.shade50),
                                         Expanded(
                                           child: SizedBox(
-                                            height: 60.h * times.length,
-                                            child: ListView.separated(
-                                              itemCount: slots.length,
-                                              scrollDirection: Axis.horizontal,
-                                              physics: const ClampingScrollPhysics(),
-                                              separatorBuilder: (BuildContext context, int index) {
-                                                return VerticalDivider(color: AppColor.neutralColor.shade50);
-                                              },
-                                              itemBuilder: (BuildContext context, int index) {
-                                                var slot = slots[index];
-
-                                                var item = SizedBox(
-                                                  width: slotWidth,
+                                            height: widget.slotHeight * times.length,
+                                            child: Builder(builder: (context) {
+                                              Widget buildItem(UnitModel unit) {
+                                                return SizedBox(
+                                                  width: widget.slotWidth,
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                                     children: [
                                                       SizedBox(
-                                                        height: 60.h,
+                                                        height: widget.slotHeight,
                                                         child: Center(
-                                                          child: Text(slot.name),
+                                                          child: Text(unit.name),
                                                         ),
                                                       ),
                                                       Divider(color: AppColor.neutralColor.shade50),
@@ -152,11 +148,11 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                           future: _.fetchBookingListFuture,
                                                           builder: (context, snapshot) {
                                                             List<BookingModel> bookings = snapshot.data?.where((booking) {
-                                                                  // if (booking.status != "Confirmed") return false;
+                                                                  if (booking.unitId != unit.id) return false;
 
-                                                                  if (booking.unitId != slot.id) return false;
+                                                                  var startTime = booking.startTime!.toDate();
 
-                                                                  if (booking.startTime.day != _.selectedDate.day || booking.startTime.month != _.selectedDate.month || booking.startTime.year != _.selectedDate.year) return false;
+                                                                  if (startTime.day != _.selectedDate.day || startTime.month != _.selectedDate.month || startTime.year != _.selectedDate.year) return false;
 
                                                                   return true;
                                                                 }).toList() ??
@@ -169,62 +165,56 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                                     itemCount: times.length,
                                                                     physics: const NeverScrollableScrollPhysics(),
                                                                     separatorBuilder: (BuildContext context, int index) {
-                                                                      return SizedBox(width: slotWidth, child: Divider(color: AppColor.neutralColor.shade50));
+                                                                      return SizedBox(width: widget.slotWidth, child: Divider(color: AppColor.neutralColor.shade50));
                                                                     },
                                                                     itemBuilder: (BuildContext context, int index) {
                                                                       return SizedBox(
-                                                                        width: slotWidth,
-                                                                        height: 60.h,
+                                                                        width: widget.slotWidth,
+                                                                        height: widget.slotHeight,
                                                                       );
                                                                     },
                                                                   ),
                                                                 ),
                                                                 ...List.generate(bookings.length, (index) {
                                                                   var booking = bookings[index];
+                                                                  var startTime = booking.startTime!.toDate();
+                                                                  var endTime = booking.endTime!.toDate();
 
-                                                                  Color backgroundColor, foregroundColor;
+                                                                  double convertMinutesToPixels(int minutes) {
+                                                                    double ratio = widget.slotHeight / 60;
 
-                                                                  if (booking.status == "Confirmed") {
-                                                                    backgroundColor = const Color(0xFFECFDF3);
-                                                                    foregroundColor = const Color(0xFFABEFC6);
-                                                                  } else if (booking.status == "Pending") {
-                                                                    backgroundColor = const Color(0xFFF9F5FF);
-                                                                    foregroundColor = const Color(0xFFE9D7FE);
-                                                                  } else if (booking.status == "Cancelled") {
-                                                                    backgroundColor = const Color(0xFFFEF3F2);
-                                                                    foregroundColor = const Color(0xFFFECDCA);
-                                                                  } else {
-                                                                    backgroundColor = const Color(0xFFF8F8F8);
-                                                                    foregroundColor = const Color(0xFFE0E0E0);
+                                                                    int additionalHeight = minutes % 60;
+
+                                                                    return (ratio * minutes + additionalHeight);
                                                                   }
 
                                                                   return Positioned(
-                                                                    top: 60.h * booking.startTime.hour,
-                                                                    height: booking.endTime.difference(booking.startTime).inMinutes.h,
+                                                                    top: widget.slotHeight * startTime.hour,
+                                                                    height: convertMinutesToPixels(endTime.difference(startTime).inMinutes),
                                                                     left: 0,
                                                                     right: 0,
                                                                     child: GestureDetector(
                                                                       onTap: () => Get.toNamed(
-                                                                        Routes.bookingDetail.replaceFirst(':venueId', booking.venueId).replaceFirst(':bookingId', booking.id),
+                                                                        Routes.bookingDetail.replaceFirst(':venueId', booking.venueId!).replaceFirst(':bookingId', booking.id!),
                                                                       ),
                                                                       child: Container(
                                                                         margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                                                                         padding: EdgeInsets.all(8.w),
                                                                         decoration: BoxDecoration(
-                                                                          color: backgroundColor,
+                                                                          color: booking.status!.backgroundColor,
                                                                           borderRadius: BorderRadius.circular(8.r),
-                                                                          border: Border.all(color: foregroundColor, strokeAlign: BorderSide.strokeAlignInside),
+                                                                          border: Border.all(color: booking.status!.foregroundColor, strokeAlign: BorderSide.strokeAlignInside),
                                                                         ),
                                                                         child: Column(
                                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                                           crossAxisAlignment: CrossAxisAlignment.stretch,
                                                                           children: [
                                                                             Text(
-                                                                              booking.contactName,
+                                                                              booking.customer!.name,
                                                                               style: AppTypography.bodyMedium.semiBold,
                                                                             ),
                                                                             Text(
-                                                                              DateFormat("hh:mm a").format(booking.startTime),
+                                                                              "From: ${DateFormat("hh:mm a").format(startTime)} - To: ${DateFormat("hh:mm a").format(endTime)}",
                                                                               style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
                                                                             ),
                                                                           ],
@@ -241,10 +231,36 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                                     ],
                                                   ),
                                                 );
+                                              }
 
-                                                return item;
-                                              },
-                                            ),
+                                              if (slots.length.isLowerThan(3)) {
+                                                List<Widget> data = [];
+
+                                                for (var slot in slots) {
+                                                  data.add(Expanded(child: buildItem(slot)));
+                                                  data.add(VerticalDivider(color: AppColor.neutralColor.shade50));
+                                                }
+
+                                                return Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  children: data,
+                                                );
+                                              } else {
+                                                return ListView.separated(
+                                                  itemCount: slots.length,
+                                                  scrollDirection: Axis.horizontal,
+                                                  physics: const ClampingScrollPhysics(),
+                                                  separatorBuilder: (BuildContext context, int index) {
+                                                    return VerticalDivider(color: AppColor.neutralColor.shade50);
+                                                  },
+                                                  itemBuilder: (BuildContext context, int index) {
+                                                    var slot = slots[index];
+
+                                                    return buildItem(slot);
+                                                  },
+                                                );
+                                              }
+                                            }),
                                           ),
                                         ),
                                       ],
@@ -252,13 +268,20 @@ class _ScheduleViewState extends State<ScheduleView> with AutomaticKeepAliveClie
                                   ),
                                 ),
                               ),
+                              Divider(color: AppColor.neutralColor.shade50),
                             ],
                           );
                         },
                       );
-                    }),
-              ),
-            ],
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _.onAddBooking,
+            child: const Icon(Symbols.calendar_add_on_rounded),
           ),
         );
       },

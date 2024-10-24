@@ -1,17 +1,16 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/data/models/booking_model.dart';
+import '../../../../core/routes/pages.dart';
+import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/unit_model.dart';
-import '../../../../services/data_sync_service.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
+import 'venue_list_page_controller.dart';
 
 class VenueDetailPageController extends GetxController {
   final String venueId = Get.parameters['venueId']!;
 
   Future<VenueModel>? fetchVenueFuture;
-
   Future<List<UnitModel>>? fetchUnitListFuture;
-
   Future<List<BookingModel>>? fetchBookingListFuture;
 
   DateTime selectedDate = DateTime.now();
@@ -24,7 +23,7 @@ class VenueDetailPageController extends GetxController {
   Future<void> deleteVenue(String id) async {
     await FirebaseFirestoreSource().deleteVenue(id);
 
-    await DataSyncService.instance.refreshVenueList();
+    await VenueListPageController.instance.fetchVenues();
 
     Get.back();
   }
@@ -56,6 +55,22 @@ class VenueDetailPageController extends GetxController {
     fetchBookingList(venueId);
 
     super.onInit();
+  }
+
+  Future<void> onAddBooking() async {
+    var result = await Get.toNamed(Routes.bookingCreate.replaceAll(':venueId', venueId));
+
+    if (result == true) {
+      fetchBookingList(venueId);
+    }
+  }
+
+  Future<void> onUnitAddPress() async {
+    var result = await Get.toNamed(Routes.unitCreate.replaceFirst(':venueId', venueId));
+
+    if (result == true) {
+      fetchUnitList(venueId);
+    }
   }
 }
 

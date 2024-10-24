@@ -34,4 +34,10 @@ abstract class Routes {
   static const unitCreate = '$_units/create';
   static const unitDetail = '$_units/:unitId';
   static const unitEdit = '$_units/:unitId/edit';
+
+  static const _customers = '/customers';
+  static const customers = _customers;
+  static const customerCreate = '$_customers/create';
+  static const customerDetail = '$_customers/:customerId';
+  static const customerEdit = '$_customers/:customerId/edit';
 }

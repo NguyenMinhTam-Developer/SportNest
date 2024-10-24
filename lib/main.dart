@@ -2,15 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'src/services/app_service.dart';
 
 import 'firebase_options.dart';
 import 'src/core/design/color.dart';
 import 'src/core/design/styles.dart';
 import 'src/core/design/typography.dart';
 import 'src/core/routes/pages.dart';
+import 'src/services/app_service.dart';
 import 'src/services/authentication_service.dart';
-import 'src/services/data_sync_service.dart';
+import 'src/services/data_async_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ Future<void> main() async {
 Future<void> initServices() async {
   await Get.putAsync(() => AuthService().init(), permanent: true);
   await Get.putAsync(() => AppService().init(), permanent: true);
-  await Get.putAsync(() => DataSyncService().init(), permanent: true);
+  await Get.putAsync(() => DataAsyncService().init(), permanent: true);
 }
 
 class App extends StatelessWidget {

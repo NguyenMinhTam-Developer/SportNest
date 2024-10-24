@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/src/shared/components/button.dart';
-import 'package:sport_nest_flutter/src/shared/layouts/ek_auto_layout.dart';
+import '../../../../data/enums/booking_status_enum.dart';
+import '../../../../shared/components/button.dart';
+import '../../../../shared/layouts/ek_auto_layout.dart';
 
 import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
@@ -45,7 +46,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                     switch (value) {
                       case "edit":
                         Get.toNamed(
-                          Routes.bookingEdit.replaceFirst(':bookingId', snapshot.requireData.id).replaceFirst(':venueId', snapshot.requireData.venueId),
+                          Routes.bookingEdit.replaceFirst(':bookingId', snapshot.requireData.id!).replaceFirst(':venueId', snapshot.requireData.venueId!),
                           arguments: snapshot.requireData,
                         );
                         break;
@@ -70,7 +71,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                             FilledButton(
                               onPressed: () {
                                 Get.back();
-                                controller.deleteBooking(snapshot.requireData.id);
+                                controller.deleteBooking(snapshot.requireData.id!);
                               },
                               style: FilledButton.styleFrom(
                                 backgroundColor: AppColor.errorColor.main,
@@ -117,7 +118,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 8.h),
-                      Chip(label: Text(booking.status.isHardcoded)),
+                      Chip(label: Text(booking.status!.toDisplayString())),
                       SizedBox(height: 40.h),
                       Text(
                         "Schedule".isHardcoded,
@@ -146,7 +147,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  DateFormat('EEEE, MMMM dd, yyyy').format(booking.startTime),
+                                  DateFormat('EEEE, MMMM dd, yyyy').format(booking.startTime!.toDate()),
                                   style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                                 ),
                               ],
@@ -161,7 +162,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  "${DateFormat('HH:mm aa').format(booking.startTime)} - ${DateFormat('HH:mm aa').format(booking.endTime)}",
+                                  "${DateFormat('HH:mm aa').format(booking.startTime!.toDate())} - ${DateFormat('HH:mm aa').format(booking.endTime!.toDate())}",
                                   style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                                 ),
                               ],
@@ -197,7 +198,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  booking.contactName,
+                                  booking.customer!.name,
                                   style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                                 ),
                               ],
@@ -212,7 +213,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  booking.phoneNumber,
+                                  booking.customer!.phoneNumber,
                                   style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                                 ),
                               ],
@@ -226,7 +227,7 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
               },
             ),
             bottomNavigationBar: Opacity(
-              opacity: snapshot.data?.status == "Pending" ? 1 : 0,
+              opacity: snapshot.data?.status == BookingStatusEnum.pending ? 1 : 0,
               child: SafeArea(
                 child: Padding(
                   padding: EdgeInsets.all(16.w),

@@ -1,14 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/features/booking/presentation/controllers/booking_list_page_controller.dart';
+import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
+import '../../../venues/presentation/controllers/venue_list_page_controller.dart';
+import '../../../../data/models/customer_model.dart';
+import '../../../../core/routes/pages.dart';
+import '../../../../data/params/create_booking_param.dart';
 
-import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 
 class CreateBookingPageController extends GetxController {
   final String initialVenueId = Get.parameters['venueId']!;
@@ -16,8 +19,10 @@ class CreateBookingPageController extends GetxController {
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
-  Future<List<VenueModel>>? venues;
+  List<VenueModel> venues = [];
   Future<List<UnitModel>>? units;
+
+  CustomerModel? customer;
 
   bool isLoading = false;
 
@@ -25,9 +30,9 @@ class CreateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = FirebaseFirestoreSource().fetchVenueList(AuthService().user!.uid);
+    venues = await VenueListPageController.instance.fetchVenueListFuture!;
 
-    units = FirebaseFirestoreSource().fetchUnitList(initialVenueId);
+    units = Future.value(await VenueDetailPageController.instance.fetchUnitListFuture!);
 
     update();
   }
@@ -54,39 +59,36 @@ class CreateBookingPageController extends GetxController {
       final startTime = formData['startTime'] as DateTime;
       final endTime = formData['endTime'] as DateTime;
 
-      final startDateTime = DateTime(
+      final startDateTime = Timestamp.fromDate(DateTime(
         date.year,
         date.month,
         date.day,
         startTime.hour,
         startTime.minute,
-      );
-      final endDateTime = DateTime(
+      ));
+      final endDateTime = Timestamp.fromDate(DateTime(
         date.year,
         date.month,
         date.day,
         endTime.hour,
         endTime.minute,
-      );
+      ));
 
-      final newBooking = BookingModel(
-        id: '',
-        userId: AuthService().user!.uid,
+      final newBooking = CreateBookingParam(
         venueId: venueId,
         unitId: unitId,
         startTime: startDateTime,
         endTime: endDateTime,
-        contactName: formData['contactName'] as String,
-        phoneNumber: formData['phoneNumber'] as String,
-        status: 'Pending',
+        customerId: customer?.id ?? '',
+        createdBy: AuthService().currentUser!.uid,
       );
 
       try {
         await FirebaseFirestoreSource().createBooking(newBooking);
 
-        await BookingListPageController.instance.fetchBookings(venueId);
+        await VenueDetailPageController.instance.fetchBookingList(venueId);
 
-        Get.back();
+        Get.back(result: true);
       } catch (e) {
         Get.snackbar('Error', 'Failed to create booking');
       } finally {
@@ -97,6 +99,17 @@ class CreateBookingPageController extends GetxController {
       autovalidateMode = AutovalidateMode.always;
       update();
     }
+  }
+
+  Future<void> onCustomerPressed() async {
+    final result = await Get.toNamed(Routes.customers, arguments: true);
+
+    if (result != null && result is CustomerModel) {
+      customer = result;
+      formKey.currentState?.patchValue({"contactName": customer!.name});
+    }
+
+    update();
   }
 }
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import '../../../../services/authentication_service.dart';
+import 'venue_list_page_controller.dart';
+
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/data_sync_service.dart';
+import '../../../../services/authentication_service.dart';
 import '../../../../shared/extensions/hardcode.dart';
 
 class CreateVenuePageController extends GetxController {
@@ -37,11 +38,11 @@ class CreateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.user!.uid,
+            createdBy: AuthService.instance.currentUser!.uid,
           ),
         );
 
-        await DataSyncService.instance.refreshVenueList();
+        await VenueListPageController.instance.fetchVenues();
 
         isLoading = false;
         update();

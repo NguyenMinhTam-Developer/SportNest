@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+
+import '../../../../core/design/color.dart';
+import '../../../../core/design/typography.dart';
+import '../../../../core/routes/pages.dart';
+import '../../../../data/enums/booking_status_enum.dart';
+import '../../../../data/models/booking_model.dart';
+import '../../../../data/models/venue_model.dart';
+import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/widgets/list_indicators.dart';
-import '../widgets/booking_view.dart';
+import '../controllers/venue_detail_page_controller.dart';
 import '../widgets/details_view.dart';
 import '../widgets/schedule_view.dart';
 import '../widgets/slots_view.dart';
-import '../../../../core/design/color.dart';
-import '../../../../core/design/typography.dart';
-import '../../../../data/models/venue_model.dart';
-import '../../../../shared/extensions/hardcode.dart';
-
-import '../../../../core/routes/pages.dart';
-import '../controllers/venue_detail_page_controller.dart';
+import 'venue_notification_page.dart';
 
 class VenueDetailPage extends GetView<VenueDetailPageController> {
   const VenueDetailPage({super.key});
@@ -24,12 +26,29 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
         return FutureBuilder<VenueModel>(
           future: controller.fetchVenueFuture,
           builder: (context, snapshot) => DefaultTabController(
-            length: 4,
+            length: 3,
             child: Scaffold(
               appBar: AppBar(
                 title: Text(snapshot.data?.name ?? ""),
                 actions: snapshot.hasData
                     ? [
+                        IconButton(
+                          onPressed: () => Get.to(() => const VeunueNotificationPage()),
+                          icon: FutureBuilder<List<BookingModel>>(
+                            future: controller.fetchBookingListFuture,
+                            builder: (context, snapshot) {
+                              int pendingCount = snapshot.data?.where((element) => element.status == BookingStatusEnum.pending).length ?? 0;
+                              bool isActive = pendingCount.isGreaterThan(0);
+                              String label = pendingCount.toString();
+
+                              return Badge(
+                                isLabelVisible: isActive,
+                                label: Text(label),
+                                child: const Icon(Symbols.notifications_rounded),
+                              );
+                            },
+                          ),
+                        ),
                         PopupMenuButton(
                           itemBuilder: (context) {
                             return [
@@ -87,7 +106,6 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                 bottom: const TabBar(
                   tabs: [
                     Tab(text: "Details"),
-                    Tab(text: "Booking"),
                     Tab(text: "Schedule"),
                     Tab(text: "Units"),
                   ],
@@ -113,8 +131,7 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       const DetailsView(),
-                      BookingsView(venueId: venue.id),
-                      const ScheduleView(),
+                      ScheduleView(),
                       SlotsView(venueId: venue.id),
                     ],
                   );

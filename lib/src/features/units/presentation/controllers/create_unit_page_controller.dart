@@ -37,7 +37,7 @@ class CreateUnitPageController extends GetxController {
         isLoading = false;
         update();
 
-        Get.back();
+        Get.back(result: true);
 
         Get.snackbar(
           'Success!'.isHardcoded,

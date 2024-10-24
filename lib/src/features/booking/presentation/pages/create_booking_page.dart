@@ -5,7 +5,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../data/models/unit_model.dart';
-import '../../../../data/models/venue_model.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
 import '../../../../shared/extensions/hardcode.dart';
@@ -40,28 +39,18 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                     InputLabel(
                       labelText: "Venue".isHardcoded,
                       isRequired: true,
-                      child: FutureBuilder<List<VenueModel>>(
-                          future: controller.venues,
-                          builder: (context, snapshot) {
-                            return FormBuilderDropdown<String>(
-                              name: "venueId",
-                              initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialVenueId)?.id,
-                              icon: snapshot.connectionState == ConnectionState.waiting ? const CircularProgressIndicator() : null,
-                              decoration: InputDecoration(
-                                hintText: "Select venue".isHardcoded,
-                              ),
-                              items: (snapshot.data ?? [])
-                                  .map((venue) => DropdownMenuItem(
-                                        value: venue.id,
-                                        child: Text(venue.name),
-                                      ))
-                                  .toList(),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                              ]),
-                              onChanged: (value) => controller.onVenueChanged(value),
-                            );
-                          }),
+                      child: FormBuilderDropdown<String>(
+                        name: "venueId",
+                        initialValue: controller.initialVenueId,
+                        decoration: InputDecoration(
+                          hintText: "Select venue".isHardcoded,
+                        ),
+                        items: controller.venues.map((venue) => DropdownMenuItem(value: venue.id, child: Text(venue.name))).toList(),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                        onChanged: (value) => controller.onVenueChanged(value),
+                      ),
                     ),
                     InputLabel(
                       labelText: "Unit".isHardcoded,
@@ -146,30 +135,18 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                       ],
                     ),
                     InputLabel(
-                      labelText: "Contact Name".isHardcoded,
+                      labelText: "Customer".isHardcoded,
                       isRequired: true,
                       child: FormBuilderTextField(
                         name: "contactName",
+                        readOnly: true,
+                        onTap: () => controller.onCustomerPressed(),
                         decoration: InputDecoration(
                           hintText: "Enter contact name".isHardcoded,
+                          suffixIcon: const Icon(Symbols.contacts_rounded),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                        ]),
-                      ),
-                    ),
-                    InputLabel(
-                      labelText: "Phone Number".isHardcoded,
-                      isRequired: true,
-                      child: FormBuilderTextField(
-                        name: "phoneNumber",
-                        decoration: InputDecoration(
-                          hintText: "Enter phone number".isHardcoded,
-                        ),
-                        keyboardType: TextInputType.phone,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
                         ]),
                       ),
                     ),

@@ -42,7 +42,7 @@ class UpdateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.user!.uid,
+            createdBy: AuthService.instance.currentUser!.uid,
           ),
         );
 

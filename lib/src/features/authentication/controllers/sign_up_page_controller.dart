@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+
+import '../../../core/routes/pages.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/sources/firebase/firebase_authentication_source.dart';
 import '../../../data/sources/firebase/firebase_firestore_source.dart';
-
-import '../../../core/routes/pages.dart';
 
 class SignUpPageController extends GetxController {
   bool _isLoading = false;

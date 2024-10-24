@@ -60,6 +60,11 @@ class ProfilePage extends GetView<ProfilePageController> {
                       icon: Symbols.store_rounded,
                       title: "My Venues",
                     ),
+                    ProfileMenuItem(
+                      onPressed: () => Get.toNamed(Routes.customers),
+                      icon: Symbols.groups_rounded,
+                      title: "My Customers",
+                    ),
                   ],
                 ),
               ],
@@ -93,16 +98,19 @@ class ProfileMenuItem extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         children: [
           Container(
-            padding: EdgeInsets.all(4.w),
+            height: 40.w,
+            width: 40.w,
             decoration: BoxDecoration(
               color: AppColor.primaryColor.surface,
               borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Icon(
-              icon,
-              size: 20.w,
-              fill: 1,
-              color: AppColor.primaryColor.main,
+            child: Center(
+              child: Icon(
+                icon,
+                size: 24.w,
+                fill: 1,
+                color: AppColor.primaryColor.main,
+              ),
             ),
           ),
           Expanded(

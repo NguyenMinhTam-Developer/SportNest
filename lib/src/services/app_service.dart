@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/data/models/unit_type_model.dart';
+
+import '../data/models/unit_type_model.dart';
 import '../data/sources/firebase/firebase_firestore_source.dart';
 
 class AppService extends GetxService {

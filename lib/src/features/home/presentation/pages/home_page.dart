@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../customer/presentation/pages/customer_page.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../schedule/presentation/pages/schedule_page.dart';
@@ -17,7 +16,7 @@ class HomePage extends GetWidget<HomePageController> {
       const DashboardPage(),
       const SizedBox(),
       const SchedulePage(),
-      const CustomerPage(),
+      const SizedBox(),
       const ProfilePage(),
     ];
 
@@ -41,9 +40,9 @@ class HomePage extends GetWidget<HomePageController> {
                 label: 'Dashboard',
               ),
               NavigationDestination(
-                icon: Icon(Symbols.today_rounded),
-                selectedIcon: Icon(Symbols.today_rounded, fill: 1),
-                label: 'Bookings',
+                icon: Icon(Symbols.chat_rounded),
+                selectedIcon: Icon(Symbols.chat_rounded, fill: 1),
+                label: 'Messages',
               ),
               NavigationDestination(
                 icon: Icon(Symbols.calendar_month_rounded),
@@ -51,9 +50,9 @@ class HomePage extends GetWidget<HomePageController> {
                 label: 'Schedule',
               ),
               NavigationDestination(
-                icon: Icon(Symbols.groups_rounded),
-                selectedIcon: Icon(Symbols.groups_rounded, fill: 1),
-                label: 'Customers',
+                icon: Icon(Symbols.notifications_rounded),
+                selectedIcon: Icon(Symbols.notifications_rounded, fill: 1),
+                label: 'Notifications',
               ),
               NavigationDestination(
                 icon: Icon(Symbols.account_circle),

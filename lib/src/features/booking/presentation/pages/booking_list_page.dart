@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+
 import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
+import '../../../../core/routes/pages.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../services/app_service.dart';
 import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
-
-import '../../../../core/routes/pages.dart';
 import '../controllers/booking_list_page_controller.dart';
 
 class BookingListPage extends GetView<BookingListPageController> {
@@ -33,7 +33,7 @@ class BookingListPage extends GetView<BookingListPageController> {
                         IconButton(
                           icon: const Icon(Symbols.add_rounded),
                           tooltip: 'Add Booking'.isHardcoded,
-                          onPressed: () => Get.toNamed(Routes.bookingCreate.replaceFirst(':id', snapshot.requireData.first.venueId)),
+                          onPressed: () => Get.toNamed(Routes.bookingCreate.replaceFirst(':id', snapshot.requireData.first.venueId!)),
                         ),
                       ]
                     : null,
@@ -116,7 +116,7 @@ class VenueBookingItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Get.toNamed(
-        Routes.bookingDetail.replaceFirst(':venueId', booking.venueId).replaceFirst(':bookingId', booking.id),
+        Routes.bookingDetail.replaceFirst(':venueId', booking.venueId!).replaceFirst(':bookingId', booking.id!),
       ),
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
@@ -164,7 +164,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                       ),
                     ),
                     Chip(
-                      label: Text(booking.status.isHardcoded),
+                      label: Text(booking.status!.toDisplayString()),
                     ),
                   ],
                 ),
@@ -186,7 +186,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            booking.contactName,
+                            booking.customer!.name,
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade80),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -205,7 +205,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            booking.phoneNumber,
+                            booking.customer!.phoneNumber,
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade100),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -233,7 +233,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            DateFormat("EE, dd MMM yyyy").format(booking.startTime),
+                            DateFormat("EE, dd MMM yyyy").format(booking.startTime!.toDate()),
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade80),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -252,13 +252,13 @@ class VenueBookingItemWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            DateFormat("h:mm aa - ").format(booking.startTime),
+                            DateFormat("h:mm aa - ").format(booking.startTime!.toDate()),
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade100),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            DateFormat("h:mm aa").format(booking.endTime),
+                            DateFormat("h:mm aa").format(booking.endTime!.toDate()),
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade100),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

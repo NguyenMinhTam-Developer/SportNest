@@ -1,15 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/src/core/routes/pages.dart';
 
 import '../../../../data/models/booking_model.dart';
+import '../../../../data/models/customer_model.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/models/unit_model.dart';
+import '../../../../data/params/update_booking_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
 import '../../../../shared/extensions/hardcode.dart';
+import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 import 'booking_detail_page_controller.dart';
-import 'booking_list_page_controller.dart';
 
 class UpdateBookingPageController extends GetxController {
   BookingModel initialBooking = Get.arguments as BookingModel;
@@ -22,6 +26,7 @@ class UpdateBookingPageController extends GetxController {
 
   Future<List<VenueModel>>? venues;
   Future<List<UnitModel>>? units;
+  CustomerModel? customer;
 
   bool isLoading = false;
 
@@ -29,7 +34,7 @@ class UpdateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = FirebaseFirestoreSource().fetchVenueList(AuthService().user!.uid);
+    venues = FirebaseFirestoreSource().fetchVenueList(AuthService().currentUser!.uid);
     formKey.currentState?.fields['venueId']?.didChange(initialBooking.venueId);
     formKey.currentState?.patchValue({"venueId": initialBooking.venueId});
 
@@ -37,6 +42,9 @@ class UpdateBookingPageController extends GetxController {
 
     formKey.currentState?.fields['unitId']?.didChange(initialBooking.unitId);
     formKey.currentState?.patchValue({"unitId": initialBooking.unitId});
+
+    customer = initialBooking.customer;
+    formKey.currentState?.patchValue({"contactName": customer!.name});
 
     update();
   }
@@ -63,37 +71,40 @@ class UpdateBookingPageController extends GetxController {
       final startTime = formData['startTime'] as DateTime;
       final endTime = formData['endTime'] as DateTime;
 
-      final startDateTime = DateTime(
+      final startDateTime = Timestamp.fromDate(DateTime(
         date.year,
         date.month,
         date.day,
         startTime.hour,
         startTime.minute,
-      );
+      ));
 
-      final endDateTime = DateTime(
+      final endDateTime = Timestamp.fromDate(DateTime(
         date.year,
         date.month,
         date.day,
         endTime.hour,
         endTime.minute,
-      );
+      ));
 
-      final updatedBooking = initialBooking.copyWith(
+      final updatedBooking = UpdateBookingParam(
+        id: _bookingId,
         venueId: venueId,
         unitId: unitId,
+        customerId: initialBooking.customerId ?? '',
         startTime: startDateTime,
         endTime: endDateTime,
-        contactName: formData['contactName'] as String,
-        phoneNumber: formData['phoneNumber'] as String,
-        status: formData['status'] as String,
+        updatedBy: AuthService().currentUser!.uid,
+        updatedAt: Timestamp.now(),
       );
 
       try {
         await FirebaseFirestoreSource().updateBooking(updatedBooking);
         await BookingDetailPageController.instance.fetchBooking(_bookingId);
-        await BookingListPageController.instance.fetchBookings(_venueId);
-        Get.back();
+        await VenueDetailPageController.instance.fetchBookingList(venueId);
+
+        Get.back(result: true);
+
         Get.snackbar(
           'Success!'.isHardcoded,
           'Booking updated successfully'.isHardcoded,
@@ -111,6 +122,17 @@ class UpdateBookingPageController extends GetxController {
       autovalidateMode = AutovalidateMode.always;
       update();
     }
+  }
+
+  Future<void> onCustomerPressed() async {
+    final result = await Get.toNamed(Routes.customers, arguments: true);
+
+    if (result != null && result is CustomerModel) {
+      customer = result;
+      formKey.currentState?.patchValue({"contactName": customer!.name});
+    }
+
+    update();
   }
 }
 

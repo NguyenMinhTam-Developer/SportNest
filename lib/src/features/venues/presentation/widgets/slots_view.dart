@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/core/routes/pages.dart';
+import 'package:sport_nest_flutter/src/features/venues/presentation/controllers/venue_detail_page_controller.dart';
 import '../../../units/presentation/controllers/unit_list_page_controller.dart';
 import '../../../units/presentation/pages/unit_list_page.dart';
 
@@ -27,7 +27,7 @@ class _SlotsViewState extends State<SlotsView> with AutomaticKeepAliveClientMixi
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "unit_fab",
-        onPressed: () => Get.toNamed(Routes.unitCreate.replaceFirst(':venueId', widget.venueId)),
+        onPressed: VenueDetailPageController.instance.onUnitAddPress,
         child: const Icon(Icons.add),
       ),
     );

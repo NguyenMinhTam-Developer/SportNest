@@ -4,9 +4,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/services/app_service.dart';
 
 import '../../../../core/design/shadow.dart';
+import '../../../../services/app_service.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
 import '../../../../shared/extensions/hardcode.dart';

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import '../../../../services/app_service.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
@@ -12,18 +10,18 @@ import '../../../../shared/components/input_label.dart';
 import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/layouts/page_loading_indicator.dart';
-import '../controllers/update_unit_page_controller.dart';
+import '../controllers/create_customer_page_controller.dart';
 
-class UpdateUnitPage extends GetView<UpdateUnitPageController> {
-  const UpdateUnitPage({super.key});
+class CreateCustomerPage extends GetView<CreateCustomerPageController> {
+  const CreateCustomerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<UpdateUnitPageController>(builder: (controller) {
+    return GetBuilder<CreateCustomerPageController>(builder: (controller) {
       return PageLoadingIndicator(
-        focedLoading: controller.isLoading,
+        future: controller.createCustomerFuture,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text('Update Unit'.isHardcoded)),
+          appBar: AppBar(title: Text('Create Customer'.isHardcoded)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -39,9 +37,8 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
-                      initialValue: controller.initialUnit.name,
                       decoration: InputDecoration(
-                        hintText: "Enter unit name".isHardcoded,
+                        hintText: "Enter customer name".isHardcoded,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -51,43 +48,45 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Price".isHardcoded,
+                    labelText: "Phone Number".isHardcoded,
                     isRequired: true,
                     child: FormBuilderTextField(
-                      name: "price",
-                      initialValue: controller.initialUnit.price.toString(),
+                      name: "phoneNumber",
                       decoration: InputDecoration(
-                        hintText: "Enter unit price".isHardcoded,
+                        hintText: "Enter phone number".isHardcoded,
                       ),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.numeric(),
                         FormBuilderValidators.required(),
+                        FormBuilderValidators.numeric(),
                       ]),
                     ),
                   ),
                   InputLabel(
-                    labelText: "Type".isHardcoded,
-                    isRequired: true,
-                    child: FormBuilderDropdown<String>(
-                      name: "type",
-                      initialValue: controller.initialUnit.type,
+                    labelText: "Email".isHardcoded,
+                    child: FormBuilderTextField(
+                      name: "email",
                       decoration: InputDecoration(
-                        hintText: "Select unit type".isHardcoded,
+                        hintText: "Enter email address".isHardcoded,
                       ),
-                      items: AppService.instance.unitTypes
-                          .map((type) => DropdownMenuItem(
-                                value: type.id,
-                                child: Text(type.name),
-                              ))
-                          .toList(),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        FormBuilderValidators.email(checkNullOrEmpty: false),
                       ]),
+                    ),
+                  ),
+                  InputLabel(
+                    labelText: "Address".isHardcoded,
+                    child: FormBuilderTextField(
+                      name: "address",
+                      decoration: InputDecoration(
+                        hintText: "Enter address".isHardcoded,
+                      ),
+                      keyboardType: TextInputType.streetAddress,
+                      textInputAction: TextInputAction.done,
+                      maxLines: 3,
                     ),
                   ),
                 ],
@@ -109,7 +108,7 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: "Update Unit".isHardcoded,
+                label: "Create Customer".isHardcoded,
               ),
             ),
           ),
