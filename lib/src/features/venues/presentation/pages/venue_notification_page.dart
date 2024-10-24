@@ -20,7 +20,7 @@ class VeunueNotificationPage extends GetView<VenueDetailPageController> {
         child: GetBuilder<VenueDetailPageController>(
           builder: (controller) {
             return FutureBuilder<List<BookingModel>>(
-              future: controller.fetchBookingListFuture,
+              future: null,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

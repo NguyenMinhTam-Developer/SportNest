@@ -27,6 +27,11 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
           future: controller.fetchBookingFuture,
           builder: (context, snapshot) => Scaffold(
             appBar: AppBar(
+              leading: BackButton(
+                onPressed: () {
+                  Get.back(result: controller.isUpdated);
+                },
+              ),
               title: const Text("Booking Detail"),
               actions: [
                 PopupMenuButton(
@@ -42,13 +47,18 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                       ),
                     ];
                   },
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     switch (value) {
                       case "edit":
-                        Get.toNamed(
+                        var result = await Get.toNamed(
                           Routes.bookingEdit.replaceFirst(':bookingId', snapshot.requireData.id!).replaceFirst(':venueId', snapshot.requireData.venueId!),
                           arguments: snapshot.requireData,
                         );
+
+                        if (result == true) {
+                          controller.isUpdated = true;
+                          controller.fetchBooking(snapshot.requireData.id!);
+                        }
                         break;
                       case "delete":
                         Get.dialog(AlertDialog(

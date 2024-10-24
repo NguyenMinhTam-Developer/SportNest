@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 import '../../../venues/presentation/controllers/venue_list_page_controller.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../core/routes/pages.dart';
@@ -31,8 +30,6 @@ class CreateBookingPageController extends GetxController {
     super.onReady();
 
     venues = await VenueListPageController.instance.fetchVenueListFuture!;
-
-    units = Future.value(await VenueDetailPageController.instance.fetchUnitListFuture!);
 
     update();
   }
@@ -85,8 +82,6 @@ class CreateBookingPageController extends GetxController {
 
       try {
         await FirebaseFirestoreSource().createBooking(newBooking);
-
-        await VenueDetailPageController.instance.fetchBookingList(venueId);
 
         Get.back(result: true);
       } catch (e) {

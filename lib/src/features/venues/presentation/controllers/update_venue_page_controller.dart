@@ -53,7 +53,7 @@ class UpdateVenuePageController extends GetxController {
         isLoading = false;
         update();
 
-        Get.back();
+        Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
           'Success!'.isHardcoded,

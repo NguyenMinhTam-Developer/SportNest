@@ -24,14 +24,6 @@ class ProfilePage extends GetView<ProfilePageController> {
                 icon: const Icon(Symbols.settings_rounded),
                 onPressed: () {},
               ),
-              IconButton(
-                icon: const Icon(Symbols.notifications_rounded),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Symbols.chat_rounded),
-                onPressed: () {},
-              ),
             ],
           ),
           body: SingleChildScrollView(

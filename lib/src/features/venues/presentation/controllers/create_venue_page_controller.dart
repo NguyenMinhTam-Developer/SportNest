@@ -42,12 +42,10 @@ class CreateVenuePageController extends GetxController {
           ),
         );
 
-        await VenueListPageController.instance.fetchVenues();
-
         isLoading = false;
         update();
 
-        Get.back();
+        Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
           'Success!'.isHardcoded,

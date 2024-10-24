@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../library/colors.dart';
 import '../enums/booking_status_enum.dart';
 import 'venue_model.dart';
 
@@ -57,5 +58,42 @@ class BookingModel {
     } catch (e) {
       throw Exception('Failed to parse BookingModel: $e');
     }
+  }
+
+  BasicColor get color {
+    List<BasicColor> colorList = [
+      SecondaryColors().grayBlue,
+      SecondaryColors().grayCool,
+      SecondaryColors().grayModern,
+      SecondaryColors().grayNeutral,
+      SecondaryColors().grayIron,
+      SecondaryColors().grayTrue,
+      SecondaryColors().grayWarm,
+      SecondaryColors().moss,
+      SecondaryColors().greenLight,
+      SecondaryColors().green,
+      SecondaryColors().teal,
+      SecondaryColors().cyan,
+      SecondaryColors().blueLight,
+      SecondaryColors().blue,
+      SecondaryColors().blueDark,
+      SecondaryColors().indigo,
+      SecondaryColors().violet,
+      SecondaryColors().purple,
+      SecondaryColors().fuchsia,
+      SecondaryColors().pink,
+      SecondaryColors().rose,
+      SecondaryColors().orangeDark,
+      SecondaryColors().orange,
+      SecondaryColors().yellow,
+    ];
+
+    // Generate a hash code from the customer ID
+    int hash = id.hashCode;
+
+    int colorIndex = hash % colorList.length;
+
+    // Return the color from the list
+    return colorList[colorIndex];
   }
 }

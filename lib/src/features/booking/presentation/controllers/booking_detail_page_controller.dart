@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/features/venues/presentation/controllers/venue_detail_page_controller.dart';
 import '../../../../data/params/update_booking_status_param.dart';
 
 import '../../../../data/enums/booking_status_enum.dart';
@@ -10,6 +9,8 @@ class BookingDetailPageController extends GetxController {
   late final String venueId;
   late final String bookingId;
 
+  bool isUpdated = false;
+
   Future<BookingModel>? fetchBookingFuture;
 
   Future<void> fetchBooking(String id) async {
@@ -19,9 +20,10 @@ class BookingDetailPageController extends GetxController {
 
   Future<void> deleteBooking(String id) async {
     await FirebaseFirestoreSource().deleteBooking(id);
-    await VenueDetailPageController.instance.fetchBookingList(venueId);
 
-    Get.back();
+    isUpdated = true;
+
+    Get.back(result: true);
   }
 
   Future<void> onRejectPressed() async {
@@ -32,7 +34,7 @@ class BookingDetailPageController extends GetxController {
       ),
     );
 
-    VenueDetailPageController.instance.fetchBookingList(venueId);
+    isUpdated = true;
 
     update();
   }
@@ -45,7 +47,7 @@ class BookingDetailPageController extends GetxController {
       ),
     );
 
-    VenueDetailPageController.instance.fetchBookingList(venueId);
+    isUpdated = true;
 
     update();
   }

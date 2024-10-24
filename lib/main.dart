@@ -51,6 +51,7 @@ class App extends StatelessWidget {
               primaryColor: AppColor.primaryColor.main,
               colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primaryColor.main),
               appBarTheme: AppBarTheme(
+                surfaceTintColor: Colors.white,
                 titleTextStyle: AppTypography.bodyLarge.semiBold.copyWith(color: AppColor.neutralColor.shade100),
                 backgroundColor: AppColor.neutralColor.shade10,
               ),
@@ -64,9 +65,9 @@ class App extends StatelessWidget {
                 ),
               ),
               dividerTheme: DividerThemeData(
-                color: AppColor.neutralColor.shade60,
-                thickness: 0.5,
-                space: 0,
+                color: AppColor.neutralColor.shade50,
+                thickness: 1.w,
+                space: 1.w,
               ),
               inputDecorationTheme: kInputDecoration,
               textSelectionTheme: TextSelectionThemeData(

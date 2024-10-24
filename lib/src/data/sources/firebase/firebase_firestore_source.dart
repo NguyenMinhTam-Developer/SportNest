@@ -50,8 +50,12 @@ class FirebaseFirestoreSource {
   }
 
   Future<VenueModel> fetchVenue(String id) async {
-    return _venuesRef.doc(id).get().then((value) {
-      return VenueModel.fromJson(value.data()!);
+    return _venuesRef.doc(id).get().then((value) async {
+      var venue = VenueModel.fromJson(value.data()!);
+
+      venue.unitList = await fetchUnitList(venue.id);
+
+      return venue;
     });
   }
 
@@ -105,18 +109,16 @@ class FirebaseFirestoreSource {
     var bookings = await _bookingsRef.where('venueId', isEqualTo: venueId).where('startTime', isGreaterThanOrEqualTo: from).where('endTime', isLessThanOrEqualTo: to).get().then((value) async {
       var bookings = value.docs.map((e) => BookingModel.fromDocumentSnapshot(e)).toList();
 
-      var venueIds = bookings.map((e) => e.venueId).toSet();
-      var unitIds = bookings.map((e) => e.unitId).toSet();
       var customerIds = bookings.map((e) => e.customerId).toSet();
 
-      List<VenueModel> venues = await Future.wait(venueIds.map((e) => fetchVenue(e!)));
-      List<UnitModel> units = await Future.wait(unitIds.map((e) => fetchUnit(e!)));
+      VenueModel venue = await fetchVenue(venueId);
+
       List<CustomerModel> customers = await Future.wait(customerIds.map((e) => fetchCustomer(e!)));
 
       for (var i = 0; i < bookings.length; i++) {
-        bookings[i].venue = venues[i];
-        bookings[i].unit = units[i];
-        bookings[i].customer = customers[i];
+        bookings[i].venue = venue;
+        bookings[i].unit = venue.unitList.firstWhere((e) => e.id == bookings[i].unitId);
+        bookings[i].customer = customers.firstWhere((e) => e.id == bookings[i].customerId);
       }
 
       return bookings;
