@@ -28,7 +28,7 @@ class VenueListPage extends GetView<VenueListPageController> {
               IconButton(
                 icon: const Icon(Symbols.add_business_rounded),
                 tooltip: 'Add Venue'.isHardcoded,
-                onPressed: () => Get.toNamed(Routes.createVenue),
+                onPressed: controller.onAddVenuePressed,
               ),
             ],
           ),
@@ -67,7 +67,7 @@ class VenueListPage extends GetView<VenueListPageController> {
                     var venue = venues[index];
 
                     return InkWell(
-                      onTap: () => Get.toNamed(Routes.venueDetail.replaceFirst(":venueId", venue.id)),
+                      onTap: () => controller.onVenuePressed(venue.id),
                       borderRadius: BorderRadius.circular(12.r),
                       child: Container(
                         clipBehavior: Clip.none,

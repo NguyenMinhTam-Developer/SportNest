@@ -100,8 +100,6 @@ class UpdateBookingPageController extends GetxController {
 
       try {
         await FirebaseFirestoreSource().updateBooking(updatedBooking);
-        await BookingDetailPageController.instance.fetchBooking(_bookingId);
-        await VenueDetailPageController.instance.fetchBookingList(venueId);
 
         Get.back(result: true);
 

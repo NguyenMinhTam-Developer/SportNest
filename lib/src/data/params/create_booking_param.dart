@@ -26,7 +26,7 @@ class CreateBookingParam {
       'customerId': customerId,
       'startTime': startTime,
       'endTime': endTime,
-      'status': BookingStatusEnum.pending.toJson(),
+      'status': BookingStatusEnum.confirmed.toJson(),
       'createdBy': createdBy,
       'createdAt': Timestamp.now(),
     };

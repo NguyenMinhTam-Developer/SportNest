@@ -12,7 +12,6 @@ class UnitListPageController extends GetxController {
 
   Future<void> fetchUnits(String venueId) async {
     fetchUnitListFuture = FirebaseFirestoreSource().fetchUnitList(venueId);
-    VenueDetailPageController.instance.fetchUnitList(venueId);
     update();
   }
 

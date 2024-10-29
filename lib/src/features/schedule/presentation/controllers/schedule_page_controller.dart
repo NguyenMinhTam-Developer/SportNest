@@ -1,193 +1,207 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:sport_nest_flutter/src/services/authentication_service.dart';
-import 'package:intl/intl.dart';
 
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:sport_nest_flutter/src/services/authentication_service.dart';
+import 'package:sport_nest_flutter/src/shared/extensions/x_datetime.dart';
+
+import '../../../../core/routes/pages.dart';
 import '../../../../data/enums/view_mode_enum.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 
 class SchedulePageController extends GetxController {
-  VenueModel? selectedVenue;
   List<VenueModel> venueList = [];
+  List<BookingModel> bookingList = [];
+
   ViewMode viewMode = ViewMode.day;
-  IconData get viewModeIcon {
-    switch (viewMode) {
-      case ViewMode.day:
-        return Symbols.calendar_view_day_rounded;
-      case ViewMode.week:
-        return Symbols.calendar_view_week_rounded;
-      case ViewMode.month:
-        return Symbols.calendar_view_month_rounded;
-    }
-  }
+  VenueModel? selectedVenue;
 
   DateTime selectedDate = DateTime.now();
-
   String get selectedDateString {
-    final now = DateTime.now();
-    final selected = selectedDate;
-
     switch (viewMode) {
       case ViewMode.day:
-        if (selected.year == now.year && selected.month == now.month && selected.day == now.day) {
+        // if selectedDate is today, return "Today"
+        if (selectedDate.isSameDate(DateTime.now())) {
           return "Today";
         }
-        return DateFormat('EEEE, MMMM d, yyyy').format(selected);
+        return DateFormat('EEEE, MMM d').format(selectedDate);
       case ViewMode.week:
-        final startOfWeek = selected.subtract(Duration(days: selected.weekday - 1));
-        final endOfWeek = startOfWeek.add(const Duration(days: 6));
-
-        if (startOfWeek.isAtSameMomentAs(now.subtract(Duration(days: now.weekday - 1)))) {
-          return "This Week";
-        }
-
-        return "${DateFormat('MMM d').format(startOfWeek)} - ${DateFormat('MMM d, yyyy').format(endOfWeek)}";
-      case ViewMode.month:
-        if (selected.year == now.year && selected.month == now.month) {
-          return "This Month";
-        }
-        return DateFormat('MMMM yyyy').format(selected);
-    }
-  }
-
-  List<String> weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  List<(DateTime, List<BookingModel>)> displayDateList = [];
-
-  bool isLoadingBookings = false;
-
-  void onPreviousPressed() {
-    switch (viewMode) {
-      case ViewMode.day:
-        setSelectedDate(selectedDate.subtract(const Duration(days: 1)));
-        break;
-      case ViewMode.week:
-        setSelectedDate(selectedDate.subtract(const Duration(days: 7)));
-        break;
-      case ViewMode.month:
-        setSelectedDate(selectedDate.subtract(const Duration(days: 1)));
-        break;
-    }
-  }
-
-  void onNextPressed() {
-    switch (viewMode) {
-      case ViewMode.day:
-        setSelectedDate(selectedDate.add(const Duration(days: 1)));
-        break;
-      case ViewMode.week:
-        setSelectedDate(selectedDate.add(const Duration(days: 7)));
-        break;
-      case ViewMode.month:
-        setSelectedDate(DateTime(selectedDate.year, selectedDate.month + 1, 1));
-        break;
-    }
-
-    update();
-  }
-
-  Future<void> onDateSelect() async {
-    final firstDate = DateTime.now().subtract(const Duration(days: 365 * 3));
-    final lastDate = DateTime.now().add(const Duration(days: 365 * 3));
-
-    var result = await Get.dialog(
-      DatePickerDialog(
-        initialDate: selectedDate,
-        firstDate: firstDate,
-        lastDate: lastDate,
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-      ),
-    );
-
-    if (result != null) {
-      setSelectedDate(result);
-    }
-  }
-
-  void setViewMode(ViewMode mode) {
-    viewMode = mode;
-    updateDisplayDateList();
-    update();
-  }
-
-  void setSelectedDate(DateTime date) {
-    selectedDate = date;
-    updateDisplayDateList();
-    update();
-  }
-
-  Future<void> updateDisplayDateList() async {
-    List<DateTime> dates = [];
-    DateTime startDate;
-    DateTime endDate;
-
-    switch (viewMode) {
-      case ViewMode.day:
-        dates = [selectedDate];
-        startDate = selectedDate;
-        endDate = selectedDate.add(const Duration(days: 1));
-        break;
-      case ViewMode.week:
-        startDate = selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
-        endDate = startDate.add(const Duration(days: 7));
-        dates = List.generate(7, (index) => startDate.add(Duration(days: index)));
-        break;
+        final firstDayOfWeek = selectedDate.firstDayOfWeek;
+        final lastDayOfWeek = selectedDate.lastDayOfWeek;
+        return '${DateFormat('MMM d').format(firstDayOfWeek)} - ${DateFormat('MMM d').format(lastDayOfWeek)}';
       case ViewMode.month:
         final firstDayOfMonth = DateTime(selectedDate.year, selectedDate.month, 1);
         final lastDayOfMonth = DateTime(selectedDate.year, selectedDate.month + 1, 0);
-        startDate = firstDayOfMonth;
-        endDate = lastDayOfMonth;
-
-        int daysFromPreviousMonth = firstDayOfMonth.weekday - 1;
-        int daysFromNextMonth = 42 - (daysFromPreviousMonth + lastDayOfMonth.day);
-
-        dates = [
-          ...List.generate(daysFromPreviousMonth, (index) => firstDayOfMonth.subtract(Duration(days: daysFromPreviousMonth - index))),
-          ...List.generate(lastDayOfMonth.day, (index) => DateTime(firstDayOfMonth.year, firstDayOfMonth.month, index + 1)),
-          ...List.generate(daysFromNextMonth, (index) => lastDayOfMonth.add(Duration(days: index + 1))),
-        ];
-        break;
+        return '${DateFormat('MMM d').format(firstDayOfMonth)} - ${DateFormat('MMM d').format(lastDayOfMonth)}, ${selectedDate.year}';
     }
-
-    assert(dates.length == 42 || dates.length == 7 || dates.length == 1, "displayDateList should contain 42 dates for month view, 7 for week view, or 1 for day view");
-
-    isLoadingBookings = true;
-    update(); // Trigger UI update with dates and loading state
-
-    // Fetch bookings
-    List<BookingModel> bookings = await FirebaseFirestoreSource().fetchBookingList(
-      selectedVenue!.id,
-      from: Timestamp.fromDate(startDate),
-      to: Timestamp.fromDate(endDate),
-    );
-
-    // Update displayDateList with fetched bookings
-    displayDateList = dates.map((date) => (date, _getBookingsForDate(date, bookings))).toList();
-
-    isLoadingBookings = false;
-    update(); // Trigger UI update with bookings and loading state
   }
 
-  List<BookingModel> _getBookingsForDate(DateTime date, List<BookingModel> bookings) {
-    return bookings.where((booking) {
-      final bookingDate = booking.startTime!.toDate();
-      return bookingDate.year == date.year && bookingDate.month == date.month && bookingDate.day == date.day;
-    }).toList();
-  }
-
-  Future<void> _fetchVenueList() async {
+  Future<void> fetchVenueList() async {
     venueList = await FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUser!.uid);
     update();
   }
 
+  Future<void> fetchBookingList() async {
+    DateTime from;
+    DateTime to;
+
+    switch (viewMode) {
+      case ViewMode.day:
+        from = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+        to = DateTime(selectedDate.year, selectedDate.month, selectedDate.day + 1);
+        break;
+      case ViewMode.week:
+        from = selectedDate.firstDayOfWeek;
+        to = selectedDate.lastDayOfWeek;
+        break;
+      case ViewMode.month:
+        from = DateTime(selectedDate.year, selectedDate.month, 1);
+        to = DateTime(selectedDate.year, selectedDate.month + 1, 0);
+        break;
+    }
+
+    bookingList = await FirebaseFirestoreSource().fetchBookingList(
+      selectedVenue!.id,
+      from: Timestamp.fromDate(from),
+      to: Timestamp.fromDate(to),
+    );
+
+    print("Fetching booking list from $from to $to");
+    print("Booking list: ${bookingList.length}");
+
+    for (var booking in bookingList) {
+      print(booking.startTime?.toDate());
+    }
+
+    update();
+  }
+
+  void onPreviousPressed() {
+    DateTime newDate;
+
+    switch (viewMode) {
+      case ViewMode.day:
+        newDate = selectedDate.subtract(const Duration(days: 1));
+        break;
+      case ViewMode.week:
+        newDate = selectedDate.subtract(const Duration(days: 7));
+        break;
+      case ViewMode.month:
+        newDate = DateTime(selectedDate.year, selectedDate.month - 1);
+        break;
+    }
+
+    onDateSelect(newDate);
+
+    update();
+  }
+
+  void onNextPressed() {
+    DateTime newDate;
+
+    switch (viewMode) {
+      case ViewMode.day:
+        newDate = selectedDate.add(const Duration(days: 1));
+        break;
+      case ViewMode.week:
+        newDate = selectedDate.add(const Duration(days: 7));
+        break;
+      case ViewMode.month:
+        newDate = DateTime(selectedDate.year, selectedDate.month + 1);
+        break;
+    }
+
+    onDateSelect(newDate);
+
+    update();
+  }
+
+  void onViewModeChanged(ViewMode viewMode) {
+    this.viewMode = viewMode;
+
+    fetchBookingList();
+
+    update();
+  }
+
+  void onDateSelect(DateTime date) {
+    var oldDate = selectedDate;
+    var newDate = date;
+
+    selectedDate = date;
+
+    switch (viewMode) {
+      case ViewMode.day:
+        fetchBookingList();
+        break;
+      case ViewMode.week:
+        if (oldDate.firstDayOfWeek.day >= newDate.firstDayOfWeek.day && oldDate.lastDayOfWeek.day <= newDate.lastDayOfWeek.day) {
+          break;
+        }
+
+        fetchBookingList();
+
+        break;
+      case ViewMode.month:
+        if (oldDate.month != newDate.month) {
+          fetchBookingList();
+        }
+        break;
+    }
+
+    update();
+  }
+
+  void onDateCellPressed(DateTime date) {
+    onViewModeChanged(ViewMode.day);
+    onDateSelect(date);
+  }
+
+  void onVenueChanged(VenueModel? venue) {
+    selectedVenue = venue;
+
+    fetchBookingList();
+
+    update();
+  }
+
+  Future<void> onBookingItemPressed(BookingModel booking) async {
+    var result = await Get.toNamed(Routes.bookingDetail.replaceAll(':venueId', booking.venueId!).replaceAll(':bookingId', booking.id!));
+
+    print("Return after press booking detail is $result");
+
+    if (result == true) {
+      fetchBookingList();
+    }
+  }
+
+  Future<void> onAddBooking() async {
+    var result = await Get.toNamed(Routes.bookingCreate.replaceAll(':venueId', selectedVenue!.id));
+
+    if (result == true) {
+      fetchBookingList();
+    }
+  }
+
+  static SchedulePageController? get instance {
+    try {
+      return Get.find<SchedulePageController>();
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Future<void> onInit() async {
-    await _fetchVenueList();
+    await fetchVenueList();
+
+    selectedDate = DateTime.now();
     selectedVenue = venueList.firstOrNull;
-    await updateDisplayDateList();
+
+    fetchBookingList();
+
     super.onInit();
   }
 }

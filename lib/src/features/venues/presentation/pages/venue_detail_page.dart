@@ -12,7 +12,6 @@ import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/venue_detail_page_controller.dart';
 import '../widgets/details_view.dart';
-import '../widgets/schedule_view.dart';
 import '../widgets/slots_view.dart';
 import 'venue_notification_page.dart';
 
@@ -26,29 +25,12 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
         return FutureBuilder<VenueModel>(
           future: controller.fetchVenueFuture,
           builder: (context, snapshot) => DefaultTabController(
-            length: 3,
+            length: 2,
             child: Scaffold(
               appBar: AppBar(
                 title: Text(snapshot.data?.name ?? ""),
                 actions: snapshot.hasData
                     ? [
-                        IconButton(
-                          onPressed: () => Get.to(() => const VeunueNotificationPage()),
-                          icon: FutureBuilder<List<BookingModel>>(
-                            future: controller.fetchBookingListFuture,
-                            builder: (context, snapshot) {
-                              int pendingCount = snapshot.data?.where((element) => element.status == BookingStatusEnum.pending).length ?? 0;
-                              bool isActive = pendingCount.isGreaterThan(0);
-                              String label = pendingCount.toString();
-
-                              return Badge(
-                                isLabelVisible: isActive,
-                                label: Text(label),
-                                child: const Icon(Symbols.notifications_rounded),
-                              );
-                            },
-                          ),
-                        ),
                         PopupMenuButton(
                           itemBuilder: (context) {
                             return [
@@ -62,10 +44,16 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                               ),
                             ];
                           },
-                          onSelected: (value) {
+                          onSelected: (value) async {
                             switch (value) {
                               case "edit":
-                                Get.toNamed(Routes.venueEdit.replaceFirst(":venueId", snapshot.requireData.id), arguments: snapshot.requireData);
+                                var result = await Get.toNamed(Routes.venueEdit.replaceFirst(":venueId", snapshot.requireData.id), arguments: snapshot.requireData);
+
+                                if (result == true) {
+                                  controller.isUpdated = true;
+                                  controller.fetchVenue(snapshot.requireData.id);
+                                  controller.update();
+                                }
                                 break;
                               case "delete":
                                 Get.dialog(AlertDialog(
@@ -106,7 +94,6 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                 bottom: const TabBar(
                   tabs: [
                     Tab(text: "Details"),
-                    Tab(text: "Schedule"),
                     Tab(text: "Units"),
                   ],
                 ),
@@ -131,7 +118,6 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       const DetailsView(),
-                      ScheduleView(),
                       SlotsView(venueId: venue.id),
                     ],
                   );
