@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../schedule/presentation/pages/schedule_page.dart';
@@ -14,9 +15,9 @@ class HomePage extends GetWidget<HomePageController> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const DashboardPage(),
-      const SizedBox(),
+      // const SizedBox(),
       const SchedulePage(),
-      const SizedBox(),
+      // const SizedBox(),
       const ProfilePage(),
     ];
 
@@ -33,31 +34,31 @@ class HomePage extends GetWidget<HomePageController> {
           bottomNavigationBar: NavigationBar(
             selectedIndex: controller.currentIndex,
             onDestinationSelected: controller.changeIndex,
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Symbols.dashboard_rounded),
-                selectedIcon: Icon(Symbols.dashboard_rounded, fill: 1),
-                label: 'Dashboard',
+                icon: const Icon(Symbols.dashboard_rounded),
+                selectedIcon: const Icon(Symbols.dashboard_rounded, fill: 1),
+                label: LocaleKeys.dashboard.tr,
               ),
+              // NavigationDestination(
+              //   icon: Icon(Symbols.chat_rounded),
+              //   selectedIcon: Icon(Symbols.chat_rounded, fill: 1),
+              //   label: 'Messages',
+              // ),
               NavigationDestination(
-                icon: Icon(Symbols.chat_rounded),
-                selectedIcon: Icon(Symbols.chat_rounded, fill: 1),
-                label: 'Messages',
+                icon: const Icon(Symbols.calendar_month_rounded),
+                selectedIcon: const Icon(Symbols.calendar_month_rounded, fill: 1),
+                label: LocaleKeys.schedule.tr,
               ),
+              // NavigationDestination(
+              //   icon: Icon(Symbols.notifications_rounded),
+              //   selectedIcon: Icon(Symbols.notifications_rounded, fill: 1),
+              //   label: 'Notifications',
+              // ),
               NavigationDestination(
-                icon: Icon(Symbols.calendar_month_rounded),
-                selectedIcon: Icon(Symbols.calendar_month_rounded, fill: 1),
-                label: 'Schedule',
-              ),
-              NavigationDestination(
-                icon: Icon(Symbols.notifications_rounded),
-                selectedIcon: Icon(Symbols.notifications_rounded, fill: 1),
-                label: 'Notifications',
-              ),
-              NavigationDestination(
-                icon: Icon(Symbols.account_circle),
-                selectedIcon: Icon(Symbols.account_circle, fill: 1),
-                label: 'Profile',
+                icon: const Icon(Symbols.account_circle),
+                selectedIcon: const Icon(Symbols.account_circle, fill: 1),
+                label: LocaleKeys.profile.tr,
               ),
             ],
           ),

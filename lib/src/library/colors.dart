@@ -1,11 +1,11 @@
 import 'dart:ui';
 
-class Colors {
+class UntitledUiColors {
   /// These are the main neutral, brand and semantic colors that make up the majority of the colors used in the design system and components.
-  PrimaryColors primary = PrimaryColors();
+  static PrimaryColors primary = PrimaryColors();
 
   /// Along with primary colors, it's helpful to have a selection of secondary colors to use in components such as pills, alerts and labels. These secondary colors should be used sparingly or as accents, while the primary color(s) should take precedence.
-  SecondaryColors secondary = SecondaryColors();
+  static SecondaryColors secondary = SecondaryColors();
 }
 
 class PrimaryColors {

@@ -2,24 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import '../../../venues/presentation/controllers/venue_list_page_controller.dart';
+import 'package:sport_nest_flutter/src/data/models/venue_model.dart';
+import '../../../../services/data_async_service.dart';
+import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/params/create_booking_param.dart';
 
-import '../../../../data/models/venue_model.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
+import '../../../../core/services/notification_service.dart';
 
 class CreateBookingPageController extends GetxController {
   final String initialVenueId = Get.parameters['venueId']!;
 
+  List<VenueModel> venues = DataAsyncService.instance.venueList;
+
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-
-  List<VenueModel> venues = [];
-  Future<List<UnitModel>>? units;
+  List<UnitModel> units = [];
 
   CustomerModel? customer;
 
@@ -29,7 +31,7 @@ class CreateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = await VenueListPageController.instance.fetchVenueListFuture!;
+    units = venues.firstWhere((v) => v.id == initialVenueId).unitList;
 
     update();
   }
@@ -39,7 +41,7 @@ class CreateBookingPageController extends GetxController {
 
     formKey.currentState?.patchValue({"unitId": null});
 
-    units = FirebaseFirestoreSource().fetchUnitList(value);
+    units = venues.firstWhere((v) => v.id == value).unitList;
 
     update();
   }
@@ -55,6 +57,7 @@ class CreateBookingPageController extends GetxController {
       final date = formData['date'] as DateTime;
       final startTime = formData['startTime'] as DateTime;
       final endTime = formData['endTime'] as DateTime;
+      final price = units.firstWhere((u) => u.id == unitId).price;
 
       final startDateTime = Timestamp.fromDate(DateTime(
         date.year,
@@ -76,12 +79,21 @@ class CreateBookingPageController extends GetxController {
         unitId: unitId,
         startTime: startDateTime,
         endTime: endDateTime,
+        price: price,
         customerId: customer?.id ?? '',
-        createdBy: AuthService().currentUser!.uid,
+        createdBy: AuthService.instance.currentUserModel!.id,
       );
 
       try {
-        await FirebaseFirestoreSource().createBooking(newBooking);
+        var data = await FirebaseFirestoreSource().createBooking(newBooking);
+
+        // After successful booking creation, schedule notification
+        await NotificationService().scheduleBookingNotification(
+          bookingId: data.numericId,
+          title: 'Upcoming Booking',
+          body: 'Your booking at ${venues.firstWhere((v) => v.id == venueId).name} is scheduled for ${newBooking.startTime.toDate().formatDate()}',
+          scheduledDate: newBooking.startTime.toDate().subtract(const Duration(minutes: 10)), // Notify 10 minutes before
+        );
 
         Get.back(result: true);
       } catch (e) {

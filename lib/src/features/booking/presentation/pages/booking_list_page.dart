@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../services/app_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/booking_list_page_controller.dart';
@@ -27,12 +27,12 @@ class BookingListPage extends GetView<BookingListPageController> {
           builder: (context, snapshot) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Bookings'.isHardcoded),
+                title: Text(LocaleKeys.bookings.tr),
                 actions: snapshot.hasData
                     ? [
                         IconButton(
                           icon: const Icon(Symbols.add_rounded),
-                          tooltip: 'Add Booking'.isHardcoded,
+                          tooltip: LocaleKeys.addBooking.tr,
                           onPressed: () => Get.toNamed(Routes.bookingCreate.replaceFirst(':id', snapshot.requireData.first.venueId!)),
                         ),
                       ]
@@ -71,14 +71,14 @@ class BookingListWidget extends StatelessWidget {
         if (snapshot.hasError) {
           return ListIndicator(
             icon: Symbols.today_rounded,
-            label: "Failed to load booking".isHardcoded,
+            label: LocaleKeys.failedToLoadBooking.tr,
           );
         }
 
         if (snapshot.data!.isEmpty) {
           return ListIndicator(
             icon: Symbols.today_rounded,
-            label: "You don't have any booking".isHardcoded,
+            label: LocaleKeys.youDontHaveAnyBooking.tr,
           );
         }
 
@@ -164,7 +164,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                       ),
                     ),
                     Chip(
-                      label: Text(booking.status!.toDisplayString()),
+                      label: Text(booking.status.toDisplayString()),
                     ),
                   ],
                 ),

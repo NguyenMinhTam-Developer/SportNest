@@ -1,6 +1,8 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
-import '../../shared/extensions/hardcode.dart';
+import '../../../../generated/locales.g.dart';
 
 enum BookingStatusEnum {
   pending,
@@ -8,7 +10,7 @@ enum BookingStatusEnum {
   cancelled,
   unknown;
 
-  static BookingStatusEnum fromString(String status) {
+  static BookingStatusEnum? fromString(String? status) {
     switch (status) {
       case 'pending':
         return BookingStatusEnum.pending;
@@ -37,13 +39,13 @@ enum BookingStatusEnum {
   String toDisplayString() {
     switch (this) {
       case BookingStatusEnum.pending:
-        return 'Pending'.isHardcoded;
+        return LocaleKeys.pending.tr;
       case BookingStatusEnum.confirmed:
-        return 'Confirmed'.isHardcoded;
+        return LocaleKeys.confirmed.tr;
       case BookingStatusEnum.cancelled:
-        return 'Cancelled'.isHardcoded;
+        return LocaleKeys.cancelled.tr;
       default:
-        return 'Unknown'.isHardcoded;
+        return LocaleKeys.unknown.tr;
     }
   }
 
@@ -70,6 +72,19 @@ enum BookingStatusEnum {
         return const Color(0xFFFECDCA);
       default:
         return const Color(0xFFE0E0E0);
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case BookingStatusEnum.confirmed:
+        return Symbols.event_available_rounded;
+      case BookingStatusEnum.pending:
+        return Symbols.pending_rounded;
+      case BookingStatusEnum.cancelled:
+        return Symbols.cancel_rounded;
+      default:
+        return Symbols.event_busy_rounded;
     }
   }
 }

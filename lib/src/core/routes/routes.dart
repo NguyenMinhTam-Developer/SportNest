@@ -10,6 +10,7 @@ abstract class Routes {
   static const home = '/';
 
   static const profileEdit = '/profile/edit';
+  static const language = '/language';
 
   static const _venues = '/venues';
   static const venues = _venues;
@@ -40,4 +41,6 @@ abstract class Routes {
   static const customerCreate = '$_customers/create';
   static const customerDetail = '$_customers/:customerId';
   static const customerEdit = '$_customers/:customerId/edit';
+
+  static const String feedback = '/feedback';
 }

@@ -1,4 +1,7 @@
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../services/language_service.dart';
 
 extension XDateTime on DateTime {
   bool isSameDate(DateTime other) {
@@ -9,8 +12,14 @@ extension XDateTime on DateTime {
     return year == other.year && month == other.month;
   }
 
+  String formatDate() {
+    final languageService = Get.find<LanguageService>();
+    return DateFormat.yMMMMEEEEd(languageService.currentLocale.languageCode).format(this);
+  }
+
   String formatTime() {
-    return DateFormat('h:mm a').format(this);
+    final languageService = Get.find<LanguageService>();
+    return DateFormat('HH:mm', languageService.currentLocale.languageCode).format(this);
   }
 
   DateTime get firstDayOfWeek {
@@ -23,6 +32,7 @@ extension XDateTime on DateTime {
 
   String getWeekdayName(int index) {
     final date = DateTime.now().subtract(Duration(days: DateTime.now().weekday - index - 1));
-    return DateFormat('EEE').format(date); // 'EEEE' gives the full name of the weekday
+    final languageService = Get.find<LanguageService>();
+    return DateFormat('EEE', languageService.currentLocale.languageCode).format(date);
   }
 }

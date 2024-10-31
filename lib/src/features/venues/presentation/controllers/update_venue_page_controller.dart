@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
-import 'venue_detail_page_controller.dart';
-import 'venue_list_page_controller.dart';
+import '../../../../services/data_async_service.dart';
 
 class UpdateVenuePageController extends GetxController {
+  final String venueId = Get.parameters['venueId']!;
+  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+
   late VenueModel initialVenue;
 
   bool isLoading = false;
@@ -42,27 +44,25 @@ class UpdateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.currentUser!.uid,
+            createdBy: AuthService.instance.currentUserModel!.id,
           ),
         );
-
-        await VenueDetailPageController.instance.fetchVenue(initialVenue.id);
-
-        await VenueListPageController.instance.fetchVenues();
 
         isLoading = false;
         update();
 
+        await dataAsyncService.fetchVenueList();
+
         Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Venue updated successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.venueUpdatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to update venue'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToUpdateVenue.tr,
         );
       } finally {
         isLoading = false;
@@ -76,7 +76,7 @@ class UpdateVenuePageController extends GetxController {
 
   @override
   void onInit() {
-    initialVenue = Get.arguments as VenueModel;
+    initialVenue = dataAsyncService.venueList.firstWhere((venue) => venue.id == venueId);
     super.onInit();
   }
 }

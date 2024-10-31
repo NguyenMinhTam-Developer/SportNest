@@ -2,16 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sport_nest_flutter/src/services/authentication_service.dart';
-import 'package:sport_nest_flutter/src/shared/extensions/x_datetime.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
+import 'package:sport_nest_flutter/src/services/data_async_service.dart';
+import 'package:sport_nest_flutter/src/services/language_service.dart';
+import '../../../../shared/extensions/x_datetime.dart';
 
 import '../../../../core/routes/pages.dart';
 import '../../../../data/enums/view_mode_enum.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
+import '../../../dashboard/presentation/controllers/dashboard_page_controller.dart';
 
 class SchedulePageController extends GetxController {
+  final languageService = Get.find<LanguageService>();
+
+  final dataAsyncService = Get.find<DataAsyncService>();
+
   List<VenueModel> venueList = [];
   List<BookingModel> bookingList = [];
 
@@ -24,26 +31,21 @@ class SchedulePageController extends GetxController {
       case ViewMode.day:
         // if selectedDate is today, return "Today"
         if (selectedDate.isSameDate(DateTime.now())) {
-          return "Today";
+          return LocaleKeys.today.tr;
         }
-        return DateFormat('EEEE, MMM d').format(selectedDate);
+        return selectedDate.formatDate();
       case ViewMode.week:
         final firstDayOfWeek = selectedDate.firstDayOfWeek;
         final lastDayOfWeek = selectedDate.lastDayOfWeek;
-        return '${DateFormat('MMM d').format(firstDayOfWeek)} - ${DateFormat('MMM d').format(lastDayOfWeek)}';
+        return '${firstDayOfWeek.day} - ${lastDayOfWeek.day}, ${DateFormat('MMMM, yyyy', languageService.currentLocale.languageCode).format(selectedDate)}';
       case ViewMode.month:
-        final firstDayOfMonth = DateTime(selectedDate.year, selectedDate.month, 1);
-        final lastDayOfMonth = DateTime(selectedDate.year, selectedDate.month + 1, 0);
-        return '${DateFormat('MMM d').format(firstDayOfMonth)} - ${DateFormat('MMM d').format(lastDayOfMonth)}, ${selectedDate.year}';
+        return DateFormat('MMMM, yyyy', languageService.currentLocale.languageCode).format(selectedDate).capitalizeFirst!;
     }
   }
 
-  Future<void> fetchVenueList() async {
-    venueList = await FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUser!.uid);
-    update();
-  }
-
   Future<void> fetchBookingList() async {
+    if (selectedVenue == null) return;
+
     DateTime from;
     DateTime to;
 
@@ -67,13 +69,6 @@ class SchedulePageController extends GetxController {
       from: Timestamp.fromDate(from),
       to: Timestamp.fromDate(to),
     );
-
-    print("Fetching booking list from $from to $to");
-    print("Booking list: ${bookingList.length}");
-
-    for (var booking in bookingList) {
-      print(booking.startTime?.toDate());
-    }
 
     update();
   }
@@ -170,18 +165,22 @@ class SchedulePageController extends GetxController {
   Future<void> onBookingItemPressed(BookingModel booking) async {
     var result = await Get.toNamed(Routes.bookingDetail.replaceAll(':venueId', booking.venueId!).replaceAll(':bookingId', booking.id!));
 
-    print("Return after press booking detail is $result");
+    print("result: $result");
 
     if (result == true) {
-      fetchBookingList();
+      await fetchBookingList();
+      DashboardPageController.instance.refreshDashboard();
     }
   }
 
   Future<void> onAddBooking() async {
     var result = await Get.toNamed(Routes.bookingCreate.replaceAll(':venueId', selectedVenue!.id));
 
+    print("result: $result");
+
     if (result == true) {
-      fetchBookingList();
+      await fetchBookingList();
+      DashboardPageController.instance.refreshDashboard();
     }
   }
 
@@ -195,7 +194,7 @@ class SchedulePageController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await fetchVenueList();
+    venueList = await dataAsyncService.fetchVenueListFuture;
 
     selectedDate = DateTime.now();
     selectedVenue = venueList.firstOrNull;

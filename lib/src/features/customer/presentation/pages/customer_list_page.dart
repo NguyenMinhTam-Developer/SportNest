@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/customer_model.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/customer_list_page_controller.dart';
@@ -21,11 +21,11 @@ class CustomerListPage extends GetView<CustomerListPageController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Customers'.isHardcoded),
+            title: Text(LocaleKeys.myCustomers.tr),
             actions: [
               IconButton(
                 icon: const Icon(Symbols.person_add_alt_rounded),
-                tooltip: 'Add Customer'.isHardcoded,
+                tooltip: '${LocaleKeys.add.tr} ${LocaleKeys.customer.tr}',
                 onPressed: controller.onAddCustomerPressed,
               ),
             ],
@@ -36,7 +36,7 @@ class CustomerListPage extends GetView<CustomerListPageController> {
                 child: TextField(
                   onChanged: controller.searchCustomers,
                   decoration: InputDecoration(
-                    hintText: 'Search name or phone number'.isHardcoded,
+                    hintText: LocaleKeys.searchCustomerHint.tr,
                     prefixIcon: const Icon(Symbols.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
@@ -79,7 +79,7 @@ class CustomerListWidget extends StatelessWidget {
             if (snapshot.hasError) {
               return ListIndicator(
                 icon: Symbols.error_rounded,
-                label: "Failed to load customers".isHardcoded,
+                label: LocaleKeys.failedToLoad.tr,
               );
             }
 
@@ -87,7 +87,7 @@ class CustomerListWidget extends StatelessWidget {
               if (customers.isEmpty) {
                 return ListIndicator(
                   icon: Symbols.person_rounded,
-                  label: "No customers found".isHardcoded,
+                  label: LocaleKeys.emptyCustomerListLabel.tr,
                 );
               }
 

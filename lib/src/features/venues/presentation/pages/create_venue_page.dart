@@ -5,11 +5,11 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/layouts/page_loading_indicator.dart';
 import '../controllers/create_venue_page_controller.dart';
@@ -23,7 +23,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text('Create Venue'.isHardcoded)),
+          appBar: AppBar(title: Text(LocaleKeys.createVenue.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -35,12 +35,12 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: "Name".isHardcoded,
+                    labelText: LocaleKeys.venueName.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       decoration: InputDecoration(
-                        hintText: "Enter venue name".isHardcoded,
+                        hintText: LocaleKeys.enterVenueName.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -50,12 +50,12 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Address".isHardcoded,
+                    labelText: LocaleKeys.address.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "address",
                       decoration: InputDecoration(
-                        hintText: "Enter venue address".isHardcoded,
+                        hintText: LocaleKeys.enterVenueAddress.tr,
                         suffixIcon: const Icon(Symbols.place_rounded),
                       ),
                       keyboardType: TextInputType.streetAddress,
@@ -71,15 +71,15 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     children: [
                       Expanded(
                         child: InputLabel(
-                          labelText: "Open Time".isHardcoded,
+                          labelText: LocaleKeys.openTime.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "openTime",
                             inputType: InputType.time,
                             format: DateFormat("h:mm aa"),
-                            decoration: InputDecoration(
-                              hintText: "HH:mm".isHardcoded,
-                              suffixIcon: const Icon(Symbols.sunny),
+                            decoration: const InputDecoration(
+                              hintText: "HH:mm",
+                              suffixIcon: Icon(Symbols.sunny),
                             ),
                             keyboardType: TextInputType.streetAddress,
                             textInputAction: TextInputAction.next,
@@ -91,15 +91,15 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                       ),
                       Expanded(
                         child: InputLabel(
-                          labelText: "Close Time".isHardcoded,
+                          labelText: LocaleKeys.closeTime.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "closeTime",
                             inputType: InputType.time,
                             format: DateFormat("h:mm aa"),
-                            decoration: InputDecoration(
-                              hintText: "HH:mm".isHardcoded,
-                              suffixIcon: const Icon(Symbols.bedtime_rounded),
+                            decoration: const InputDecoration(
+                              hintText: "HH:mm",
+                              suffixIcon: Icon(Symbols.bedtime_rounded),
                             ),
                             keyboardType: TextInputType.streetAddress,
                             textInputAction: TextInputAction.next,
@@ -112,12 +112,12 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     ],
                   ),
                   InputLabel(
-                    labelText: "Description".isHardcoded,
+                    labelText: LocaleKeys.description.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "description",
                       decoration: InputDecoration(
-                        hintText: "Enter venue description".isHardcoded,
+                        hintText: LocaleKeys.enterVenueDescription.tr,
                       ),
                       minLines: 5,
                       maxLines: 5,
@@ -147,7 +147,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: "Create Venue".isHardcoded,
+                label: LocaleKeys.create.tr,
               ),
             ),
           ),

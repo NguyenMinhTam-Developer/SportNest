@@ -1,24 +1,42 @@
 import 'package:get/get.dart';
+import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 
+import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import 'unit_list_page_controller.dart';
+import '../../../../services/data_async_service.dart';
 
 class UnitDetailPageController extends GetxController {
-  Future<UnitModel>? fetchUnitFuture;
+  final String _venueId = Get.parameters['venueId']!;
+  final String _unitId = Get.parameters['unitId']!;
+
+  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+  final VenueDetailPageController venueDetailPageController = VenueDetailPageController.instance;
+
   UnitModel? unit;
 
   Future<void> fetchUnit(String id) async {
-    fetchUnitFuture = FirebaseFirestoreSource().fetchUnit(id);
-    unit = await fetchUnitFuture;
+    await venueDetailPageController.fetchVenue();
+    unit = dataAsyncService.venueList.firstWhereOrNull((venue) => venue.id == _venueId)?.unitList.firstWhereOrNull((unit) => unit.id == id);
     update();
+  }
+
+  Future<void> onUnitEditPressed() async {
+    var result = await Get.toNamed(
+      Routes.unitEdit.replaceFirst(":venueId", _venueId).replaceFirst(":unitId", _unitId),
+      arguments: unit,
+    );
+
+    if (result == true) {
+      await fetchUnit(_unitId);
+    }
   }
 
   Future<void> deleteUnit() async {
     await FirebaseFirestoreSource().deleteUnit(unit!.id);
-    await UnitListPageController.instance.fetchUnits(unit!.venueId);
+    await VenueDetailPageController.instance.fetchVenue();
 
-    Get.back();
+    Get.back(closeOverlays: true);
   }
 
   static UnitDetailPageController get instance {
@@ -31,7 +49,15 @@ class UnitDetailPageController extends GetxController {
 
   @override
   void onInit() {
-    fetchUnit(Get.parameters['unitId']!);
+    unit = DataAsyncService.instance.venueList
+        .firstWhereOrNull(
+          (venue) => venue.id == _venueId,
+        )
+        ?.unitList
+        .firstWhereOrNull(
+          (unit) => unit.id == _unitId,
+        );
+
     super.onInit();
   }
 }

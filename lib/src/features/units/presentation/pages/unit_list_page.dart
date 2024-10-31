@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../services/app_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/unit_list_page_controller.dart';
@@ -27,12 +27,12 @@ class UnitListPage extends GetView<UnitListPageController> {
           builder: (context, snapshot) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Units'.isHardcoded),
+                title: Text(LocaleKeys.units.tr),
                 actions: snapshot.hasData
                     ? [
                         IconButton(
                           icon: const Icon(Symbols.add_rounded),
-                          tooltip: 'Add Unit'.isHardcoded,
+                          tooltip: LocaleKeys.addUnit.tr,
                           onPressed: () => Get.toNamed(Routes.unitCreate.replaceFirst(':id', snapshot.requireData.first.venueId)),
                         ),
                       ]
@@ -71,14 +71,14 @@ class UnitListWidget extends StatelessWidget {
         if (snapshot.hasError) {
           return ListIndicator(
             icon: Symbols.error_rounded,
-            label: "Failed to load unit".isHardcoded,
+            label: LocaleKeys.failedToLoadUnits.tr,
           );
         }
 
         if (snapshot.data!.isEmpty) {
           return ListIndicator(
             icon: Symbols.category_rounded,
-            label: "You don't have any unit".isHardcoded,
+            label: LocaleKeys.noUnitsFound.tr,
           );
         }
 
@@ -96,6 +96,7 @@ class UnitListWidget extends StatelessWidget {
 
             return UnitItemWidget(
               unit: unit,
+              onDetailPressed: () {},
             );
           },
         );
@@ -104,18 +105,20 @@ class UnitListWidget extends StatelessWidget {
   }
 }
 
-class UnitItemWidget extends GetWidget<UnitListPageController> {
+class UnitItemWidget extends StatelessWidget {
   const UnitItemWidget({
     super.key,
     required this.unit,
+    required this.onDetailPressed,
   });
 
   final UnitModel unit;
+  final VoidCallback onDetailPressed;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => controller.onDetailPressed(unit),
+      onTap: onDetailPressed,
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
         clipBehavior: Clip.none,

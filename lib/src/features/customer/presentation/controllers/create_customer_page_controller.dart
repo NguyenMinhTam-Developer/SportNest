@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/create_customer_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
 
 class CreateCustomerPageController extends GetxController {
   Future<CustomerModel>? createCustomerFuture;
@@ -27,7 +27,7 @@ class CreateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            createdBy: AuthService.instance.currentUser!.uid,
+            createdBy: AuthService.instance.currentUserModel!.id,
           ),
         );
 
@@ -36,15 +36,15 @@ class CreateCustomerPageController extends GetxController {
         Get.back(result: true);
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Customer created successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.customerCreatedSuccessfully.tr,
         );
 
         update();
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to create customer'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToCreateCustomer.tr,
         );
       }
     } else {

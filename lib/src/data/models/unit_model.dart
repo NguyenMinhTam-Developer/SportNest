@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UnitModel {
   final String id;
   final String name;
-  final double price;
+  final num price;
   final String status;
   final String venueId;
   final String type; // New field
@@ -15,25 +17,26 @@ class UnitModel {
     required this.type, // New field
   });
 
-  factory UnitModel.fromJson(Map<String, dynamic> json) {
+  factory UnitModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    var doc = snapshot.data() ?? {};
+
     return UnitModel(
-      id: json['id'],
-      name: json['name'],
-      price: json['price'],
-      status: json['status'],
-      venueId: json['venueId'],
-      type: json['type'] ?? "",
+      id: snapshot.id,
+      name: doc['name'],
+      price: doc['price'],
+      status: doc['status'],
+      venueId: doc['venueId'],
+      type: doc['type'] ?? "",
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'price': price,
       'status': status,
       'venueId': venueId,
-      'type': type, // New field
+      'type': type,
     };
   }
 

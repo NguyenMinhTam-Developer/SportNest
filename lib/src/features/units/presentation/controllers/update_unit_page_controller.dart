@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
+
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import 'unit_detail_page_controller.dart';
-import 'unit_list_page_controller.dart';
-import '../../../../shared/extensions/hardcode.dart';
 
 class UpdateUnitPageController extends GetxController {
   late UnitModel initialUnit;
@@ -35,23 +34,19 @@ class UpdateUnitPageController extends GetxController {
           ),
         );
 
-        await UnitDetailPageController.instance.fetchUnit(initialUnit.id);
-
-        await UnitListPageController.instance.fetchUnits(initialUnit.venueId);
-
         isLoading = false;
         update();
 
-        Get.back();
+        Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Unit updated successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.unitUpdatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to update unit'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToUpdateUnit.tr,
         );
       } finally {
         isLoading = false;

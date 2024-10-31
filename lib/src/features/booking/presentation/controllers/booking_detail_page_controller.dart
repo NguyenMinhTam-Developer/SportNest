@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/params/update_booking_status_param.dart';
-
+import '../../../../data/params/update_booking_payment_status_param.dart';
 import '../../../../data/enums/booking_status_enum.dart';
+import '../../../../data/enums/payment_status_enum.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
+import '../../../../core/services/notification_service.dart';
 
 class BookingDetailPageController extends GetxController {
   late final String venueId;
@@ -18,38 +22,77 @@ class BookingDetailPageController extends GetxController {
     update();
   }
 
-  Future<void> deleteBooking(String id) async {
-    await FirebaseFirestoreSource().deleteBooking(id);
+  Future<void> deleteBooking(BookingModel booking) async {
+    try {
+      await NotificationService().cancelBookingNotification(
+        booking.numericId,
+      );
 
-    isUpdated = true;
-
-    Get.back(result: true);
+      await FirebaseFirestoreSource().deleteBooking(bookingId);
+      isUpdated = true;
+      Get.back(result: true);
+    } catch (e) {
+      Get.snackbar(
+        LocaleKeys.error.tr,
+        LocaleKeys.failedToDeleteBooking.tr,
+        snackPosition: SnackPosition.TOP,
+      );
+    }
   }
 
-  Future<void> onRejectPressed() async {
-    fetchBookingFuture = FirebaseFirestoreSource().updateBookingStatus(
-      UpdateBookingStatusParam(
-        id: bookingId,
-        status: BookingStatusEnum.cancelled,
-      ),
-    );
+  void updateBookingStatus(BookingStatusEnum status) async {
+    try {
+      final booking = await FirebaseFirestoreSource().updateBookingStatus(
+        UpdateBookingStatusParam(
+          id: bookingId,
+          status: status,
+        ),
+      );
 
-    isUpdated = true;
+      isUpdated = true;
 
-    update();
+      if (status == BookingStatusEnum.cancelled) {
+        await NotificationService().cancelBookingNotification(
+          booking.numericId,
+        );
+      } else {
+        await NotificationService().scheduleBookingNotification(
+          bookingId: booking.numericId,
+          title: 'Upcoming Booking',
+          body: 'Your booking at ${booking.venue?.name} is scheduled for ${booking.startTime?.toDate().formatDate()}',
+          scheduledDate: booking.startTime!.toDate().subtract(const Duration(minutes: 10)),
+        );
+      }
+
+      fetchBooking(bookingId);
+      update();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to update booking status',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
-  Future<void> onConfirmPressed() async {
-    fetchBookingFuture = FirebaseFirestoreSource().updateBookingStatus(
-      UpdateBookingStatusParam(
-        id: bookingId,
-        status: BookingStatusEnum.confirmed,
-      ),
-    );
-
-    isUpdated = true;
-
-    update();
+  void updatePaymentStatus(String bookingId, PaymentStatusEnum status) async {
+    try {
+      await FirebaseFirestoreSource().updateBookingPaymentStatus(
+        UpdateBookingPaymentStatusParam(
+          id: bookingId,
+          paymentStatus: status,
+        ),
+      );
+      isUpdated = true;
+      fetchBooking(bookingId);
+      update();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to update payment status',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   @override

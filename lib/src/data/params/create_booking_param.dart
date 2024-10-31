@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../enums/booking_status_enum.dart';
+import '../enums/payment_status_enum.dart';
 
 class CreateBookingParam {
   final String venueId;
@@ -8,6 +9,7 @@ class CreateBookingParam {
   final String customerId;
   final Timestamp startTime;
   final Timestamp endTime;
+  final num price;
   final String createdBy;
 
   CreateBookingParam({
@@ -16,6 +18,7 @@ class CreateBookingParam {
     required this.customerId,
     required this.startTime,
     required this.endTime,
+    required this.price,
     required this.createdBy,
   });
 
@@ -27,6 +30,8 @@ class CreateBookingParam {
       'startTime': startTime,
       'endTime': endTime,
       'status': BookingStatusEnum.confirmed.toJson(),
+      'paymentStatus': PaymentStatusEnum.pending.toJson(),
+      'price': price,
       'createdBy': createdBy,
       'createdAt': Timestamp.now(),
     };

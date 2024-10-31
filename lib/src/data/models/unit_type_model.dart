@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
+
 class UnitTypeModel {
   final String id;
   final String name;
@@ -5,6 +8,23 @@ class UnitTypeModel {
   final int index;
 
   UnitTypeModel({required this.id, required this.name, required this.code, required this.index});
+
+  String get localeName {
+    switch (code) {
+      case 'tennis':
+        return LocaleKeys.tennis.tr;
+      case 'basketball':
+        return LocaleKeys.basketball.tr;
+      case 'football':
+        return LocaleKeys.football.tr;
+      case 'table_tennis':
+        return LocaleKeys.tableTennis.tr;
+      case 'badminton':
+        return LocaleKeys.badminton.tr;
+      default:
+        return name;
+    }
+  }
 
   factory UnitTypeModel.fromJson(Map<String, dynamic> json) {
     return UnitTypeModel(

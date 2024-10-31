@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../data/models/customer_model.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/customer_detail_page_controller.dart';
@@ -29,11 +29,11 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                     return [
                       PopupMenuItem(
                         value: "edit",
-                        child: Text("Edit".isHardcoded),
+                        child: Text(LocaleKeys.edit.tr),
                       ),
                       PopupMenuItem(
                         value: "delete",
-                        child: Text("Delete".isHardcoded),
+                        child: Text(LocaleKeys.delete.tr),
                       ),
                     ];
                   },
@@ -45,11 +45,11 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                       case "delete":
                         Get.dialog(AlertDialog(
                           title: Text(
-                            "Delete Customer".isHardcoded,
+                            LocaleKeys.deleteCustomer.tr,
                             style: AppTypography.heading5.semiBold,
                           ),
                           content: Text(
-                            "Are you sure you want to delete this customer?".isHardcoded,
+                            LocaleKeys.areYouSureYouWantToDeleteThisCustomer.tr,
                             style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                           ),
                           actions: [
@@ -58,7 +58,7 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                               style: TextButton.styleFrom(
                                 foregroundColor: AppColor.neutralColor.shade100,
                               ),
-                              child: Text("Cancel".isHardcoded),
+                              child: Text(LocaleKeys.cancel.tr),
                             ),
                             FilledButton(
                               onPressed: () {
@@ -68,7 +68,7 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                               style: FilledButton.styleFrom(
                                 backgroundColor: AppColor.errorColor.main,
                               ),
-                              child: Text("Delete".isHardcoded),
+                              child: Text(LocaleKeys.delete.tr),
                             ),
                           ],
                         ));
@@ -87,7 +87,7 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                 if (snapshot.hasError) {
                   return ListIndicator(
                     icon: Symbols.error_rounded,
-                    label: "Failed to load customer detail".isHardcoded,
+                    label: LocaleKeys.failedToLoadCustomerDetail.tr,
                   );
                 }
 
@@ -115,10 +115,10 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
       gap: 16.h,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildInfoItem("Name".isHardcoded, customer.name),
-        _buildInfoItem("Phone".isHardcoded, customer.phoneNumber),
-        _buildInfoItem("Email".isHardcoded, customer.email),
-        _buildInfoItem("Address".isHardcoded, customer.address),
+        _buildInfoItem(LocaleKeys.customerName.tr, customer.name),
+        _buildInfoItem(LocaleKeys.phoneNumber.tr, customer.phoneNumber),
+        _buildInfoItem(LocaleKeys.email.tr, customer.email),
+        _buildInfoItem(LocaleKeys.address.tr, customer.address),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
@@ -19,12 +20,6 @@ class ProfilePage extends GetView<ProfilePageController> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Profile'),
-            actions: [
-              IconButton(
-                icon: const Icon(Symbols.settings_rounded),
-                onPressed: () {},
-              ),
-            ],
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -33,7 +28,7 @@ class ProfilePage extends GetView<ProfilePageController> {
               gap: 8.h,
               children: [
                 Text(
-                  "Profile",
+                  LocaleKeys.profile.tr,
                   style: AppTypography.bodySmall.medium.copyWith(
                     color: AppColor.neutralColor.shade60,
                   ),
@@ -43,21 +38,56 @@ class ProfilePage extends GetView<ProfilePageController> {
                   gap: 4.h,
                   children: [
                     ProfileMenuItem(
-                      onPressed: () => Get.toNamed(Routes.profileEdit),
+                      onPressed: controller.onPersonalInformationPressed,
                       icon: Symbols.person_rounded,
-                      title: "Personal Information",
+                      title: LocaleKeys.personalInformation.tr,
                     ),
                     ProfileMenuItem(
                       onPressed: () => Get.toNamed(Routes.venues),
                       icon: Symbols.store_rounded,
-                      title: "My Venues",
+                      title: LocaleKeys.myVenues.tr,
                     ),
                     ProfileMenuItem(
                       onPressed: () => Get.toNamed(Routes.customers),
                       icon: Symbols.groups_rounded,
-                      title: "My Customers",
+                      title: LocaleKeys.myCustomers.tr,
                     ),
                   ],
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  LocaleKeys.settings.tr,
+                  style: AppTypography.bodySmall.medium.copyWith(
+                    color: AppColor.neutralColor.shade60,
+                  ),
+                ).marginSymmetric(horizontal: 16.w),
+
+                // Language
+                ProfileMenuItem(
+                  onPressed: controller.onLanguagePressed,
+                  icon: Symbols.language_rounded,
+                  title: LocaleKeys.languages.tr,
+                ),
+
+                Text(
+                  LocaleKeys.other.tr,
+                  style: AppTypography.bodySmall.medium.copyWith(
+                    color: AppColor.neutralColor.shade60,
+                  ),
+                ).marginSymmetric(horizontal: 16.w),
+
+                // // Add Feedback menu item
+                // ProfileMenuItem(
+                //   onPressed: () => Get.toNamed(Routes.feedback),
+                //   icon: Symbols.feedback_rounded,
+                //   title: LocaleKeys.sendFeedback.tr,
+                // ),
+
+                // Logout menu item
+                ProfileMenuItem(
+                  onPressed: controller.onLogoutPressed,
+                  icon: Symbols.logout_rounded,
+                  title: LocaleKeys.logout.tr,
                 ),
               ],
             ),

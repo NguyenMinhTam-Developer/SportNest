@@ -4,12 +4,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 import '../../../../services/app_service.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/layouts/page_loading_indicator.dart';
 import '../controllers/update_unit_page_controller.dart';
@@ -23,7 +23,7 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text('Update Unit'.isHardcoded)),
+          appBar: AppBar(title: Text(LocaleKeys.updateUnit.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -35,13 +35,13 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: "Name".isHardcoded,
+                    labelText: LocaleKeys.slotName.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       initialValue: controller.initialUnit.name,
                       decoration: InputDecoration(
-                        hintText: "Enter unit name".isHardcoded,
+                        hintText: LocaleKeys.enterSlotName.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -51,13 +51,13 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Price".isHardcoded,
+                    labelText: LocaleKeys.price.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "price",
                       initialValue: controller.initialUnit.price.toString(),
                       decoration: InputDecoration(
-                        hintText: "Enter unit price".isHardcoded,
+                        hintText: LocaleKeys.enterSlotPrice.tr,
                       ),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
@@ -71,18 +71,18 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Type".isHardcoded,
+                    labelText: LocaleKeys.type.tr,
                     isRequired: true,
                     child: FormBuilderDropdown<String>(
                       name: "type",
                       initialValue: controller.initialUnit.type,
                       decoration: InputDecoration(
-                        hintText: "Select unit type".isHardcoded,
+                        hintText: LocaleKeys.selectSlotType.tr,
                       ),
                       items: AppService.instance.unitTypes
                           .map((type) => DropdownMenuItem(
                                 value: type.id,
-                                child: Text(type.name),
+                                child: Text(type.localeName),
                               ))
                           .toList(),
                       validator: FormBuilderValidators.compose([
@@ -109,7 +109,7 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: "Update Unit".isHardcoded,
+                label: LocaleKeys.update.tr,
               ),
             ),
           ),
