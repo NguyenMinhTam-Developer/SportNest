@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../library/colors.dart';
 import '../enums/booking_status_enum.dart';
+import '../enums/payment_status_enum.dart';
 import 'venue_model.dart';
 
 import 'customer_model.dart';
@@ -13,7 +14,9 @@ class BookingModel {
   final String? customerId;
   final Timestamp? startTime;
   final Timestamp? endTime;
-  final BookingStatusEnum? status;
+  final BookingStatusEnum status;
+  final PaymentStatusEnum paymentStatus;
+  final num? price;
 
   final String? createdBy;
   final String? updatedBy;
@@ -24,6 +27,18 @@ class BookingModel {
   UnitModel? unit;
   CustomerModel? customer;
 
+  int get numericId {
+    if (id == null) return 0;
+
+    // Convert string to consistent numeric value within 32-bit integer range
+    int numeric = 0;
+    for (int i = 0; i < id!.length; i++) {
+      numeric = ((numeric * 31) % 0x7FFFFFFF) + (id!.codeUnitAt(i) % 0x7FFFFFFF);
+      numeric = numeric % 0x7FFFFFFF; // Keep within 31-bit positive range
+    }
+    return numeric;
+  }
+
   BookingModel({
     required this.id,
     required this.venueId,
@@ -32,6 +47,8 @@ class BookingModel {
     required this.endTime,
     required this.customerId,
     required this.status,
+    required this.paymentStatus,
+    required this.price,
     this.createdBy,
     this.createdAt,
     this.updatedBy,
@@ -49,7 +66,9 @@ class BookingModel {
         startTime: data['startTime'],
         endTime: data['endTime'],
         customerId: data['customerId'],
-        status: BookingStatusEnum.fromString(data['status']),
+        status: BookingStatusEnum.fromString(data['status']) ?? BookingStatusEnum.unknown,
+        paymentStatus: PaymentStatusEnum.fromString(data['paymentStatus']) ?? PaymentStatusEnum.unknown,
+        price: data['price'],
         createdBy: data['createdBy'],
         updatedBy: data['updatedBy'],
         createdAt: data['createdAt'],
@@ -88,12 +107,8 @@ class BookingModel {
       SecondaryColors().yellow,
     ];
 
-    // Generate a hash code from the customer ID
-    int hash = id.hashCode;
-
-    int colorIndex = hash % colorList.length;
-
-    // Return the color from the list
+    // Use the new numericId instead of hashCode
+    int colorIndex = numericId % colorList.length;
     return colorList[colorIndex];
   }
 }

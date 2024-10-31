@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../shared/extensions/hardcode.dart';
-import 'unit_list_page_controller.dart';
 
 class CreateUnitPageController extends GetxController {
   bool isLoading = false;
@@ -32,21 +31,19 @@ class CreateUnitPageController extends GetxController {
           ),
         );
 
-        await UnitListPageController.instance.fetchUnits(venueId);
-
         isLoading = false;
         update();
 
         Get.back(result: true);
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Unit created successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.unitCreatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to create unit'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToCreateUnit.tr,
         );
       }
     } else {

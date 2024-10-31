@@ -1,36 +1,32 @@
 import 'package:get/get.dart';
-import '../../../../core/routes/pages.dart';
-import '../../../../services/authentication_service.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 
-import '../../../../data/models/venue_model.dart';
+import '../../../../core/routes/pages.dart';
 import '../../../../services/data_async_service.dart';
 
 class VenueListPageController extends GetxController {
-  Future<List<VenueModel>>? fetchVenueListFuture;
-
-  Future<void> fetchVenues() async {
-    fetchVenueListFuture = FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUser!.uid);
-
-    DataAsyncService.instance?.refreshSchedulePage();
-
-    update();
-  }
+  final DataAsyncService dataAsyncService = DataAsyncService.instance;
 
   Future<void> onAddVenuePressed() async {
     var result = await Get.toNamed(Routes.createVenue);
 
     if (result == true) {
-      fetchVenues();
+      dataAsyncService.fetchVenueList();
     }
   }
 
   Future<void> onVenuePressed(String id) async {
-    var result = await Get.toNamed(Routes.venueDetail.replaceFirst(":venueId", id));
+    var result = await Get.toNamed(
+      Routes.venueDetail.replaceFirst(":venueId", id),
+      arguments: dataAsyncService.venueList.firstWhere((venue) => venue.id == id),
+    );
 
     if (result == true) {
-      fetchVenues();
+      dataAsyncService.fetchVenueList();
     }
+  }
+
+  Future<void> onRefresh() async {
+    await dataAsyncService.fetchVenueList();
   }
 
   static VenueListPageController get instance {
@@ -39,12 +35,6 @@ class VenueListPageController extends GetxController {
     } catch (e) {
       return Get.put(VenueListPageController());
     }
-  }
-
-  @override
-  void onInit() {
-    fetchVenues();
-    super.onInit();
   }
 }
 

@@ -1,3 +1,3 @@
-extension Hardcode on String {
+extension HardCodeString on String {
   String get isHardcoded => this;
 }

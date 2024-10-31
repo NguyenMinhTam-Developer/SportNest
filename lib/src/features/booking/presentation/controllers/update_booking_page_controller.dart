@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/core/routes/pages.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../core/routes/pages.dart';
 
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/customer_model.dart';
@@ -11,9 +12,7 @@ import '../../../../data/models/unit_model.dart';
 import '../../../../data/params/update_booking_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
-import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
-import 'booking_detail_page_controller.dart';
+import '../../../../core/services/notification_service.dart';
 
 class UpdateBookingPageController extends GetxController {
   BookingModel initialBooking = Get.arguments as BookingModel;
@@ -34,7 +33,7 @@ class UpdateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = FirebaseFirestoreSource().fetchVenueList(AuthService().currentUser!.uid);
+    venues = FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUserModel!.id);
     formKey.currentState?.fields['venueId']?.didChange(initialBooking.venueId);
     formKey.currentState?.patchValue({"venueId": initialBooking.venueId});
 
@@ -87,30 +86,40 @@ class UpdateBookingPageController extends GetxController {
         endTime.minute,
       ));
 
-      final updatedBooking = UpdateBookingParam(
+      final updatedBookingParam = UpdateBookingParam(
         id: _bookingId,
         venueId: venueId,
         unitId: unitId,
         customerId: initialBooking.customerId ?? '',
         startTime: startDateTime,
         endTime: endDateTime,
-        updatedBy: AuthService().currentUser!.uid,
+        updatedBy: AuthService.instance.currentUserModel!.id,
         updatedAt: Timestamp.now(),
       );
 
       try {
-        await FirebaseFirestoreSource().updateBooking(updatedBooking);
+        final booking = await FirebaseFirestoreSource().updateBooking(updatedBookingParam);
+
+        await NotificationService().cancelBookingNotification(
+          booking.numericId,
+        );
+
+        await NotificationService().scheduleBookingNotification(
+          bookingId: booking.numericId,
+          title: LocaleKeys.upcomingBooking.tr,
+          body: LocaleKeys.upcomingBookingMessage.trParams({"venueName": booking.venue?.name ?? ''}),
+          scheduledDate: booking.startTime!.toDate().subtract(const Duration(minutes: 10)),
+        );
 
         Get.back(result: true);
-
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Booking updated successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.bookingUpdatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to update booking'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToUpdateBooking.tr,
         );
       } finally {
         isLoading = false;

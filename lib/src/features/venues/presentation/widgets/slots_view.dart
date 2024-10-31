@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/features/venues/presentation/controllers/venue_detail_page_controller.dart';
-import '../../../units/presentation/controllers/unit_list_page_controller.dart';
+
 import '../../../units/presentation/pages/unit_list_page.dart';
+import '../controllers/venue_detail_page_controller.dart';
 
 class SlotsView extends StatefulWidget {
-  const SlotsView({super.key, required this.venueId});
-
-  final String venueId;
+  const SlotsView({super.key});
 
   @override
   State<SlotsView> createState() => _SlotsViewState();
@@ -19,15 +17,31 @@ class _SlotsViewState extends State<SlotsView> with AutomaticKeepAliveClientMixi
     super.build(context);
 
     return Scaffold(
-      body: GetBuilder<UnitListPageController>(
-        init: UnitListPageController(),
-        builder: (_) {
-          return UnitListWidget(future: _.fetchUnitListFuture);
+      body: GetBuilder<VenueDetailPageController>(
+        builder: (controller) {
+          var units = controller.venue?.unitList ?? [];
+
+          return ListView.separated(
+            itemCount: units.length,
+            padding: const EdgeInsets.all(16),
+            clipBehavior: Clip.none,
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 16);
+            },
+            itemBuilder: (BuildContext context, int index) {
+              var unit = units[index];
+
+              return UnitItemWidget(
+                unit: unit,
+                onDetailPressed: () => controller.onUnitItemPressed(unit),
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "unit_fab",
-        onPressed: VenueDetailPageController.instance.onUnitAddPress,
+        onPressed: VenueDetailPageController.instance.onUnitAddPressed,
         child: const Icon(Icons.add),
       ),
     );

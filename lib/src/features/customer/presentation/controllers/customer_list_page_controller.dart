@@ -13,7 +13,7 @@ class CustomerListPageController extends GetxController {
   bool isSelectMode = Get.arguments ?? false;
 
   Future<void> fetchCustomers() async {
-    fetchCustomerListFuture = FirebaseFirestoreSource().fetchCustomerList(AuthService.instance.currentUser!.uid);
+    fetchCustomerListFuture = FirebaseFirestoreSource().fetchCustomerList(AuthService.instance.currentUserModel!.id);
     allCustomers = await fetchCustomerListFuture ?? [];
     filteredCustomers.value = allCustomers;
     update();

@@ -5,13 +5,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/layouts/page_loading_indicator.dart';
 import '../controllers/update_booking_page_controller.dart';
@@ -26,7 +26,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
         return PageLoadingIndicator(
           focedLoading: controller.isLoading,
           scaffold: Scaffold(
-            appBar: AppBar(title: Text('Update Booking'.isHardcoded)),
+            appBar: AppBar(title: Text(LocaleKeys.updateBooking.tr)),
             body: SingleChildScrollView(
               clipBehavior: Clip.none,
               padding: EdgeInsets.all(16.w),
@@ -38,7 +38,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     InputLabel(
-                      labelText: "Venue".isHardcoded,
+                      labelText: LocaleKeys.venue.tr,
                       isRequired: true,
                       child: FutureBuilder<List<VenueModel>>(
                         future: controller.venues,
@@ -47,7 +47,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             name: "venueId",
                             initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialBooking.venueId)?.id,
                             decoration: InputDecoration(
-                              hintText: "Select venue".isHardcoded,
+                              hintText: LocaleKeys.selectVenue.tr,
                             ),
                             items: (snapshot.data ?? [])
                                 .map((venue) => DropdownMenuItem(
@@ -64,7 +64,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       ),
                     ),
                     InputLabel(
-                      labelText: "Unit".isHardcoded,
+                      labelText: LocaleKeys.slots.tr,
                       isRequired: true,
                       child: FutureBuilder<List<UnitModel>>(
                         future: controller.units,
@@ -73,7 +73,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             name: "unitId",
                             initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialBooking.unitId)?.id,
                             decoration: InputDecoration(
-                              hintText: "Select unit".isHardcoded,
+                              hintText: LocaleKeys.selectSlot.tr,
                             ),
                             items: (snapshot.data ?? [])
                                 .map((unit) => DropdownMenuItem(
@@ -89,7 +89,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       ),
                     ),
                     InputLabel(
-                      labelText: "Date".isHardcoded,
+                      labelText: LocaleKeys.date.tr,
                       isRequired: true,
                       child: FormBuilderDateTimePicker(
                         name: "date",
@@ -97,7 +97,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                         inputType: InputType.date,
                         // firstDate: DateTime.now(),
                         decoration: InputDecoration(
-                          hintText: "Select date".isHardcoded,
+                          hintText: LocaleKeys.selectDate.tr,
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -110,16 +110,16 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       children: [
                         Expanded(
                           child: InputLabel(
-                            labelText: "Start Time".isHardcoded,
+                            labelText: LocaleKeys.startTime.tr,
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "startTime",
                               initialValue: controller.initialBooking.startTime!.toDate(),
                               inputType: InputType.time,
                               format: DateFormat("h:mm aa"),
-                              decoration: InputDecoration(
-                                hintText: "HH:mm".isHardcoded,
-                                suffixIcon: const Icon(Symbols.schedule),
+                              decoration: const InputDecoration(
+                                hintText: "HH:mm",
+                                suffixIcon: Icon(Symbols.schedule),
                               ),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
@@ -129,16 +129,16 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                         ),
                         Expanded(
                           child: InputLabel(
-                            labelText: "End Time".isHardcoded,
+                            labelText: LocaleKeys.endTime.tr,
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "endTime",
                               initialValue: controller.initialBooking.endTime!.toDate(),
                               inputType: InputType.time,
                               format: DateFormat("h:mm aa"),
-                              decoration: InputDecoration(
-                                hintText: "HH:mm".isHardcoded,
-                                suffixIcon: const Icon(Symbols.schedule),
+                              decoration: const InputDecoration(
+                                hintText: "HH:mm",
+                                suffixIcon: Icon(Symbols.schedule),
                               ),
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
@@ -149,14 +149,14 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       ],
                     ),
                     InputLabel(
-                      labelText: "Customer".isHardcoded,
+                      labelText: LocaleKeys.customer.tr,
                       isRequired: true,
                       child: FormBuilderTextField(
                         name: "contactName",
                         readOnly: true,
                         onTap: () => controller.onCustomerPressed(),
                         decoration: InputDecoration(
-                          hintText: "Enter contact name".isHardcoded,
+                          hintText: LocaleKeys.enterContactName.tr,
                           suffixIcon: const Icon(Symbols.contacts_rounded),
                         ),
                         validator: FormBuilderValidators.compose([
@@ -183,7 +183,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
               child: SafeArea(
                 child: ButtonComponent.primary(
                   onPressed: controller.onSubmitPressed,
-                  label: "Update Booking".isHardcoded,
+                  label: LocaleKeys.updateBooking.tr,
                 ),
               ),
             ),

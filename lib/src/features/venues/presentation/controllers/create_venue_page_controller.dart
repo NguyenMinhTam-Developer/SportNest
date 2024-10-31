@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'venue_list_page_controller.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/venue_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
 
 class CreateVenuePageController extends GetxController {
   bool isLoading = false;
@@ -38,7 +37,7 @@ class CreateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.currentUser!.uid,
+            createdBy: AuthService.instance.currentUserModel!.id,
           ),
         );
 
@@ -48,13 +47,13 @@ class CreateVenuePageController extends GetxController {
         Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Venue created successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.venueCreatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to create venue'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToCreateVenue.tr,
         );
       }
     } else {

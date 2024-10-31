@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
+import '../../../../generated/locales.g.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../core/routes/pages.dart';
 import '../../../data/sources/firebase/firebase_authentication_source.dart';
@@ -37,7 +38,10 @@ class SignInPageController extends GetxController {
 
         Get.offAllNamed(Routes.home);
       } on AuthenticationException {
-        Get.snackbar("Alert!", "Email or password is incorrect");
+        Get.snackbar(
+          LocaleKeys.alert.tr,
+          LocaleKeys.emailPasswordIncorrect.tr,
+        );
       } finally {
         _isLoading = false;
         update();

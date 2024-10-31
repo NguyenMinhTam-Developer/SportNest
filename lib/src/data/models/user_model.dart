@@ -1,19 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String id;
   final String username;
   final String email;
+  final String phoneNumber;
+
+  String get firstName => username.split(' ').first;
+  String get lastName => username.split(' ').last;
 
   UserModel({
     required this.id,
     required this.username,
     required this.email,
+    this.phoneNumber = "",
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return UserModel(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
+      id: snapshot.id,
+      username: snapshot.data()?['username'] ?? "",
+      email: snapshot.data()?['email'] ?? "",
+      phoneNumber: snapshot.data()?['phoneNumber'] ?? "",
     );
   }
 
@@ -22,6 +30,7 @@ class UserModel {
       'id': id,
       'username': username,
       'email': email,
+      'phoneNumber': phoneNumber,
     };
   }
 }

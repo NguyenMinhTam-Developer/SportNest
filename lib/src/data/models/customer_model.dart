@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../library/colors.dart';
-
 class CustomerModel {
   final String id;
   final String name;

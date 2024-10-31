@@ -4,12 +4,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../services/app_service.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/layouts/page_loading_indicator.dart';
 import '../controllers/create_unit_page_controller.dart';
@@ -23,7 +23,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text('Create Unit'.isHardcoded)),
+          appBar: AppBar(title: Text(LocaleKeys.createUnit.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -35,12 +35,12 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: "Name".isHardcoded,
+                    labelText: LocaleKeys.slotName.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       decoration: InputDecoration(
-                        hintText: "Enter unit name".isHardcoded,
+                        hintText: LocaleKeys.enterSlotName.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -50,12 +50,12 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Price".isHardcoded,
+                    labelText: LocaleKeys.price.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "price",
                       decoration: InputDecoration(
-                        hintText: "Enter unit price".isHardcoded,
+                        hintText: LocaleKeys.enterSlotPrice.tr,
                       ),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
@@ -69,13 +69,13 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: "Type".isHardcoded,
+                    labelText: LocaleKeys.type.tr,
                     isRequired: true,
                     child: FormBuilderDropdown<String>(
                       name: "type",
                       initialValue: AppService.instance.unitTypes.firstOrNull?.id,
                       decoration: InputDecoration(
-                        hintText: "Select unit type".isHardcoded,
+                        hintText: LocaleKeys.selectSlotType.tr,
                       ),
                       items: AppService.instance.unitTypes
                           .map((type) => DropdownMenuItem(
@@ -107,7 +107,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: "Create Unit".isHardcoded,
+                label: LocaleKeys.createUnit.tr,
               ),
             ),
           ),

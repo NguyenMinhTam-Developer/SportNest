@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/update_customer_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../services/authentication_service.dart';
-import '../../../../shared/extensions/hardcode.dart';
 import 'customer_detail_page_controller.dart';
 import 'customer_list_page_controller.dart';
 
@@ -34,7 +34,7 @@ class UpdateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            updatedBy: AuthService.instance.currentUser!.uid,
+            updatedBy: AuthService.instance.currentUserModel!.id,
           ),
         );
 
@@ -47,13 +47,13 @@ class UpdateCustomerPageController extends GetxController {
         Get.back();
 
         Get.snackbar(
-          'Success!'.isHardcoded,
-          'Customer updated successfully'.isHardcoded,
+          LocaleKeys.success.tr,
+          LocaleKeys.customerUpdatedSuccessfully.tr,
         );
       } catch (e) {
         Get.snackbar(
-          'Alert!'.isHardcoded,
-          'Failed to update customer'.isHardcoded,
+          LocaleKeys.alert.tr,
+          LocaleKeys.failedToUpdateCustomer.tr,
         );
       }
     } else {

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/features/venues/presentation/controllers/venue_detail_page_controller.dart';
 
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';

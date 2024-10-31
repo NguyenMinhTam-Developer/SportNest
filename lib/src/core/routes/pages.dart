@@ -24,7 +24,9 @@ import '../../features/customer/presentation/pages/update_customer_page.dart';
 import '../../features/dashboard/presentation/controllers/dashboard_page_controller.dart';
 import '../../features/home/presentation/controllers/home_page_controller.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/profile/presentation/controllers/language_page_controller.dart';
 import '../../features/profile/presentation/controllers/profile_page_controller.dart';
+import '../../features/profile/presentation/pages/language_page.dart';
 import '../../features/schedule/presentation/controllers/schedule_page_controller.dart';
 import '../../features/units/presentation/controllers/create_unit_page_controller.dart';
 import '../../features/units/presentation/controllers/unit_detail_page_controller.dart';
@@ -44,6 +46,10 @@ import '../../features/venues/presentation/pages/venue_detail_page.dart';
 import '../../features/venues/presentation/pages/venue_list_page.dart';
 import '../../modules/splash/controllers/splash_page_controller.dart';
 import '../../modules/splash/pages/splash_page.dart';
+import '../../features/profile/presentation/pages/edit_profile_page.dart';
+import '../../features/profile/presentation/controllers/edit_profile_controller.dart';
+import '../../features/feedback/feedback_page_controller.dart';
+import '../../features/feedback/pages/feedback_page.dart';
 
 part 'routes.dart';
 
@@ -169,6 +175,29 @@ abstract class AppPages {
           ],
         ),
       ],
+    ),
+
+    // Profile
+    GetPage(
+      name: Routes.profileEdit,
+      page: () => const EditProfilePage(),
+      binding: EditProfileBinding(),
+    ),
+
+    // Language
+    GetPage(
+      name: Routes.language,
+      page: () => const LanguagePage(),
+      binding: LanguagePageBinding(),
+    ),
+
+    // Feedback
+    GetPage(
+      name: Routes.feedback,
+      page: () => const FeedbackPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => FeedbackPageController());
+      }),
     ),
   ];
 

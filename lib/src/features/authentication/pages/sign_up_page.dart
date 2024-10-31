@@ -5,17 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../../generated/locales.g.dart';
 
 import '../../../core/design/color.dart';
 import '../../../core/design/typography.dart';
 import '../../../core/routes/pages.dart';
 import '../../../shared/components/button.dart';
 import '../../../shared/components/input_label.dart';
-import '../../../shared/extensions/hardcode.dart';
 import '../../../shared/layouts/ek_auto_layout.dart';
 import '../../../shared/layouts/page_loading_indicator.dart';
 import '../controllers/sign_up_page_controller.dart';
-import '../widgets/social_media_widget.dart';
 
 class SignUpPage extends GetWidget<SignUpPageController> {
   const SignUpPage({super.key});
@@ -35,30 +34,17 @@ class SignUpPage extends GetWidget<SignUpPageController> {
                   _buildHeader(),
                   SizedBox(height: 24.h),
                   _buildForm(),
-                  SizedBox(height: 24.h),
-                  EKAutoLayout(
-                    direction: EKAutoLayoutDirection.horizontal,
-                    gap: 24.w,
-                    children: [
-                      const Expanded(child: Divider()),
-                      Text(
-                        "Or Sign in with".isHardcoded,
-                        style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  SizedBox(height: 24.h),
-                  const SocialAuthWidget(),
+                  // SizedBox(height: 24.h),
+                  // const SocialAuthWidget(),
                   SizedBox(height: 24.h),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Already a member? ".isHardcoded,
+                      text: LocaleKeys.alreadyAMember.tr,
                       style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade100),
                       children: [
                         TextSpan(
-                          text: "Sign In".isHardcoded,
+                          text: LocaleKeys.signIn.tr,
                           style: AppTypography.bodyMedium.semiBold.copyWith(color: AppColor.primaryColor.main),
                           recognizer: TapGestureRecognizer()..onTap = () => Get.offNamed(Routes.signIn),
                         ),
@@ -82,11 +68,11 @@ class SignUpPage extends GetWidget<SignUpPageController> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           InputLabel(
-            labelText: "Email".isHardcoded,
+            labelText: LocaleKeys.email.tr,
             child: FormBuilderTextField(
               name: "email",
               decoration: InputDecoration(
-                hintText: "Enter your email".isHardcoded,
+                hintText: LocaleKeys.enterYourEmail.tr,
               ),
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -98,11 +84,11 @@ class SignUpPage extends GetWidget<SignUpPageController> {
           ),
           SizedBox(height: 16.h),
           InputLabel(
-            labelText: "Username".isHardcoded,
+            labelText: LocaleKeys.username.tr,
             child: FormBuilderTextField(
               name: "username",
               decoration: InputDecoration(
-                hintText: "Enter your username".isHardcoded,
+                hintText: LocaleKeys.enterYourUsername.tr,
               ),
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
@@ -113,14 +99,14 @@ class SignUpPage extends GetWidget<SignUpPageController> {
           ),
           SizedBox(height: 16.h),
           InputLabel(
-            labelText: "Password".isHardcoded,
+            labelText: LocaleKeys.password.tr,
             child: FormBuilderTextField(
               name: "password",
               obscureText: controller.obscureText,
               keyboardType: TextInputType.visiblePassword,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
-                hintText: "Enter your password".isHardcoded,
+                hintText: LocaleKeys.enterYourPassword.tr,
                 suffixIcon: IconButton(
                   onPressed: controller.onPasswordVisibilityPressed,
                   icon: Icon(
@@ -157,20 +143,20 @@ class SignUpPage extends GetWidget<SignUpPageController> {
                 child: RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                    text: "I Agree with ".isHardcoded,
+                    text: "${LocaleKeys.iAgreeWith.tr}  ",
                     style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade100),
                     children: [
                       TextSpan(
-                        text: "Terms of Service".isHardcoded,
+                        text: LocaleKeys.termsOfService.tr,
                         style: AppTypography.bodyMedium.semiBold.copyWith(color: AppColor.primaryColor.main),
                         recognizer: TapGestureRecognizer()..onTap = () {},
                       ),
                       TextSpan(
-                        text: " and ".isHardcoded,
+                        text: " ${LocaleKeys.and.tr} ",
                         style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade100),
                       ),
                       TextSpan(
-                        text: "Privacy Policy".isHardcoded,
+                        text: LocaleKeys.privacyPolicy.tr,
                         style: AppTypography.bodyMedium.semiBold.copyWith(color: AppColor.primaryColor.main),
                         recognizer: TapGestureRecognizer()..onTap = () {},
                       ),
@@ -183,7 +169,7 @@ class SignUpPage extends GetWidget<SignUpPageController> {
           SizedBox(height: 24.h),
           ButtonComponent.primary(
             onPressed: controller.isAgree ? controller.onSubmitPressed : null,
-            label: "Register".isHardcoded,
+            label: LocaleKeys.register.tr,
           ),
         ],
       ),
@@ -195,12 +181,12 @@ class SignUpPage extends GetWidget<SignUpPageController> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          "Getting started!".isHardcoded,
+          LocaleKeys.gettingStarted.tr,
           style: AppTypography.heading5.semiBold,
         ),
         SizedBox(height: 8.h),
         Text(
-          "Create account to start using Sport Nest".isHardcoded,
+          LocaleKeys.createAccountToStartUsingSportNest.tr,
           style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
         ),
       ],

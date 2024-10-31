@@ -1,7 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'generated/locales.g.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:get_storage/get_storage.dart';
 
 import 'firebase_options.dart';
 import 'src/core/design/color.dart';
@@ -11,15 +15,28 @@ import 'src/core/routes/pages.dart';
 import 'src/services/app_service.dart';
 import 'src/services/authentication_service.dart';
 import 'src/services/data_async_service.dart';
+import 'src/core/services/notification_service.dart';
+import 'src/services/language_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize GetStorage
+  await GetStorage.init();
+
+  // Initialize Firebase first
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Then initialize other services
   await initServices();
+
+  // Initialize timezone data
+  tz.initializeTimeZones();
+
+  // Initialize notification service
+  await NotificationService().initialize();
 
   runApp(const App());
 }
@@ -28,6 +45,7 @@ Future<void> initServices() async {
   await Get.putAsync(() => AuthService().init(), permanent: true);
   await Get.putAsync(() => AppService().init(), permanent: true);
   await Get.putAsync(() => DataAsyncService().init(), permanent: true);
+  await Get.putAsync(() => LanguageService().init(), permanent: true);
 }
 
 class App extends StatelessWidget {
@@ -77,6 +95,15 @@ class App extends StatelessWidget {
               ),
             ),
             initialRoute: AppPages.initialRoute,
+            translationsKeys: AppTranslation.translations,
+            supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN'), Locale('ko', 'KR')],
+            fallbackLocale: const Locale('en', 'US'),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            locale: Get.find<LanguageService>().currentLocale,
           ),
         );
       },
