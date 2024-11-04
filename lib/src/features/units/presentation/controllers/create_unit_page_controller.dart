@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../data/models/unit_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
+import '../../../../controllers/application_controller.dart';
 
 class CreateUnitPageController extends GetxController {
   bool isLoading = false;
@@ -22,7 +22,7 @@ class CreateUnitPageController extends GetxController {
         isLoading = true;
         update();
 
-        await FirebaseFirestoreSource().createUnit(
+        await ApplicationController.instance.createUnit(
           UnitModel(
             name: name,
             price: price,

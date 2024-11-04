@@ -4,7 +4,7 @@ import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../../generated/locales.g.dart';
 import '../../../../library/colors.dart';
 import '../../../../library/typography.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 import '../../../../data/models/booking_model.dart';
 import '../../../../library/spacing.dart';
@@ -26,7 +26,7 @@ class DashboardPage extends GetWidget<DashboardPageController> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                GetBuilder<AuthService>(
+                GetBuilder<AuthenticationController>(
                   builder: (_) {
                     return Text(
                       greetingMessage(_.currentUserModel?.firstName ?? ""),

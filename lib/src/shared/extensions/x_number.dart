@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../services/language_service.dart';
+import '../../controllers/language_service.dart';
 
 extension NumberFormatX on num {
   /// Formats number to currency format
@@ -9,7 +9,7 @@ extension NumberFormatX on num {
   String toCurrency({String? symbol, bool withSymbol = true, int decimalDigits = 0}) {
     String defaultSymbol = symbol ?? '';
 
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     switch (languageService.currentLocale.languageCode) {
       case 'en':
         defaultSymbol = '\$';
@@ -35,7 +35,7 @@ extension NumberFormatX on num {
   /// Formats number with thousand separator
   /// Example: 1000000 -> 1.000.000
   String toThousandSeparator() {
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     final formatter = NumberFormat('#,###', languageService.currentLocale.languageCode);
     return formatter.format(this);
   }
@@ -43,7 +43,7 @@ extension NumberFormatX on num {
   /// Formats number to compact format
   /// Example: 1000000 -> 1Tr
   String toCompact() {
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     final formatter = NumberFormat.compact(locale: languageService.currentLocale.languageCode);
     return formatter.format(this);
   }
@@ -51,7 +51,7 @@ extension NumberFormatX on num {
   /// Formats number to percentage
   /// Example: 0.75 -> 75%
   String toPercentage({int decimalDigits = 0}) {
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     final formatter = NumberFormat.percentPattern(languageService.currentLocale.languageCode);
     formatter.maximumFractionDigits = decimalDigits;
     return formatter.format(this);

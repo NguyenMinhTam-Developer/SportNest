@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/src/services/data_async_service.dart';
-import 'package:sport_nest_flutter/src/services/language_service.dart';
+import 'package:sport_nest_flutter/src/controllers/application_controller.dart';
+import 'package:sport_nest_flutter/src/controllers/language_service.dart';
 import '../../../../../generated/locales.g.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../../../../core/design/color.dart';
@@ -22,151 +22,153 @@ class SchedulePage extends GetView<SchedulePageController> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataAsyncService>(
-      builder: (dataAsyncService) {
-        return GetBuilder<SchedulePageController>(
-          builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: _.venueList.isNotEmpty
-                  ? Row(
-                      children: [
-                        Text(controller.selectedVenue?.name ?? ""),
-                        PopupMenuButton<VenueModel>(
-                          icon: const Icon(Symbols.keyboard_arrow_down_rounded),
-                          itemBuilder: (BuildContext context) => controller.venueList
-                              .map((venue) => PopupMenuItem<VenueModel>(
-                                    value: venue,
-                                    child: Text(venue.name),
-                                  ))
-                              .toList(),
-                          onSelected: controller.onVenueChanged,
-                        ),
-                      ],
-                    )
-                  : Text(LocaleKeys.schedule.tr),
-              actions: [
-                IconButton(
-                  icon: const Icon(Symbols.today_rounded),
-                  onPressed: () {
-                    controller.selectedDate = DateTime.now();
-                    controller.update();
-                  },
-                ),
-                Builder(builder: (context) {
-                  IconData viewModeIcon;
-
-                  switch (controller.viewMode) {
-                    case ViewMode.day:
-                      viewModeIcon = Symbols.calendar_view_day_rounded;
-                      break;
-                    case ViewMode.week:
-                      viewModeIcon = Symbols.calendar_view_week_rounded;
-                      break;
-                    case ViewMode.month:
-                      viewModeIcon = Symbols.calendar_view_month_rounded;
-                      break;
-                  }
-
-                  return PopupMenuButton<ViewMode>(
-                    icon: Icon(viewModeIcon),
-                    onSelected: controller.onViewModeChanged,
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<ViewMode>>[
-                      PopupMenuItem<ViewMode>(
-                        value: ViewMode.day,
-                        child: Text(LocaleKeys.dayView.tr),
-                      ),
-                      PopupMenuItem<ViewMode>(
-                        value: ViewMode.week,
-                        child: Text(LocaleKeys.weekView.tr),
-                      ),
-                      PopupMenuItem<ViewMode>(
-                        value: ViewMode.month,
-                        child: Text(LocaleKeys.monthView.tr),
-                      ),
-                    ],
-                  );
-                }),
-              ],
-              bottom: PreferredSize(
-                preferredSize: const Size(0, 64),
-                child: SizedBox(
-                  height: 64,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFFD5D7DA), width: 1),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              InkWell(
-                                onTap: controller.onPreviousPressed,
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(8.r), bottomLeft: Radius.circular(8.r)),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                  decoration: const BoxDecoration(
-                                    border: Border(right: BorderSide(color: Color(0xFFD5D7DA), width: 1)),
-                                  ),
-                                  child: const Icon(Symbols.keyboard_arrow_left_rounded),
-                                ),
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    DateTime? date = await showDatePicker(
-                                      context: context,
-                                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                                      initialDate: controller.selectedDate,
-                                      firstDate: DateTime(controller.selectedDate.year - 100, 1, 1),
-                                      lastDate: DateTime(controller.selectedDate.year + 100, 12, 31),
-                                    );
-
-                                    if (date != null) {
-                                      controller.onDateSelect(date);
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    child: Center(
-                                      child: Text(
-                                        controller.selectedDateString,
-                                        style: AppTypography.bodyMedium.semiBold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: controller.onNextPressed,
-                                borderRadius: BorderRadius.only(topRight: Radius.circular(8.r), bottomRight: Radius.circular(8.r)),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                  decoration: const BoxDecoration(
-                                    border: Border(left: BorderSide(color: Color(0xFFD5D7DA), width: 1)),
-                                  ),
-                                  child: const Icon(Symbols.keyboard_arrow_right_rounded),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+    return GetBuilder<SchedulePageController>(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          title: Obx(() {
+            if (ApplicationController.instance.venueList.value.isNotEmpty) {
+              return Row(
+                children: [
+                  Text(controller.selectedVenue?.name ?? ""),
+                  PopupMenuButton<VenueModel>(
+                    icon: const Icon(Symbols.keyboard_arrow_down_rounded),
+                    itemBuilder: (BuildContext context) => ApplicationController.instance.venueList.value
+                        .map((venue) => PopupMenuItem<VenueModel>(
+                              value: venue,
+                              child: Text(venue.name),
+                            ))
+                        .toList(),
+                    onSelected: controller.onVenueChanged,
                   ),
+                ],
+              );
+            } else {
+              return Text(LocaleKeys.schedule.tr);
+            }
+          }),
+          actions: [
+            IconButton(
+              icon: const Icon(Symbols.today_rounded),
+              onPressed: () {
+                controller.selectedDate = DateTime.now();
+                controller.update();
+              },
+            ),
+            Builder(builder: (context) {
+              IconData viewModeIcon;
+
+              switch (controller.viewMode) {
+                case ViewMode.day:
+                  viewModeIcon = Symbols.calendar_view_day_rounded;
+                  break;
+                case ViewMode.week:
+                  viewModeIcon = Symbols.calendar_view_week_rounded;
+                  break;
+                case ViewMode.month:
+                  viewModeIcon = Symbols.calendar_view_month_rounded;
+                  break;
+              }
+
+              return PopupMenuButton<ViewMode>(
+                icon: Icon(viewModeIcon),
+                onSelected: controller.onViewModeChanged,
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<ViewMode>>[
+                  PopupMenuItem<ViewMode>(
+                    value: ViewMode.day,
+                    child: Text(LocaleKeys.dayView.tr),
+                  ),
+                  PopupMenuItem<ViewMode>(
+                    value: ViewMode.week,
+                    child: Text(LocaleKeys.weekView.tr),
+                  ),
+                  PopupMenuItem<ViewMode>(
+                    value: ViewMode.month,
+                    child: Text(LocaleKeys.monthView.tr),
+                  ),
+                ],
+              );
+            }),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size(0, 64),
+            child: SizedBox(
+              height: 64,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFFD5D7DA), width: 1),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          InkWell(
+                            onTap: controller.onPreviousPressed,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(8.r), bottomLeft: Radius.circular(8.r)),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: const BoxDecoration(
+                                border: Border(right: BorderSide(color: Color(0xFFD5D7DA), width: 1)),
+                              ),
+                              child: const Icon(Symbols.keyboard_arrow_left_rounded),
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () async {
+                                DateTime? date = await showDatePicker(
+                                  context: context,
+                                  initialEntryMode: DatePickerEntryMode.calendarOnly,
+                                  initialDate: controller.selectedDate,
+                                  firstDate: DateTime(controller.selectedDate.year - 100, 1, 1),
+                                  lastDate: DateTime(controller.selectedDate.year + 100, 12, 31),
+                                );
+
+                                if (date != null) {
+                                  controller.onDateSelect(date);
+                                }
+                              },
+                              child: SizedBox(
+                                child: Center(
+                                  child: Text(
+                                    controller.selectedDateString,
+                                    style: AppTypography.bodyMedium.semiBold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: controller.onNextPressed,
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(8.r), bottomRight: Radius.circular(8.r)),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: const BoxDecoration(
+                                border: Border(left: BorderSide(color: Color(0xFFD5D7DA), width: 1)),
+                              ),
+                              child: const Icon(Symbols.keyboard_arrow_right_rounded),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            body: Column(
+          ),
+        ),
+        body: Obx(() => Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Divider(thickness: 1.w),
-                if (_.venueList.isNotEmpty)
+                if (ApplicationController.instance.venueList.value.isNotEmpty)
                   Expanded(
                     child: ScheduleCalendarView(
                       selectedDate: controller.selectedDate,
@@ -177,7 +179,7 @@ class SchedulePage extends GetView<SchedulePageController> {
                       onBookingItemPressed: controller.onBookingItemPressed,
                     ),
                   ),
-                if (_.venueList.isEmpty)
+                if (ApplicationController.instance.venueList.value.isEmpty)
                   Expanded(
                     child: Center(
                       child: ListIndicator(
@@ -187,16 +189,14 @@ class SchedulePage extends GetView<SchedulePageController> {
                     ),
                   ),
               ],
-            ),
-            floatingActionButton: _.venueList.isNotEmpty
-                ? FloatingActionButton(
-                    onPressed: controller.onAddBooking,
-                    child: const Icon(Symbols.calendar_add_on_rounded),
-                  )
-                : null,
-          ),
-        );
-      },
+            )),
+        floatingActionButton: ApplicationController.instance.venueList.value.isNotEmpty
+            ? FloatingActionButton(
+                onPressed: controller.onAddBooking,
+                child: const Icon(Symbols.calendar_add_on_rounded),
+              )
+            : null,
+      ),
     );
   }
 }
@@ -344,7 +344,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        DateFormat('EEE', LanguageService.instance.currentLocale.languageCode).format(widget.selectedDate),
+                        DateFormat('EEE', LanguageController.instance.currentLocale.languageCode).format(widget.selectedDate),
                         style: AppTypography.bodySmall.semiBold.copyWith(color: AppColor.neutralColor.shade80),
                       ),
                       SizedBox(height: 4.w),
@@ -677,7 +677,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      DateFormat('EEE', LanguageService.instance.currentLocale.languageCode).format(widget.selectedDate.firstDayOfWeek.add(Duration(days: index))),
+                                      DateFormat('EEE', LanguageController.instance.currentLocale.languageCode).format(widget.selectedDate.firstDayOfWeek.add(Duration(days: index))),
                                       style: AppTypography.bodySmall.semiBold.copyWith(color: AppColor.neutralColor.shade80),
                                     ),
                                     SizedBox(height: 4.w),

@@ -3,9 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
 
+import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/venue_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 class CreateVenuePageController extends GetxController {
   bool isLoading = false;
@@ -30,14 +30,14 @@ class CreateVenuePageController extends GetxController {
         isLoading = true;
         update();
 
-        await FirebaseFirestoreSource().createVenue(
+        await ApplicationController.instance.createVenue(
           VenueModel(
             name: name,
             address: address,
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.currentUserModel!.id,
+            createdBy: AuthenticationController.instance.currentUserModel!.id,
           ),
         );
 

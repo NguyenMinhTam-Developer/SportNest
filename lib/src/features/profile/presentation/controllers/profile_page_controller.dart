@@ -5,7 +5,7 @@ import 'package:sport_nest_flutter/generated/locales.g.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 class ProfilePageController extends GetxController {
   void onPersonalInformationPressed() {
@@ -33,7 +33,7 @@ class ProfilePageController extends GetxController {
         FilledButton(
           onPressed: () async {
             Get.back();
-            AuthService.instance.signOut();
+            AuthenticationController.instance.signOut();
 
             Get.offAllNamed(Routes.signIn);
           },

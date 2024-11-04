@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import '../../../../../generated/locales.g.dart';
 import '../controllers/edit_profile_controller.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
@@ -17,7 +18,7 @@ class EditProfilePage extends GetView<EditProfileController> {
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
           appBar: AppBar(
-            title: const Text('Edit Profile'),
+            title: Text(LocaleKeys.editProfile.tr),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => Get.back(),
@@ -32,25 +33,25 @@ class EditProfilePage extends GetView<EditProfileController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InputLabel(
-                    labelText: 'Email',
+                    labelText: LocaleKeys.email.tr,
                     child: FormBuilderTextField(
                       name: 'email',
                       enabled: false,
                       initialValue: controller.initialUser.email,
-                      decoration: const InputDecoration(
-                        hintText: 'Your email',
+                      decoration: InputDecoration(
+                        hintText: LocaleKeys.enterYourEmail.tr,
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   InputLabel(
-                    labelText: 'Username',
+                    labelText: LocaleKeys.username.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: 'username',
                       initialValue: controller.initialUser.username,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your username',
+                      decoration: InputDecoration(
+                        hintText: LocaleKeys.enterYourUsername.tr,
                       ),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -60,12 +61,12 @@ class EditProfilePage extends GetView<EditProfileController> {
                   ),
                   const SizedBox(height: 16),
                   InputLabel(
-                    labelText: 'Phone Number',
+                    labelText: LocaleKeys.phoneNumber.tr,
                     child: FormBuilderTextField(
                       name: 'phoneNumber',
                       initialValue: controller.initialUser.phoneNumber,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your phone number',
+                      decoration: InputDecoration(
+                        hintText: LocaleKeys.enterPhoneNumber.tr,
                       ),
                       keyboardType: TextInputType.phone,
                     ),
@@ -73,7 +74,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                   const SizedBox(height: 24),
                   ButtonComponent.primary(
                     onPressed: controller.updateProfile,
-                    label: 'Save Changes',
+                    label: LocaleKeys.saveChanges.tr,
                   ),
                 ],
               ),

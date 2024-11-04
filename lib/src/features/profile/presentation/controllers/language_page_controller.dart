@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import '../../../../services/language_service.dart';
+import '../../../../controllers/language_service.dart';
 
 class LanguagePageController extends GetxController {
-  final _languageService = Get.find<LanguageService>();
+  final _languageService = Get.find<LanguageController>();
 
   final languages = [
     {'name': 'English', 'code': 'en', 'country': 'US'},

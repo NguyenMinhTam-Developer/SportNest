@@ -10,7 +10,7 @@ import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/booking_model.dart';
-import '../../../../services/app_service.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/booking_list_page_controller.dart';
@@ -155,7 +155,7 @@ class VenueBookingItemWidget extends StatelessWidget {
                           ),
 
                           Text(
-                            AppService.instance.unitTypes.firstWhere((element) => element.id == booking.unit?.type).name,
+                            ApplicationController.instance.unitTypes.value.firstWhere((element) => element.id == booking.unit?.type).name,
                             style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

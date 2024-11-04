@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sport_nest_flutter/src/data/params/create_feedback_param.dart';
 import 'package:sport_nest_flutter/src/data/sources/firebase/firebase_firestore_source.dart';
 import 'package:sport_nest_flutter/src/data/sources/firebase/firebase_storage_source.dart';
-import 'package:sport_nest_flutter/src/services/authentication_service.dart';
+import 'package:sport_nest_flutter/src/controllers/authentication_controller.dart';
 
 import '../../../generated/locales.g.dart';
 
@@ -42,7 +42,7 @@ class FeedbackPageController extends GetxController {
       final param = CreateFeedbackParam(
         title: values['title'],
         content: values['content'],
-        userId: AuthService.instance.currentUserModel!.id,
+        userId: AuthenticationController.instance.currentUserModel!.id,
         imagePaths: selectedImages,
         videoPath: selectedVideo.value,
       );

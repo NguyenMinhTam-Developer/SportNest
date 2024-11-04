@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
-import '../../../../services/app_service.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
@@ -68,26 +68,28 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                       ]),
                     ),
                   ),
-                  InputLabel(
-                    labelText: LocaleKeys.type.tr,
-                    isRequired: true,
-                    child: FormBuilderDropdown<String>(
-                      name: "type",
-                      initialValue: AppService.instance.unitTypes.firstOrNull?.id,
-                      decoration: InputDecoration(
-                        hintText: LocaleKeys.selectSlotType.tr,
+                  Obx(() {
+                    return InputLabel(
+                      labelText: LocaleKeys.type.tr,
+                      isRequired: true,
+                      child: FormBuilderDropdown<String>(
+                        name: "type",
+                        initialValue: ApplicationController.instance.unitTypes.value.firstOrNull?.id,
+                        decoration: InputDecoration(
+                          hintText: LocaleKeys.selectSlotType.tr,
+                        ),
+                        items: ApplicationController.instance.unitTypes.value
+                            .map((type) => DropdownMenuItem(
+                                  value: type.id,
+                                  child: Text(type.name),
+                                ))
+                            .toList(),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
                       ),
-                      items: AppService.instance.unitTypes
-                          .map((type) => DropdownMenuItem(
-                                value: type.id,
-                                child: Text(type.name),
-                              ))
-                          .toList(),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                  ),
+                    );
+                  }),
                 ],
               ),
             ),

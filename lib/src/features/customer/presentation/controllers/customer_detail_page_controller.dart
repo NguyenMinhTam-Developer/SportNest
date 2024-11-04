@@ -16,14 +16,15 @@ class CustomerDetailPageController extends GetxController {
   }
 
   Future<void> onEditPressed(CustomerModel customer) async {
-    customer = await Get.toNamed(
+    var result = await Get.toNamed(
       Routes.customerEdit.replaceFirst(':customerId', customer.id),
       arguments: customer,
     );
 
-    CustomerListPageController.instance.fetchCustomers();
-
-    update();
+    if (result == true) {
+      CustomerListPageController.instance.fetchCustomers();
+      update();
+    }
   }
 
   Future<void> deleteCustomer() async {

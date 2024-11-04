@@ -1,33 +1,19 @@
 import 'package:get/get.dart';
 
+import '../../../../controllers/application_controller.dart';
 import '../../../../core/routes/pages.dart';
-import '../../../../services/data_async_service.dart';
 
 class VenueListPageController extends GetxController {
-  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+  final ApplicationController applicationController = ApplicationController.instance;
 
-  Future<void> onAddVenuePressed() async {
-    var result = await Get.toNamed(Routes.createVenue);
+  void onAddVenuePressed() => Get.toNamed(
+        Routes.createVenue,
+      );
 
-    if (result == true) {
-      dataAsyncService.fetchVenueList();
-    }
-  }
-
-  Future<void> onVenuePressed(String id) async {
-    var result = await Get.toNamed(
-      Routes.venueDetail.replaceFirst(":venueId", id),
-      arguments: dataAsyncService.venueList.firstWhere((venue) => venue.id == id),
-    );
-
-    if (result == true) {
-      dataAsyncService.fetchVenueList();
-    }
-  }
-
-  Future<void> onRefresh() async {
-    await dataAsyncService.fetchVenueList();
-  }
+  void onVenuePressed(String id) => Get.toNamed(
+        Routes.venueDetail.replaceFirst(":venueId", id),
+        arguments: applicationController.venueList.value.firstWhere((venue) => venue.id == id),
+      );
 
   static VenueListPageController get instance {
     try {

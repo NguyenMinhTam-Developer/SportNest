@@ -10,7 +10,7 @@ import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';
-import '../../../../services/app_service.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/unit_list_page_controller.dart';
@@ -161,7 +161,7 @@ class UnitItemWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    AppService.instance.unitTypes.firstWhereOrNull((element) => element.id == unit.type)?.name ?? 'Unknown Type',
+                    ApplicationController.instance.unitTypes.value.firstWhereOrNull((element) => element.id == unit.type)?.name ?? 'Unknown Type',
                     style: AppTypography.bodySmall.medium.copyWith(color: AppColor.neutralColor.shade60),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

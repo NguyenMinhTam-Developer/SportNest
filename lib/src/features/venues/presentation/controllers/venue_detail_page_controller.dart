@@ -1,25 +1,22 @@
 import 'package:get/get.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/models/venue_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/data_async_service.dart';
 
 class VenueDetailPageController extends GetxController {
   final String venueId = Get.parameters['venueId']!;
-  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+  final ApplicationController applicationController = ApplicationController.instance;
 
   VenueModel? venue;
 
   Future<void> fetchVenue() async {
-    await dataAsyncService.fetchVenueList();
-    venue = dataAsyncService.venueList.firstWhereOrNull((venue) => venue.id == venueId);
+    venue = applicationController.venueList.value.firstWhereOrNull((venue) => venue.id == venueId);
     update();
   }
 
   Future<void> deleteVenue() async {
-    await FirebaseFirestoreSource().deleteVenue(venueId);
-    await dataAsyncService.fetchVenueList();
+    await applicationController.deleteVenue(venueId);
 
     Get.back(result: true, closeOverlays: true);
   }
@@ -44,7 +41,8 @@ class VenueDetailPageController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
 
-    venue = dataAsyncService.venueList.firstWhereOrNull((venue) => venue.id == venueId);
+    fetchVenue();
+
     update();
   }
 

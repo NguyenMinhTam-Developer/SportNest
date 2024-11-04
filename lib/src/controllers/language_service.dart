@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class LanguageService extends GetxController implements GetxService {
+class LanguageController extends GetxController {
   static const String _storageKey = 'selected_locale';
   final _storage = GetStorage();
 
@@ -18,9 +18,9 @@ class LanguageService extends GetxController implements GetxService {
 
   Locale currentLocale = defaultLocale;
 
-  static LanguageService instance = Get.find<LanguageService>();
+  static LanguageController instance = Get.find<LanguageController>();
 
-  Future<LanguageService> init() async {
+  Future<LanguageController> init() async {
     // Check if there's a saved locale in storage first
     final String? savedLocale = _storage.read(_storageKey);
 
