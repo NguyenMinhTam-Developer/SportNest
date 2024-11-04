@@ -3,8 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
 
+import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/unit_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 
 class UpdateUnitPageController extends GetxController {
   late UnitModel initialUnit;
@@ -24,7 +24,7 @@ class UpdateUnitPageController extends GetxController {
         isLoading = true;
         update();
 
-        await FirebaseFirestoreSource().updateUnit(
+        await ApplicationController.instance.updateUnit(
           UnitModel(
             id: initialUnit.id,
             name: name,

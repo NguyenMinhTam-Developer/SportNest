@@ -3,14 +3,13 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
 
+import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/venue_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
-import '../../../../services/data_async_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 class UpdateVenuePageController extends GetxController {
   final String venueId = Get.parameters['venueId']!;
-  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+  final ApplicationController applicationController = ApplicationController.instance;
 
   late VenueModel initialVenue;
 
@@ -36,7 +35,7 @@ class UpdateVenuePageController extends GetxController {
         isLoading = true;
         update();
 
-        await FirebaseFirestoreSource().updateVenue(
+        await ApplicationController.instance.updateVenue(
           VenueModel(
             id: initialVenue.id,
             name: name,
@@ -44,14 +43,12 @@ class UpdateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthService.instance.currentUserModel!.id,
+            createdBy: AuthenticationController.instance.currentUserModel!.id,
           ),
         );
 
         isLoading = false;
         update();
-
-        await dataAsyncService.fetchVenueList();
 
         Get.back(result: true, closeOverlays: true);
 
@@ -76,7 +73,7 @@ class UpdateVenuePageController extends GetxController {
 
   @override
   void onInit() {
-    initialVenue = dataAsyncService.venueList.firstWhere((venue) => venue.id == venueId);
+    initialVenue = applicationController.venueList.value.firstWhere((venue) => venue.id == venueId);
     super.onInit();
   }
 }

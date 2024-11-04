@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/src/data/models/venue_model.dart';
-import '../../../../services/data_async_service.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../core/routes/pages.dart';
@@ -11,13 +11,13 @@ import '../../../../data/params/create_booking_param.dart';
 
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 import '../../../../core/services/notification_service.dart';
 
 class CreateBookingPageController extends GetxController {
   final String initialVenueId = Get.parameters['venueId']!;
 
-  List<VenueModel> venues = DataAsyncService.instance.venueList;
+  List<VenueModel> venues = [];
 
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
@@ -30,6 +30,8 @@ class CreateBookingPageController extends GetxController {
   @override
   Future<void> onReady() async {
     super.onReady();
+
+    venues = ApplicationController.instance.venueList.value;
 
     units = venues.firstWhere((v) => v.id == initialVenueId).unitList;
 
@@ -81,11 +83,13 @@ class CreateBookingPageController extends GetxController {
         endTime: endDateTime,
         price: price,
         customerId: customer?.id ?? '',
-        createdBy: AuthService.instance.currentUserModel!.id,
+        createdBy: AuthenticationController.instance.currentUserModel!.id,
       );
 
       try {
         var data = await FirebaseFirestoreSource().createBooking(newBooking);
+
+        await ApplicationController.instance.asyncBookingData();
 
         // After successful booking creation, schedule notification
         await NotificationService().scheduleBookingNotification(
@@ -96,6 +100,8 @@ class CreateBookingPageController extends GetxController {
         );
 
         Get.back(result: true);
+
+        Get.snackbar('Success', 'Booking created successfully');
       } catch (e) {
         Get.snackbar('Error', 'Failed to create booking');
       } finally {

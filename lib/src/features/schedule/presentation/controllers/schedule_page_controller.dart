@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
-import 'package:sport_nest_flutter/src/services/data_async_service.dart';
-import 'package:sport_nest_flutter/src/services/language_service.dart';
+import 'package:sport_nest_flutter/src/controllers/language_service.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 
 import '../../../../core/routes/pages.dart';
@@ -15,11 +15,9 @@ import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../dashboard/presentation/controllers/dashboard_page_controller.dart';
 
 class SchedulePageController extends GetxController {
-  final languageService = Get.find<LanguageService>();
+  final languageService = Get.find<LanguageController>();
+  final applicationController = Get.find<ApplicationController>();
 
-  final dataAsyncService = Get.find<DataAsyncService>();
-
-  List<VenueModel> venueList = [];
   List<BookingModel> bookingList = [];
 
   ViewMode viewMode = ViewMode.day;
@@ -165,8 +163,6 @@ class SchedulePageController extends GetxController {
   Future<void> onBookingItemPressed(BookingModel booking) async {
     var result = await Get.toNamed(Routes.bookingDetail.replaceAll(':venueId', booking.venueId!).replaceAll(':bookingId', booking.id!));
 
-    print("result: $result");
-
     if (result == true) {
       await fetchBookingList();
       DashboardPageController.instance.refreshDashboard();
@@ -175,8 +171,6 @@ class SchedulePageController extends GetxController {
 
   Future<void> onAddBooking() async {
     var result = await Get.toNamed(Routes.bookingCreate.replaceAll(':venueId', selectedVenue!.id));
-
-    print("result: $result");
 
     if (result == true) {
       await fetchBookingList();
@@ -192,16 +186,12 @@ class SchedulePageController extends GetxController {
     }
   }
 
-  @override
-  Future<void> onInit() async {
-    venueList = await dataAsyncService.fetchVenueListFuture;
-
+  Future<void> initializeData() async {
+    print('initializeData');
     selectedDate = DateTime.now();
-    selectedVenue = venueList.firstOrNull;
+    selectedVenue = applicationController.venueList.value.firstOrNull;
 
     fetchBookingList();
-
-    super.onInit();
   }
 }
 

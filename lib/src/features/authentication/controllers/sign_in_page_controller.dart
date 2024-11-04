@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 import '../../../../generated/locales.g.dart';
+import '../../../controllers/authentication_controller.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../../core/routes/pages.dart';
 import '../../../data/sources/firebase/firebase_authentication_source.dart';
@@ -35,6 +36,8 @@ class SignInPageController extends GetxController {
           _formKey.currentState!.fields['email']!.value as String,
           _formKey.currentState!.fields['password']!.value as String,
         );
+
+        await AuthenticationController.instance.updateUserData();
 
         Get.offAllNamed(Routes.home);
       } on AuthenticationException {

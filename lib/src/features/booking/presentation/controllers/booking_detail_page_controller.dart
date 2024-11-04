@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/params/update_booking_status_param.dart';
 import '../../../../data/params/update_booking_payment_status_param.dart';
@@ -24,13 +25,15 @@ class BookingDetailPageController extends GetxController {
 
   Future<void> deleteBooking(BookingModel booking) async {
     try {
-      await NotificationService().cancelBookingNotification(
-        booking.numericId,
-      );
-
+      await NotificationService().cancelBookingNotification(booking.numericId);
       await FirebaseFirestoreSource().deleteBooking(bookingId);
+      await ApplicationController.instance.asyncBookingData();
+
       isUpdated = true;
+
       Get.back(result: true);
+
+      Get.snackbar('Success', 'Booking deleted successfully');
     } catch (e) {
       Get.snackbar(
         LocaleKeys.error.tr,
@@ -50,6 +53,8 @@ class BookingDetailPageController extends GetxController {
       );
 
       isUpdated = true;
+
+      await ApplicationController.instance.asyncBookingData();
 
       if (status == BookingStatusEnum.cancelled) {
         await NotificationService().cancelBookingNotification(
@@ -83,7 +88,11 @@ class BookingDetailPageController extends GetxController {
           paymentStatus: status,
         ),
       );
+
       isUpdated = true;
+
+      await ApplicationController.instance.asyncBookingData();
+
       fetchBooking(bookingId);
       update();
     } catch (e) {

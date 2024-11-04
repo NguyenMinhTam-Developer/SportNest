@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
-import '../../../../services/app_service.dart';
+import '../../../../controllers/application_controller.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
@@ -79,7 +79,7 @@ class UpdateUnitPage extends GetView<UpdateUnitPageController> {
                       decoration: InputDecoration(
                         hintText: LocaleKeys.selectSlotType.tr,
                       ),
-                      items: AppService.instance.unitTypes
+                      items: ApplicationController.instance.unitTypes.value
                           .map((type) => DropdownMenuItem(
                                 value: type.id,
                                 child: Text(type.localeName),

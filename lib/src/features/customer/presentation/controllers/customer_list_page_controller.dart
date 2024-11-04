@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 class CustomerListPageController extends GetxController {
   Future<List<CustomerModel>>? fetchCustomerListFuture;
@@ -13,7 +13,7 @@ class CustomerListPageController extends GetxController {
   bool isSelectMode = Get.arguments ?? false;
 
   Future<void> fetchCustomers() async {
-    fetchCustomerListFuture = FirebaseFirestoreSource().fetchCustomerList(AuthService.instance.currentUserModel!.id);
+    fetchCustomerListFuture = FirebaseFirestoreSource().fetchCustomerList(AuthenticationController.instance.currentUserModel!.id);
     allCustomers = await fetchCustomerListFuture ?? [];
     filteredCustomers.value = allCustomers;
     update();

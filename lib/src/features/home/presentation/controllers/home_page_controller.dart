@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../../services/data_async_service.dart';
+import '../../../../controllers/application_controller.dart';
 
 class HomePageController extends GetxController {
   int _currentIndex = 0;
@@ -14,7 +14,7 @@ class HomePageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    DataAsyncService.instance.fetchVenueList();
+    ApplicationController.instance.initializeApplicationData();
   }
 }
 

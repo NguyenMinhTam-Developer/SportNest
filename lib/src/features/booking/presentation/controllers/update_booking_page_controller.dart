@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../core/routes/pages.dart';
 
 import '../../../../data/models/booking_model.dart';
@@ -11,7 +12,7 @@ import '../../../../data/models/venue_model.dart';
 import '../../../../data/models/unit_model.dart';
 import '../../../../data/params/update_booking_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 import '../../../../core/services/notification_service.dart';
 
 class UpdateBookingPageController extends GetxController {
@@ -33,7 +34,7 @@ class UpdateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = FirebaseFirestoreSource().fetchVenueList(AuthService.instance.currentUserModel!.id);
+    venues = FirebaseFirestoreSource().fetchVenueList(AuthenticationController.instance.currentUserModel!.id);
     formKey.currentState?.fields['venueId']?.didChange(initialBooking.venueId);
     formKey.currentState?.patchValue({"venueId": initialBooking.venueId});
 
@@ -93,12 +94,14 @@ class UpdateBookingPageController extends GetxController {
         customerId: initialBooking.customerId ?? '',
         startTime: startDateTime,
         endTime: endDateTime,
-        updatedBy: AuthService.instance.currentUserModel!.id,
+        updatedBy: AuthenticationController.instance.currentUserModel!.id,
         updatedAt: Timestamp.now(),
       );
 
       try {
         final booking = await FirebaseFirestoreSource().updateBooking(updatedBookingParam);
+
+        await ApplicationController.instance.asyncBookingData();
 
         await NotificationService().cancelBookingNotification(
           booking.numericId,

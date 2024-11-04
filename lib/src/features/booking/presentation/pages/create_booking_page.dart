@@ -3,8 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/services/data_async_service.dart';
 import '../../../../../generated/locales.g.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
@@ -36,26 +36,24 @@ class CreateBookingPage extends GetView<CreateBookingPageController> {
                   gap: 16.h,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    GetBuilder<DataAsyncService>(
-                      builder: (_) {
-                        return InputLabel(
-                          labelText: LocaleKeys.venue.tr,
-                          isRequired: true,
-                          child: FormBuilderDropdown<String>(
-                            name: "venueId",
-                            initialValue: controller.initialVenueId,
-                            decoration: InputDecoration(
-                              hintText: LocaleKeys.selectVenue.tr,
-                            ),
-                            items: DataAsyncService.instance.venueList.map((venue) => DropdownMenuItem(value: venue.id, child: Text(venue.name))).toList(),
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(),
-                            ]),
-                            onChanged: (value) => controller.onVenueChanged(value),
+                    Obx(() {
+                      return InputLabel(
+                        labelText: LocaleKeys.venue.tr,
+                        isRequired: true,
+                        child: FormBuilderDropdown<String>(
+                          name: "venueId",
+                          initialValue: controller.initialVenueId,
+                          decoration: InputDecoration(
+                            hintText: LocaleKeys.selectVenue.tr,
                           ),
-                        );
-                      },
-                    ),
+                          items: ApplicationController.instance.venueList.value.map((venue) => DropdownMenuItem(value: venue.id, child: Text(venue.name))).toList(),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          onChanged: (value) => controller.onVenueChanged(value),
+                        ),
+                      );
+                    }),
                     InputLabel(
                       labelText: LocaleKeys.slots.tr,
                       isRequired: true,

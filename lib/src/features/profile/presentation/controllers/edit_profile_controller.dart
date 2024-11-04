@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import '../../../../data/models/user_model.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 
 class EditProfileController extends GetxController {
-  final _authService = AuthService.instance;
+  final _authService = AuthenticationController.instance;
   final formKey = GlobalKey<FormBuilderState>();
 
   late final UserModel initialUser;
@@ -35,7 +35,7 @@ class EditProfileController extends GetxController {
       );
 
       await FirebaseFirestoreSource().updateUser(updatedUser);
-      await _authService.refreshUserData();
+      await _authService.updateUserData();
 
       Get.back(closeOverlays: true);
       Get.snackbar(

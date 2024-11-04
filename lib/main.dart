@@ -12,11 +12,10 @@ import 'src/core/design/color.dart';
 import 'src/core/design/styles.dart';
 import 'src/core/design/typography.dart';
 import 'src/core/routes/pages.dart';
-import 'src/services/app_service.dart';
-import 'src/services/authentication_service.dart';
-import 'src/services/data_async_service.dart';
+import 'src/controllers/application_controller.dart';
+import 'src/controllers/authentication_controller.dart';
 import 'src/core/services/notification_service.dart';
-import 'src/services/language_service.dart';
+import 'src/controllers/language_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +29,7 @@ Future<void> main() async {
   );
 
   // Then initialize other services
-  await initServices();
+  await initGlobalControllers();
 
   // Initialize timezone data
   tz.initializeTimeZones();
@@ -41,11 +40,11 @@ Future<void> main() async {
   runApp(const App());
 }
 
-Future<void> initServices() async {
-  await Get.putAsync(() => AuthService().init(), permanent: true);
-  await Get.putAsync(() => AppService().init(), permanent: true);
-  await Get.putAsync(() => DataAsyncService().init(), permanent: true);
-  await Get.putAsync(() => LanguageService().init(), permanent: true);
+Future<void> initGlobalControllers() async {
+  await Get.putAsync(() => LanguageController().init(), permanent: true);
+
+  Get.put(AuthenticationController(), permanent: true);
+  Get.put(ApplicationController(), permanent: true);
 }
 
 class App extends StatelessWidget {
@@ -103,7 +102,7 @@ class App extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            locale: Get.find<LanguageService>().currentLocale,
+            locale: Get.find<LanguageController>().currentLocale,
           ),
         );
       },

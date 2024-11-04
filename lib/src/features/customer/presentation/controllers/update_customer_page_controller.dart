@@ -6,7 +6,7 @@ import 'package:sport_nest_flutter/generated/locales.g.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/update_customer_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 import 'customer_detail_page_controller.dart';
 import 'customer_list_page_controller.dart';
 
@@ -34,7 +34,7 @@ class UpdateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            updatedBy: AuthService.instance.currentUserModel!.id,
+            updatedBy: AuthenticationController.instance.currentUserModel!.id,
           ),
         );
 
@@ -44,7 +44,7 @@ class UpdateCustomerPageController extends GetxController {
         isLoading = false;
         update();
 
-        Get.back();
+        Get.back(result: true, closeOverlays: true);
 
         Get.snackbar(
           LocaleKeys.success.tr,

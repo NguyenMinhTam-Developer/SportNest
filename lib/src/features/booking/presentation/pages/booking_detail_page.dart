@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:sport_nest_flutter/src/shared/extensions/x_number.dart';
 import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/color.dart';
@@ -198,6 +199,12 @@ class BookingDetailPage extends GetView<BookingDetailPageController> {
                       SizedBox(height: 8.h),
                       Text(
                         booking.unit!.name,
+                        style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        booking.price?.toCurrency() ?? '0',
                         style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                         textAlign: TextAlign.center,
                       ),

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 import '../../../../shared/extensions/x_number.dart';
 
 import '../../../../core/routes/pages.dart';
@@ -68,7 +68,7 @@ class DashboardPageController extends GetxController {
     final startDate = _getStartDate(selectedTimeFrameIndex);
     final endDate = _getEndDate(selectedTimeFrameIndex);
     timeFrameBookings = await FirebaseFirestoreSource().fetchBookingsByTimeFrame(
-      AuthService.instance.currentUserModel!.id,
+      AuthenticationController.instance.currentUserModel!.id,
       startDate,
       endDate,
     );
@@ -77,6 +77,7 @@ class DashboardPageController extends GetxController {
 
   onTimeFrameSelected(int index) {
     selectedTimeFrameIndex = index;
+    update();
     fetchTimeFrameBookings();
   }
 
@@ -90,17 +91,12 @@ class DashboardPageController extends GetxController {
   }
 
   Future<void> fetchUpcomingBookings() async {
-    final bookings = await FirebaseFirestoreSource().fetchUpcomingBookingList(AuthService.instance.currentUserModel!.id);
-    upcomingBookings.addAll(bookings);
+    upcomingBookings = await FirebaseFirestoreSource().fetchUpcomingBookingList(AuthenticationController.instance.currentUserModel!.id);
     update();
   }
 
   Future<void> onBookingItemPressed(BookingModel booking) async {
-    var result = await Get.toNamed(Routes.bookingDetail.replaceAll(':venueId', booking.venueId!).replaceAll(':bookingId', booking.id!));
-
-    if (result == true) {
-      fetchUpcomingBookings();
-    }
+    await Get.toNamed(Routes.bookingDetail.replaceAll(':venueId', booking.venueId!).replaceAll(':bookingId', booking.id!));
   }
 
   @override

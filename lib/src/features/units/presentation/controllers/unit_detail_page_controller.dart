@@ -1,23 +1,22 @@
 import 'package:get/get.dart';
+import '../../../../controllers/application_controller.dart';
 import '../../../venues/presentation/controllers/venue_detail_page_controller.dart';
 
 import '../../../../core/routes/pages.dart';
 import '../../../../data/models/unit_model.dart';
-import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/data_async_service.dart';
 
 class UnitDetailPageController extends GetxController {
   final String _venueId = Get.parameters['venueId']!;
   final String _unitId = Get.parameters['unitId']!;
 
-  final DataAsyncService dataAsyncService = DataAsyncService.instance;
+  final ApplicationController applicationController = ApplicationController.instance;
   final VenueDetailPageController venueDetailPageController = VenueDetailPageController.instance;
 
   UnitModel? unit;
+  bool isUpdated = false;
 
   Future<void> fetchUnit(String id) async {
-    await venueDetailPageController.fetchVenue();
-    unit = dataAsyncService.venueList.firstWhereOrNull((venue) => venue.id == _venueId)?.unitList.firstWhereOrNull((unit) => unit.id == id);
+    unit = applicationController.venueList.value.firstWhereOrNull((venue) => venue.id == _venueId)?.unitList.firstWhereOrNull((unit) => unit.id == id);
     update();
   }
 
@@ -29,12 +28,13 @@ class UnitDetailPageController extends GetxController {
 
     if (result == true) {
       await fetchUnit(_unitId);
+      await venueDetailPageController.fetchVenue();
     }
   }
 
   Future<void> deleteUnit() async {
-    await FirebaseFirestoreSource().deleteUnit(unit!.id);
-    await VenueDetailPageController.instance.fetchVenue();
+    await applicationController.deleteUnit(unit!.id);
+    await venueDetailPageController.fetchVenue();
 
     Get.back(closeOverlays: true);
   }
@@ -49,7 +49,7 @@ class UnitDetailPageController extends GetxController {
 
   @override
   void onInit() {
-    unit = DataAsyncService.instance.venueList
+    unit = applicationController.venueList.value
         .firstWhereOrNull(
           (venue) => venue.id == _venueId,
         )

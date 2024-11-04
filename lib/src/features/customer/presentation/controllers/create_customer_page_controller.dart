@@ -6,7 +6,7 @@ import 'package:sport_nest_flutter/generated/locales.g.dart';
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/create_customer_param.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
-import '../../../../services/authentication_service.dart';
+import '../../../../controllers/authentication_controller.dart';
 
 class CreateCustomerPageController extends GetxController {
   Future<CustomerModel>? createCustomerFuture;
@@ -27,7 +27,7 @@ class CreateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            createdBy: AuthService.instance.currentUserModel!.id,
+            createdBy: AuthenticationController.instance.currentUserModel!.id,
           ),
         );
 

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../services/language_service.dart';
+import '../../controllers/language_service.dart';
 
 extension XDateTime on DateTime {
   bool isSameDate(DateTime other) {
@@ -13,12 +13,12 @@ extension XDateTime on DateTime {
   }
 
   String formatDate() {
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     return DateFormat.yMMMMEEEEd(languageService.currentLocale.languageCode).format(this);
   }
 
   String formatTime() {
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     return DateFormat('HH:mm', languageService.currentLocale.languageCode).format(this);
   }
 
@@ -32,7 +32,7 @@ extension XDateTime on DateTime {
 
   String getWeekdayName(int index) {
     final date = DateTime.now().subtract(Duration(days: DateTime.now().weekday - index - 1));
-    final languageService = Get.find<LanguageService>();
+    final languageService = Get.find<LanguageController>();
     return DateFormat('EEE', languageService.currentLocale.languageCode).format(date);
   }
 }
