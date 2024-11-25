@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../models/receipt_model.dart';
 
 import '../../models/booking_model.dart';
 import '../../models/customer_model.dart';
-import '../../models/schedule.dart';
 import '../../models/unit_model.dart';
 import '../../models/unit_type_model.dart';
 import '../../models/user_model.dart';
@@ -25,7 +26,7 @@ class FirebaseFirestoreSource {
 
   final _bookingsRef = FirebaseFirestore.instance.collection('bookings');
 
-  final _schedulesRef = FirebaseFirestore.instance.collection('schedules');
+  final _receiptsRef = FirebaseFirestore.instance.collection('receipts');
 
   final _unitTypesRef = FirebaseFirestore.instance.collection('unitTypes');
 
@@ -35,8 +36,10 @@ class FirebaseFirestoreSource {
 
   // ==================== Users ====================
 
-  Future<void> createUser(UserModel user) async {
+  Future<UserModel> createUser(UserModel user) async {
     await _usersRef.doc(user.id).set(user.toJson());
+
+    return user;
   }
 
   Future<UserModel?> fetchUser(String id) async {
@@ -48,6 +51,8 @@ class FirebaseFirestoreSource {
   Future<void> updateUser(UserModel user) async {
     try {
       await _usersRef.doc(user.id).update(user.toJson());
+
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(user.username);
     } catch (e) {
       throw Exception('Failed to update user in Firestore: $e');
     }
@@ -133,16 +138,21 @@ class FirebaseFirestoreSource {
     var bookings = await _bookingsRef.where('venueId', isEqualTo: venueId).where('startTime', isGreaterThanOrEqualTo: from).where('startTime', isLessThanOrEqualTo: newTo).get().then((value) async {
       var bookings = value.docs.map((e) => BookingModel.fromDocumentSnapshot(e)).toList();
 
-      var customerIds = bookings.map((e) => e.customerId).toSet();
+      List<String> customerIds = bookings.where((e) => e.customerId != null).map((e) => e.customerId!).toList();
 
       VenueModel venue = await fetchVenue(venueId);
 
-      List<CustomerModel> customers = await Future.wait(customerIds.map((e) => fetchCustomer(e!)));
+      List<CustomerModel> customers = await Future.wait(customerIds.map((e) {
+        return fetchCustomer(e);
+      }));
 
       for (var i = 0; i < bookings.length; i++) {
         bookings[i].venue = venue;
         bookings[i].unit = venue.unitList.firstWhere((e) => e.id == bookings[i].unitId);
-        bookings[i].customer = customers.firstWhere((e) => e.id == bookings[i].customerId);
+
+        if (bookings[i].customerId != null) {
+          bookings[i].customer = customers.firstWhere((e) => e.id == bookings[i].customerId);
+        }
       }
 
       return bookings;
@@ -169,7 +179,14 @@ class FirebaseFirestoreSource {
 
         booking.venue = await fetchVenue(booking.venueId!);
         booking.unit = await fetchUnit(booking.unitId!);
-        booking.customer = await fetchCustomer(booking.customerId!);
+
+        if (booking.customerId != null) {
+          booking.customer = await fetchCustomer(booking.customerId!);
+        }
+
+        if (booking.receiptId != null) {
+          booking.receipt = await _fetchReceipt(booking.receiptId!);
+        }
 
         return booking;
       }));
@@ -186,7 +203,14 @@ class FirebaseFirestoreSource {
 
       booking.venue = await fetchVenue(booking.venueId!);
       booking.unit = await fetchUnit(booking.unitId!);
-      booking.customer = await fetchCustomer(booking.customerId!);
+
+      if (booking.customerId != null) {
+        booking.customer = await fetchCustomer(booking.customerId!);
+      }
+
+      if (booking.receiptId != null) {
+        booking.receipt = await _fetchReceipt(booking.receiptId!);
+      }
 
       return booking;
     });
@@ -228,34 +252,7 @@ class FirebaseFirestoreSource {
     return _bookingsRef.doc(id).delete();
   }
 
-  // ==================== Schedules ====================
-
-  Future<List<ScheduleModel>> fetchScheduleList(String venueId) async {
-    return _schedulesRef.where('venueId', isEqualTo: venueId).get().then((value) {
-      return value.docs.map((e) => ScheduleModel.fromJson(e.data())).toList();
-    });
-  }
-
-  Future<ScheduleModel> fetchSchedule(String id) async {
-    return _schedulesRef.doc(id).get().then((value) {
-      return ScheduleModel.fromJson(value.data()!);
-    });
-  }
-
-  Future<void> createSchedule(ScheduleModel schedule) async {
-    return _schedulesRef.add({}).then((value) {
-      schedule = schedule.copyWith(id: value.id);
-      return value.set(schedule.toJson());
-    });
-  }
-
-  Future<void> updateSchedule(ScheduleModel schedule) async {
-    return _schedulesRef.doc(schedule.id).update(schedule.toJson());
-  }
-
-  Future<void> deleteSchedule(String id) async {
-    return _schedulesRef.doc(id).delete();
-  }
+  // ==================== Unit Types ====================
 
   Future<List<UnitTypeModel>> fetchUnitTypeList() async {
     return _unitTypesRef.get().then((value) {
@@ -271,7 +268,7 @@ class FirebaseFirestoreSource {
     });
   }
 
-  Future<CustomerModel> fetchCustomer(String id) async {
+  Future<CustomerModel> fetchCustomer(String? id) async {
     return _customersRef.doc(id).get().then((snapshot) {
       return CustomerModel.fromDocumentSnapshot(snapshot);
     });
@@ -316,8 +313,17 @@ class FirebaseFirestoreSource {
     var bookingList = await Future.wait(bookings.docs.map((doc) async {
       var booking = BookingModel.fromDocumentSnapshot(doc);
       booking.venue = await fetchVenue(booking.venueId!);
+
       booking.unit = await fetchUnit(booking.unitId!);
-      booking.customer = await fetchCustomer(booking.customerId!);
+
+      if (booking.customerId != null) {
+        booking.customer = await fetchCustomer(booking.customerId!);
+      }
+
+      if (booking.receiptId != null) {
+        booking.receipt = await _fetchReceipt(booking.receiptId!);
+      }
+
       return booking;
     }));
 
@@ -343,5 +349,73 @@ class FirebaseFirestoreSource {
     var snapshots = await _feedbacksRef.where('userId', isEqualTo: userId).orderBy('createdAt', descending: true).get();
 
     return snapshots.docs.map((doc) => FeedbackModel.fromFirestore(doc)).toList();
+  }
+
+  Future<ReceiptModel> _fetchReceipt(String id) async {
+    return _receiptsRef.doc(id).get().then((value) async {
+      var receipt = ReceiptModel.fromFirestore(value);
+
+      return receipt;
+    });
+  }
+
+  Future<ReceiptModel> fetchReceiptDetail(String id) async {
+    return _receiptsRef.doc(id).get().then((value) async {
+      var receipt = ReceiptModel.fromFirestore(value);
+
+      receipt.booking = await fetchBooking(receipt.bookingId);
+
+      return receipt;
+    });
+  }
+
+  Future<ReceiptModel> createReceipt(BookingModel booking) async {
+    ReceiptModel receipt = ReceiptModel(
+      id: '',
+      bookingId: booking.id!,
+      customerId: booking.customerId,
+      venueId: booking.venueId!,
+      receiptNumber: '',
+      issueDate: Timestamp.now(),
+      dueDate: Timestamp.now(),
+      subtotal: 0,
+      taxRate: 0,
+      taxAmount: 0,
+      totalAmount: booking.totalAmount,
+      status: ReceiptStatus.pending,
+      paymentMethod: PaymentMethod.cash,
+      items: [],
+      createdBy: booking.createdBy!,
+      createdAt: Timestamp.now(),
+    );
+
+    var receiptRef = await _receiptsRef.add(receipt.toJson());
+
+    await _bookingsRef.doc(booking.id).update({'receiptId': receiptRef.id});
+
+    return await _fetchReceipt(receiptRef.id);
+  }
+
+  Future<ReceiptModel>? checkout(String receiptId) {
+    return _receiptsRef.doc(receiptId).update({'status': ReceiptStatus.paid.toJson, 'paymentMethod': PaymentMethod.cash.toJson, 'updatedAt': Timestamp.now(), 'updatedBy': FirebaseAuth.instance.currentUser!.uid}).then((value) {
+      return fetchReceiptDetail(receiptId);
+    });
+  }
+
+  Future<List<ReceiptModel>> fetchReceiptList(String userId) async {
+    try {
+      return await _receiptsRef.where('createdBy', isEqualTo: userId).orderBy('createdAt', descending: true).get().then((value) async {
+        var receipts = value.docs.map((e) => ReceiptModel.fromFirestore(e)).toList();
+
+        for (var receipt in receipts) {
+          receipt.booking = await fetchBooking(receipt.bookingId);
+        }
+
+        return receipts;
+      });
+    } catch (e) {
+      print("Error fetching receipts: $e");
+      return [];
+    }
   }
 }

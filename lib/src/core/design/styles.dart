@@ -24,6 +24,7 @@ var kInputDecoration = InputDecorationTheme(
       width: 2,
     ),
   ),
+  errorMaxLines: 2,
   errorBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(8.r),
     borderSide: BorderSide(

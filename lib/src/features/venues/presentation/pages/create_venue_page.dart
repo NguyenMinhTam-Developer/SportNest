@@ -5,7 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
@@ -23,7 +23,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text(LocaleKeys.createVenue.tr)),
+          appBar: AppBar(title: Text(LocaleKeys.create_venue.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -34,13 +34,26 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                 gap: 16.h,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // GridView.count(
+                  //   crossAxisCount: 4,
+                  //   shrinkWrap: true,
+                  //   children: [
+                  //     ...List.generate(controller.imageFiles.length, (index) {
+                  //       return const Placeholder();
+                  //     }),
+                  //     ElevatedButton(
+                  //       onPressed: controller.onAddImagesPressed,
+                  //       child: const Text("Add"),
+                  //     ),
+                  //   ],
+                  // ),
                   InputLabel(
-                    labelText: LocaleKeys.venueName.tr,
+                    labelText: LocaleKeys.venue_name.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueName.tr,
+                        hintText: LocaleKeys.enter_venue_name.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -55,7 +68,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     child: FormBuilderTextField(
                       name: "address",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueAddress.tr,
+                        hintText: LocaleKeys.enter_venue_address.tr,
                         suffixIcon: const Icon(Symbols.place_rounded),
                       ),
                       keyboardType: TextInputType.streetAddress,
@@ -71,7 +84,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     children: [
                       Expanded(
                         child: InputLabel(
-                          labelText: LocaleKeys.openTime.tr,
+                          labelText: LocaleKeys.open_time.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "openTime",
@@ -91,7 +104,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                       ),
                       Expanded(
                         child: InputLabel(
-                          labelText: LocaleKeys.closeTime.tr,
+                          labelText: LocaleKeys.close_time.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "closeTime",
@@ -117,7 +130,7 @@ class CreateVenuePage extends GetView<CreateVenuePageController> {
                     child: FormBuilderTextField(
                       name: "description",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueDescription.tr,
+                        hintText: LocaleKeys.enter_venue_description.tr,
                       ),
                       minLines: 5,
                       maxLines: 5,

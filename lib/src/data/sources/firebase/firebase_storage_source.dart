@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseStorageSource {
-  final _storage = FirebaseStorage.instance;
+  final storage = FirebaseStorage.instance;
 
   Future<List<String>> uploadFeedbackImages(
     String userId,
@@ -16,8 +16,8 @@ class FirebaseStorageSource {
       File file = File(imagePaths[i]);
 
       try {
-        await _storage.ref(path).putFile(file);
-        String downloadUrl = await _storage.ref(path).getDownloadURL();
+        await storage.ref(path).putFile(file);
+        String downloadUrl = await storage.ref(path).getDownloadURL();
         imageUrls.add(downloadUrl);
       } catch (e) {
         throw Exception('Failed to upload image: $e');
@@ -38,10 +38,21 @@ class FirebaseStorageSource {
     File file = File(videoPath);
 
     try {
-      await _storage.ref(path).putFile(file);
-      return await _storage.ref(path).getDownloadURL();
+      await storage.ref(path).putFile(file);
+      return await storage.ref(path).getDownloadURL();
     } catch (e) {
       throw Exception('Failed to upload video: $e');
+    }
+  }
+
+  Future<String> uploadVenueImage(String venueId, int index, File file) async {
+    String path = 'venues/$venueId/image_$index.jpg';
+
+    try {
+      await storage.ref(path).putFile(file);
+      return await storage.ref(path).getDownloadURL();
+    } catch (e) {
+      throw Exception('Failed to upload venue image: $e');
     }
   }
 }

@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/src/controllers/application_controller.dart';
-import 'package:sport_nest_flutter/src/controllers/language_service.dart';
 import '../../../../../generated/locales.g.dart';
+import '../../../../controllers/application_controller.dart';
+import '../../../../controllers/language_service.dart';
+import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../shared/widgets/list_indicators.dart';
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../data/enums/booking_status_enum.dart';
-import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/enums/view_mode_enum.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/unit_model.dart';
@@ -29,7 +29,12 @@ class SchedulePage extends GetView<SchedulePageController> {
             if (ApplicationController.instance.venueList.value.isNotEmpty) {
               return Row(
                 children: [
-                  Text(controller.selectedVenue?.name ?? ""),
+                  Flexible(
+                    child: Text(
+                      controller.selectedVenue?.name ?? "",
+                      maxLines: 2,
+                    ),
+                  ),
                   PopupMenuButton<VenueModel>(
                     icon: const Icon(Symbols.keyboard_arrow_down_rounded),
                     itemBuilder: (BuildContext context) => ApplicationController.instance.venueList.value
@@ -75,15 +80,15 @@ class SchedulePage extends GetView<SchedulePageController> {
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<ViewMode>>[
                   PopupMenuItem<ViewMode>(
                     value: ViewMode.day,
-                    child: Text(LocaleKeys.dayView.tr),
+                    child: Text(LocaleKeys.day_view.tr),
                   ),
                   PopupMenuItem<ViewMode>(
                     value: ViewMode.week,
-                    child: Text(LocaleKeys.weekView.tr),
+                    child: Text(LocaleKeys.week_view.tr),
                   ),
                   PopupMenuItem<ViewMode>(
                     value: ViewMode.month,
-                    child: Text(LocaleKeys.monthView.tr),
+                    child: Text(LocaleKeys.month_view.tr),
                   ),
                 ],
               );
@@ -184,18 +189,22 @@ class SchedulePage extends GetView<SchedulePageController> {
                     child: Center(
                       child: ListIndicator(
                         icon: Symbols.store_rounded,
-                        label: LocaleKeys.youDontHaveAnyVenue.tr,
+                        label: LocaleKeys.you_dont_have_any_venue.tr,
                       ),
                     ),
                   ),
               ],
             )),
-        floatingActionButton: ApplicationController.instance.venueList.value.isNotEmpty
-            ? FloatingActionButton(
-                onPressed: controller.onAddBooking,
-                child: const Icon(Symbols.calendar_add_on_rounded),
-              )
-            : null,
+        floatingActionButton: Obx(() {
+          if (ApplicationController.instance.venueList.value.isNotEmpty) {
+            return FloatingActionButton(
+              onPressed: controller.onAddBooking,
+              child: const Icon(Symbols.calendar_add_on_rounded),
+            );
+          } else {
+            return const SizedBox();
+          }
+        }),
       ),
     );
   }
@@ -324,6 +333,10 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
   }
 
   Widget _buildDayView() {
+    if (widget.slots.isEmpty) {
+      return ListIndicator(icon: Symbols.sports_martial_arts_rounded, label: LocaleKeys.no_units_found.tr);
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 1.w),
       color: AppColor.neutralColor.shade50,
@@ -398,9 +411,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                       scrollDirection: Axis.horizontal,
                       controller: weekViewSlotScrollController,
                       physics: const ClampingScrollPhysics(),
-                      separatorBuilder: (BuildContext context, int index) {
-                        return VerticalDivider(color: AppColor.neutralColor.shade50);
-                      },
+                      separatorBuilder: (BuildContext context, int index) => const VerticalDivider(),
                       itemBuilder: (BuildContext context, int index) {
                         return _buildSlotCell(widget.slots[index]);
                       },
@@ -530,7 +541,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                                             }
 
                                             return Positioned(
-                                              top: slotHeight * startTime.hour + 20.h,
+                                              top: slotHeight * (startTime.hour + startTime.minute / 60) + 8.h,
                                               height: convertMinutesToPixels(endTime.difference(startTime).inMinutes),
                                               left: 0,
                                               right: 0,
@@ -549,15 +560,10 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                                     children: [
                                                       Text(
-                                                        booking.customer?.name ?? "",
+                                                        booking.customer?.name ?? LocaleKeys.walk_in_customer.tr,
                                                         style: AppTypography.bodyMedium.semiBold.copyWith(color: booking.color.shade700),
                                                         maxLines: 1,
                                                         overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      SizedBox(height: 2.w),
-                                                      Text(
-                                                        booking.unit?.name ?? "",
-                                                        style: AppTypography.bodyMedium.regular.copyWith(color: booking.color.shade600),
                                                       ),
                                                       SizedBox(height: 2.w),
                                                       Text(
@@ -624,6 +630,10 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
   }
 
   Widget _buildWeekView() {
+    if (widget.slots.isEmpty) {
+      return ListIndicator(icon: Symbols.sports_martial_arts_rounded, label: LocaleKeys.no_units_found.tr);
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 1.w),
       color: AppColor.neutralColor.shade50,
@@ -899,7 +909,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                                             }
 
                                             return Positioned(
-                                              top: slotHeight * startTime.hour + 20.h,
+                                              top: slotHeight * (startTime.hour + startTime.minute / 60) + 20.h,
                                               height: convertMinutesToPixels(endTime.difference(startTime).inMinutes),
                                               left: 0,
                                               right: 0,
@@ -918,15 +928,10 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                                     children: [
                                                       Text(
-                                                        booking.customer?.name ?? "",
+                                                        booking.customer?.name ?? LocaleKeys.walk_in_customer.tr,
                                                         style: AppTypography.bodyMedium.semiBold.copyWith(color: booking.color.shade700),
                                                         maxLines: 1,
                                                         overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                      SizedBox(height: 2.w),
-                                                      Text(
-                                                        booking.unit?.name ?? "",
-                                                        style: AppTypography.bodyMedium.regular.copyWith(color: booking.color.shade600),
                                                       ),
                                                       SizedBox(height: 2.w),
                                                       Text(
@@ -993,6 +998,10 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
   }
 
   Widget _buildMonthView() {
+    if (widget.slots.isEmpty) {
+      return ListIndicator(icon: Symbols.sports_martial_arts_rounded, label: LocaleKeys.no_units_found.tr);
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1062,7 +1071,7 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
-                      LocaleKeys.noBookingsFound.tr,
+                      LocaleKeys.no_bookings_found.tr,
                       style: AppTypography.bodySmall.regular.copyWith(color: AppColor.neutralColor.shade60),
                     ),
                   );
@@ -1078,6 +1087,8 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
                   },
                   itemBuilder: (BuildContext context, int index) {
                     BookingModel booking = bookings[index];
+
+                    // return Text("${booking.startTime?.toDate().formatTime()} - ${booking.endTime?.toDate().formatTime()}");
 
                     return BookingItem(
                       booking: booking,
@@ -1195,63 +1206,123 @@ class _ScheduleCalendarViewState extends State<ScheduleCalendarView> {
 }
 
 class BookingItem extends StatelessWidget {
+  final BookingModel booking;
+  final Function(BookingModel)? onBookingItemPressed;
+  final bool showVenueName;
+  final bool showDate;
+
   const BookingItem({
     super.key,
     required this.booking,
-    required this.onBookingItemPressed,
+    this.onBookingItemPressed,
     this.showVenueName = false,
     this.showDate = false,
   });
 
-  final BookingModel booking;
-  final Function(BookingModel) onBookingItemPressed;
-  final bool showVenueName;
-  final bool showDate;
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: booking.color.shade50,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.r),
-        side: BorderSide(color: booking.color.shade200, width: 1.w),
-      ),
-      elevation: 0,
-      child: InkWell(
-        onTap: () => onBookingItemPressed(booking),
+    return GestureDetector(
+      onTap: () => onBookingItemPressed?.call(booking),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        decoration: BoxDecoration(
+          color: booking.color.shade50,
+          borderRadius: BorderRadius.circular(6.r),
+          border: Border.all(color: booking.color.shade200, width: 1.w),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              booking.customer?.name ?? "",
+              booking.customer?.name ?? LocaleKeys.walk_in_customer.tr,
               style: AppTypography.bodyMedium.semiBold.copyWith(color: booking.color.shade700),
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (showVenueName && booking.venue != null) ...[
+              SizedBox(height: 4.h),
+              Text(
+                booking.venue!.name,
+                style: AppTypography.bodySmall.regular.copyWith(color: booking.color.shade700),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            SizedBox(height: 4.h),
+            Text(
+              booking.unit?.name ?? "",
+              style: AppTypography.bodySmall.regular.copyWith(color: booking.color.shade700),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 2.w),
-            Row(
-              children: [
-                Text(
-                  "${showVenueName ? "${booking.venue?.name} - " : ""}${booking.unit?.name}",
-                  style: AppTypography.bodyMedium.regular.copyWith(color: booking.color.shade600),
-                ),
-              ],
-            ),
-            if (showDate) ...[
-              SizedBox(height: 2.w),
-              Text(
-                "${booking.startTime?.toDate().formatDate()}",
-                style: AppTypography.bodyMedium.regular.copyWith(color: booking.color.shade600),
-              ),
-            ],
-            SizedBox(height: 2.w),
+            SizedBox(height: 4.h),
             Text(
-              "${booking.startTime?.toDate().formatTime()} - ${booking.endTime?.toDate().formatTime()}",
-              style: AppTypography.bodyMedium.regular.copyWith(color: booking.color.shade600),
+              showDate ? "${booking.startTime?.toDate().formatDate()} | ${booking.startTime?.toDate().formatTime()} - ${booking.endTime?.toDate().formatTime()}" : "${booking.startTime?.toDate().formatTime()} - ${booking.endTime?.toDate().formatTime()}",
+              style: AppTypography.bodySmall.regular.copyWith(color: booking.color.shade700),
             ),
           ],
-        ).paddingSymmetric(horizontal: 8.w, vertical: 8.w),
+        ).paddingSymmetric(vertical: 8.w),
       ),
     );
   }
+
+  // Color _getStatusColor() {
+  //   switch (booking.status) {
+  //     case BookingStatusEnum.pending:
+  //       return Colors.orange.withOpacity(0.1);
+  //     case BookingStatusEnum.confirmed:
+  //       return Colors.green.withOpacity(0.1);
+  //     case BookingStatusEnum.cancelled:
+  //       return Colors.red.withOpacity(0.1);
+  //     case BookingStatusEnum.unknown:
+  //     default:
+  //       return Colors.grey.withOpacity(0.1);
+  //   }
+  // }
+
+  // IconData _getStatusIcon() {
+  //   switch (booking.status) {
+  //     case BookingStatusEnum.pending:
+  //       return Symbols.pending_rounded;
+  //     case BookingStatusEnum.confirmed:
+  //       return Symbols.event_available_rounded;
+  //     case BookingStatusEnum.cancelled:
+  //       return Symbols.event_busy_rounded;
+  //     case BookingStatusEnum.unknown:
+  //     default:
+  //       return Symbols.event_rounded;
+  //   }
+  // }
+
+  // void _showBookingDetails(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) => Container(
+  //       padding: EdgeInsets.all(16.w),
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             booking.customer?.name ?? LocaleKeys.available.tr,
+  //             style: AppTypography.heading6.semiBold,
+  //           ),
+  //           SizedBox(height: 8.h),
+  //           Text(
+  //             booking.venue?.name ?? "",
+  //             style: AppTypography.bodyMedium.regular,
+  //           ),
+  //           Text(
+  //             booking.unit?.name ?? "",
+  //             style: AppTypography.bodyMedium.regular,
+  //           ),
+  //           SizedBox(height: 8.h),
+  //           Text(
+  //             "${booking.startTime!.toDate().formatDate()} ${booking.startTime!.toDate().formatTime()} - ${booking.endTime!.toDate().formatTime()}",
+  //             style: AppTypography.bodyMedium.regular,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

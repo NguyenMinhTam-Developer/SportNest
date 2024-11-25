@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../generated/locales.g.dart';
 
 class UnitTypeModel {
   final String id;
@@ -18,7 +18,7 @@ class UnitTypeModel {
       case 'football':
         return LocaleKeys.football.tr;
       case 'table_tennis':
-        return LocaleKeys.tableTennis.tr;
+        return LocaleKeys.table_tennis.tr;
       case 'badminton':
         return LocaleKeys.badminton.tr;
       default:

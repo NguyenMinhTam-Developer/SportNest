@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
@@ -21,7 +21,7 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text(LocaleKeys.updateCustomer.tr)),
+          appBar: AppBar(title: Text(LocaleKeys.update_customer.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -33,13 +33,13 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: LocaleKeys.customerName.tr,
+                    labelText: LocaleKeys.customer_name.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       initialValue: controller.initialCustomer.name,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterCustomerName.tr,
+                        hintText: LocaleKeys.enter_customer_name.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -49,13 +49,13 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: LocaleKeys.phoneNumber.tr,
+                    labelText: LocaleKeys.phone_number.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "phoneNumber",
                       initialValue: controller.initialCustomer.phoneNumber,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterPhoneNumber.tr,
+                        hintText: LocaleKeys.enter_phone_number.tr,
                       ),
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
@@ -71,7 +71,7 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
                       name: "email",
                       initialValue: controller.initialCustomer.email,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterEmailAddress.tr,
+                        hintText: LocaleKeys.enter_email_address.tr,
                       ),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -86,7 +86,7 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
                       name: "address",
                       initialValue: controller.initialCustomer.address,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterAddress.tr,
+                        hintText: LocaleKeys.enter_address.tr,
                       ),
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.done,
@@ -112,7 +112,7 @@ class UpdateCustomerPage extends GetView<UpdateCustomerPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: LocaleKeys.updateCustomer.tr,
+                label: LocaleKeys.update_customer.tr,
               ),
             ),
           ),

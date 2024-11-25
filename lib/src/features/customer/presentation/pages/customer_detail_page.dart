@@ -45,11 +45,11 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                       case "delete":
                         Get.dialog(AlertDialog(
                           title: Text(
-                            LocaleKeys.deleteCustomer.tr,
+                            LocaleKeys.delete_customer.tr,
                             style: AppTypography.heading5.semiBold,
                           ),
                           content: Text(
-                            LocaleKeys.areYouSureYouWantToDeleteThisCustomer.tr,
+                            LocaleKeys.are_you_sure_you_want_to_delete_this_customer.tr,
                             style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                           ),
                           actions: [
@@ -87,7 +87,7 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
                 if (snapshot.hasError) {
                   return ListIndicator(
                     icon: Symbols.error_rounded,
-                    label: LocaleKeys.failedToLoadCustomerDetail.tr,
+                    label: LocaleKeys.failed_to_load_customer_detail.tr,
                   );
                 }
 
@@ -115,8 +115,8 @@ class CustomerDetailPage extends GetView<CustomerDetailPageController> {
       gap: 16.h,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildInfoItem(LocaleKeys.customerName.tr, customer.name),
-        _buildInfoItem(LocaleKeys.phoneNumber.tr, customer.phoneNumber),
+        _buildInfoItem(LocaleKeys.customer_name.tr, customer.name),
+        _buildInfoItem(LocaleKeys.phone_number.tr, customer.phoneNumber),
         _buildInfoItem(LocaleKeys.email.tr, customer.email),
         _buildInfoItem(LocaleKeys.address.tr, customer.address),
       ],

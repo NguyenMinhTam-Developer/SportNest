@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/data/models/venue_model.dart';
+import '../../../../data/models/venue_model.dart';
 import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/models/customer_model.dart';
@@ -26,6 +26,7 @@ class CreateBookingPageController extends GetxController {
   CustomerModel? customer;
 
   bool isLoading = false;
+  bool isWalkInCustomer = false;
 
   @override
   Future<void> onReady() async {
@@ -82,8 +83,8 @@ class CreateBookingPageController extends GetxController {
         startTime: startDateTime,
         endTime: endDateTime,
         price: price,
-        customerId: customer?.id ?? '',
-        createdBy: AuthenticationController.instance.currentUserModel!.id,
+        customerId: customer?.id,
+        createdBy: AuthenticationController.instance.currentUserModel.value!.id,
       );
 
       try {
@@ -91,13 +92,17 @@ class CreateBookingPageController extends GetxController {
 
         await ApplicationController.instance.asyncBookingData();
 
-        // After successful booking creation, schedule notification
-        await NotificationService().scheduleBookingNotification(
-          bookingId: data.numericId,
-          title: 'Upcoming Booking',
-          body: 'Your booking at ${venues.firstWhere((v) => v.id == venueId).name} is scheduled for ${newBooking.startTime.toDate().formatDate()}',
-          scheduledDate: newBooking.startTime.toDate().subtract(const Duration(minutes: 10)), // Notify 10 minutes before
-        );
+        // Only schedule notification if booking is in the future
+        final bookingDateTime = newBooking.startTime.toDate();
+
+        if (bookingDateTime.isAfter(DateTime.now())) {
+          await NotificationService().scheduleBookingNotification(
+            bookingId: data.numericId,
+            title: 'Upcoming Booking',
+            body: 'Your booking at ${venues.firstWhere((v) => v.id == venueId).name} is scheduled for ${newBooking.startTime.toDate().formatDate()}',
+            scheduledDate: bookingDateTime.subtract(const Duration(minutes: 10)), // Notify 10 minutes before
+          );
+        }
 
         Get.back(result: true);
 
@@ -120,6 +125,16 @@ class CreateBookingPageController extends GetxController {
     if (result != null && result is CustomerModel) {
       customer = result;
       formKey.currentState?.patchValue({"contactName": customer!.name});
+    }
+
+    update();
+  }
+
+  void onWalkInCustomerChanged(bool? value) {
+    isWalkInCustomer = value ?? false;
+    if (isWalkInCustomer) {
+      customer = null;
+      formKey.currentState?.patchValue({"contactName": null});
     }
 
     update();

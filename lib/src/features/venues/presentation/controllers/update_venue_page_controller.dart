@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/venue_model.dart';
@@ -43,7 +43,7 @@ class UpdateVenuePageController extends GetxController {
             openTime: openTime,
             closeTime: closeTime,
             description: description,
-            createdBy: AuthenticationController.instance.currentUserModel!.id,
+            createdBy: AuthenticationController.instance.currentUserModel.value!.id,
           ),
         );
 
@@ -54,12 +54,12 @@ class UpdateVenuePageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.venueUpdatedSuccessfully.tr,
+          LocaleKeys.venue_updated_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToUpdateVenue.tr,
+          LocaleKeys.failed_to_update_venue.tr,
         );
       } finally {
         isLoading = false;

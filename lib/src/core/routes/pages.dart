@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import '../../features/receipt/bindings/create_receipt_page_binding.dart';
+import '../../features/receipt/bindings/receipt_detail_page_binding.dart';
 
 import '../../features/authentication/controllers/sign_in_page_controller.dart';
 import '../../features/authentication/controllers/sign_up_page_controller.dart';
@@ -27,6 +29,8 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/controllers/language_page_controller.dart';
 import '../../features/profile/presentation/controllers/profile_page_controller.dart';
 import '../../features/profile/presentation/pages/language_page.dart';
+import '../../features/receipt/bindings/receipt_list_page_binding.dart';
+import '../../features/receipt/bindings/update_receipt_page_binding.dart';
 import '../../features/schedule/presentation/controllers/schedule_page_controller.dart';
 import '../../features/units/presentation/controllers/create_unit_page_controller.dart';
 import '../../features/units/presentation/controllers/unit_detail_page_controller.dart';
@@ -50,6 +54,9 @@ import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/controllers/edit_profile_controller.dart';
 import '../../features/feedback/feedback_page_controller.dart';
 import '../../features/feedback/pages/feedback_page.dart';
+import '../../features/receipt/pages/create_receipt_page.dart';
+import '../../features/receipt/pages/receipt_detail_page.dart';
+import '../../features/receipt/pages/update_receipt_page.dart';
 
 part 'routes.dart';
 
@@ -81,6 +88,7 @@ abstract class AppPages {
         BookingPageBinding(),
         SchedulePageBinding(),
         CustomerListPageBinding(),
+        ReceiptListPageBinding(),
         ProfilePageBinding(),
       ],
     ),
@@ -198,6 +206,25 @@ abstract class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut(() => FeedbackPageController());
       }),
+    ),
+
+    // Invoices
+    GetPage(
+      name: Routes.receiptCreate,
+      page: () => const CreateReceiptPage(),
+      binding: CreateReceiptPageBinding(),
+    ),
+    GetPage(
+      name: Routes.receiptDetail,
+      page: () => const ReceiptDetailPage(),
+      binding: ReceiptDetailPageBinding(),
+      children: [
+        GetPage(
+          name: _trimString(Routes.receiptDetail, Routes.receiptEdit),
+          page: () => const UpdateReceiptPage(),
+          binding: UpdateReceiptPageBinding(),
+        ),
+      ],
     ),
   ];
 

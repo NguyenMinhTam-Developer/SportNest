@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
+import 'package:sport_nest_flutter/src/data/models/receipt_model.dart';
 import '../../../../data/sources/firebase/firebase_firestore_source.dart';
 import '../../../../controllers/authentication_controller.dart';
 import '../../../../shared/extensions/x_number.dart';
 
 import '../../../../core/routes/pages.dart';
-import '../../../../data/enums/payment_status_enum.dart';
 import '../../../../data/models/booking_model.dart';
 
 class DashboardPageController extends GetxController {
@@ -18,7 +18,7 @@ class DashboardPageController extends GetxController {
   String get totalRevenue {
     final total = timeFrameBookings.fold<double>(
       0.0,
-      (sum, booking) => sum + (booking.paymentStatus == PaymentStatusEnum.paid ? (booking.price ?? 0) : 0),
+      (sum, booking) => sum + (booking.receipt?.status == ReceiptStatus.paid ? (booking.receipt?.totalAmount ?? 0) : 0),
     );
     return total.toCurrency();
   }
@@ -68,7 +68,7 @@ class DashboardPageController extends GetxController {
     final startDate = _getStartDate(selectedTimeFrameIndex);
     final endDate = _getEndDate(selectedTimeFrameIndex);
     timeFrameBookings = await FirebaseFirestoreSource().fetchBookingsByTimeFrame(
-      AuthenticationController.instance.currentUserModel!.id,
+      AuthenticationController.instance.currentUserModel.value!.id,
       startDate,
       endDate,
     );
@@ -91,7 +91,7 @@ class DashboardPageController extends GetxController {
   }
 
   Future<void> fetchUpcomingBookings() async {
-    upcomingBookings = await FirebaseFirestoreSource().fetchUpcomingBookingList(AuthenticationController.instance.currentUserModel!.id);
+    upcomingBookings = await FirebaseFirestoreSource().fetchUpcomingBookingList(AuthenticationController.instance.currentUserModel.value!.id);
     update();
   }
 

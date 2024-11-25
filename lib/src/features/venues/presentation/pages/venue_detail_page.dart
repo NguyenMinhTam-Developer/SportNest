@@ -44,11 +44,11 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                             case "delete":
                               Get.dialog(AlertDialog(
                                 title: Text(
-                                  LocaleKeys.deleteVenueTitle.tr,
+                                  LocaleKeys.delete_venue_title.tr,
                                   style: AppTypography.heading5.semiBold,
                                 ),
                                 content: Text(
-                                  LocaleKeys.deleteVenueDescription.tr,
+                                  LocaleKeys.delete_venue_description.tr,
                                   style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                                 ),
                                 actions: [
@@ -77,10 +77,10 @@ class VenueDetailPage extends GetView<VenueDetailPageController> {
                       ),
                     ]
                   : null,
-              bottom: const TabBar(
+              bottom: TabBar(
                 tabs: [
-                  Tab(text: "Details"),
-                  Tab(text: "Units"),
+                  Tab(text: LocaleKeys.details.tr),
+                  Tab(text: LocaleKeys.units.tr),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../core/routes/pages.dart';
+import '../../../../../generated/locales.g.dart';
 import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 import '../../../../data/params/update_booking_status_param.dart';
@@ -19,6 +20,8 @@ class BookingDetailPageController extends GetxController {
   Future<BookingModel>? fetchBookingFuture;
 
   Future<void> fetchBooking(String id) async {
+    print('fetchBooking: $id');
+
     fetchBookingFuture = FirebaseFirestoreSource().fetchBooking(id);
     update();
   }
@@ -37,7 +40,7 @@ class BookingDetailPageController extends GetxController {
     } catch (e) {
       Get.snackbar(
         LocaleKeys.error.tr,
-        LocaleKeys.failedToDeleteBooking.tr,
+        LocaleKeys.failed_to_delete_booking.tr,
         snackPosition: SnackPosition.TOP,
       );
     }
@@ -119,6 +122,24 @@ class BookingDetailPageController extends GetxController {
     } catch (e) {
       return Get.put(BookingDetailPageController());
     }
+  }
+
+  static BookingDetailPageController? get instanceOrNull {
+    try {
+      return Get.find();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> onCreateReceiptPressed(BookingModel booking) async {
+    var receipt = await FirebaseFirestoreSource().createReceipt(booking);
+
+    await fetchBooking(bookingId);
+
+    await ApplicationController.instance.asyncBookingData();
+
+    Get.toNamed(Routes.receiptDetail.replaceFirst(':receiptId', receipt.id));
   }
 }
 

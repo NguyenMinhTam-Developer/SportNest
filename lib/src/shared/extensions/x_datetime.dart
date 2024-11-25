@@ -19,7 +19,7 @@ extension XDateTime on DateTime {
 
   String formatTime() {
     final languageService = Get.find<LanguageController>();
-    return DateFormat('HH:mm', languageService.currentLocale.languageCode).format(this);
+    return DateFormat('HH:mm aa', languageService.currentLocale.languageCode).format(this);
   }
 
   DateTime get firstDayOfWeek {

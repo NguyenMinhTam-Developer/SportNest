@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../data/models/unit_model.dart';
 import '../../../../controllers/application_controller.dart';
@@ -38,12 +38,12 @@ class CreateUnitPageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.unitCreatedSuccessfully.tr,
+          LocaleKeys.unit_created_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToCreateUnit.tr,
+          LocaleKeys.failed_to_create_unit.tr,
         );
       }
     } else {

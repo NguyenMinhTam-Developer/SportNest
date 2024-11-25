@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../shared/extensions/x_datetime.dart';
+import 'receipt_model.dart';
 import '../../library/colors.dart';
 import '../enums/booking_status_enum.dart';
-import '../enums/payment_status_enum.dart';
 import 'venue_model.dart';
 
 import 'customer_model.dart';
@@ -12,10 +13,10 @@ class BookingModel {
   final String? venueId;
   final String? unitId;
   final String? customerId;
+  final String? receiptId;
   final Timestamp? startTime;
   final Timestamp? endTime;
   final BookingStatusEnum status;
-  final PaymentStatusEnum paymentStatus;
   final num? price;
 
   final String? createdBy;
@@ -23,9 +24,14 @@ class BookingModel {
   final Timestamp? createdAt;
   final Timestamp? updatedAt;
 
+  ReceiptModel? receipt;
   VenueModel? venue;
   UnitModel? unit;
   CustomerModel? customer;
+
+  String get timeRange {
+    return '${startTime!.toDate().formatTime()} - ${endTime!.toDate().formatTime()}';
+  }
 
   int get numericId {
     if (id == null) return 0;
@@ -39,6 +45,23 @@ class BookingModel {
     return numeric;
   }
 
+  /// Gets the total amount for the booking based on hourly price and duration
+  num get totalAmount {
+    if (startTime == null || endTime == null || price == null) {
+      return 0;
+    }
+
+    // Convert timestamps to DateTime
+    final start = startTime!.toDate();
+    final end = endTime!.toDate();
+
+    // Calculate duration in hours (including partial hours)
+    final duration = end.difference(start).inMinutes / 60.0;
+
+    // Multiply hourly price by duration
+    return price! * duration;
+  }
+
   BookingModel({
     required this.id,
     required this.venueId,
@@ -46,9 +69,10 @@ class BookingModel {
     required this.startTime,
     required this.endTime,
     required this.customerId,
+    required this.receiptId,
     required this.status,
-    required this.paymentStatus,
     required this.price,
+    this.receipt,
     this.createdBy,
     this.createdAt,
     this.updatedBy,
@@ -66,8 +90,8 @@ class BookingModel {
         startTime: data['startTime'],
         endTime: data['endTime'],
         customerId: data['customerId'],
+        receiptId: data['receiptId'],
         status: BookingStatusEnum.fromString(data['status']) ?? BookingStatusEnum.unknown,
-        paymentStatus: PaymentStatusEnum.fromString(data['paymentStatus']) ?? PaymentStatusEnum.unknown,
         price: data['price'],
         createdBy: data['createdBy'],
         updatedBy: data['updatedBy'],

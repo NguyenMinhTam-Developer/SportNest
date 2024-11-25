@@ -37,8 +37,8 @@ class NotificationService {
       NotificationDetails(
         android: AndroidNotificationDetails(
           'booking_channel',
-          LocaleKeys.bookingNotifications.tr,
-          channelDescription: LocaleKeys.notificationsForBookings.tr,
+          LocaleKeys.booking_notifications.tr,
+          channelDescription: LocaleKeys.notifications_for_bookings.tr,
           importance: Importance.high,
           priority: Priority.high,
         ),

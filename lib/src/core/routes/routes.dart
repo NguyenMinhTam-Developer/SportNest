@@ -43,4 +43,10 @@ abstract class Routes {
   static const customerEdit = '$_customers/:customerId/edit';
 
   static const String feedback = '/feedback';
+
+  static const _receipts = '/receipts';
+  static const receipts = _receipts;
+  static const receiptCreate = '$_receipts/create';
+  static const receiptDetail = '$_receipts/:receiptId';
+  static const receiptEdit = '$_receipts/:receiptId/edit';
 }

@@ -32,7 +32,7 @@ class UnitListPage extends GetView<UnitListPageController> {
                     ? [
                         IconButton(
                           icon: const Icon(Symbols.add_rounded),
-                          tooltip: LocaleKeys.addUnit.tr,
+                          tooltip: LocaleKeys.add_unit.tr,
                           onPressed: () => Get.toNamed(Routes.unitCreate.replaceFirst(':id', snapshot.requireData.first.venueId)),
                         ),
                       ]
@@ -71,14 +71,14 @@ class UnitListWidget extends StatelessWidget {
         if (snapshot.hasError) {
           return ListIndicator(
             icon: Symbols.error_rounded,
-            label: LocaleKeys.failedToLoadUnits.tr,
+            label: LocaleKeys.failed_to_load_units.tr,
           );
         }
 
         if (snapshot.data!.isEmpty) {
           return ListIndicator(
             icon: Symbols.category_rounded,
-            label: LocaleKeys.noUnitsFound.tr,
+            label: LocaleKeys.no_units_found.tr,
           );
         }
 

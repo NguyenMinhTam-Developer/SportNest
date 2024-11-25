@@ -21,7 +21,7 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
       return PageLoadingIndicator(
         future: controller.createCustomerFuture,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text(LocaleKeys.createCustomer.tr)),
+          appBar: AppBar(title: Text(LocaleKeys.create_customer.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -33,14 +33,13 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: LocaleKeys.customerName.tr,
+                    labelText: LocaleKeys.customer_name.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterCustomerName.tr,
+                        hintText: LocaleKeys.enter_customer_name.tr,
                       ),
-                      keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -48,14 +47,13 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
                     ),
                   ),
                   InputLabel(
-                    labelText: LocaleKeys.phoneNumber.tr,
+                    labelText: LocaleKeys.phone_number.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "phoneNumber",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterPhoneNumber.tr,
+                        hintText: LocaleKeys.enter_phone_number.tr,
                       ),
-                      keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
@@ -68,9 +66,8 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
                     child: FormBuilderTextField(
                       name: "email",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterEmailAddress.tr,
+                        hintText: LocaleKeys.enter_email_address.tr,
                       ),
-                      keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.email(checkNullOrEmpty: false),
@@ -82,9 +79,8 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
                     child: FormBuilderTextField(
                       name: "address",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterAddress.tr,
+                        hintText: LocaleKeys.enter_address.tr,
                       ),
-                      keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.done,
                       maxLines: 3,
                     ),
@@ -108,7 +104,7 @@ class CreateCustomerPage extends GetView<CreateCustomerPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: LocaleKeys.createCustomer.tr,
+                label: LocaleKeys.create_customer.tr,
               ),
             ),
           ),

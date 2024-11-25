@@ -1,4 +1,5 @@
 import 'unit_model.dart';
+import 'media_model.dart';
 
 class VenueModel {
   final String id;
@@ -10,6 +11,7 @@ class VenueModel {
   final String createdBy;
 
   List<UnitModel> unitList = [];
+  List<MediaModel> mediaList = [];
 
   VenueModel({
     this.id = "",
@@ -19,6 +21,7 @@ class VenueModel {
     required this.closeTime,
     required this.description,
     required this.createdBy,
+    this.mediaList = const [],
   });
 
   factory VenueModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +33,7 @@ class VenueModel {
       closeTime: DateTime.parse(json['closeTime']),
       description: json['description'],
       createdBy: json['createdBy'],
+      mediaList: (json['mediaList'] as List<dynamic>?)?.map((media) => MediaModel.fromJson(media)).toList() ?? [],
     );
   }
 
@@ -42,6 +46,7 @@ class VenueModel {
       'closeTime': closeTime.toIso8601String(),
       'description': description,
       'createdBy': createdBy,
+      'mediaList': mediaList.map((media) => media.toJson()).toList(),
     };
   }
 
@@ -53,6 +58,7 @@ class VenueModel {
     DateTime? closeTime,
     String? description,
     String? createdBy,
+    List<MediaModel>? mediaList,
   }) {
     return VenueModel(
       id: id ?? this.id,
@@ -62,6 +68,7 @@ class VenueModel {
       closeTime: closeTime ?? this.closeTime,
       description: description ?? this.description,
       createdBy: createdBy ?? this.createdBy,
+      mediaList: mediaList ?? this.mediaList,
     );
   }
 }

@@ -4,13 +4,11 @@ import 'package:get/get.dart';
 
 import '../../../../generated/locales.g.dart';
 import '../../../controllers/authentication_controller.dart';
-import '../../../core/errors/exceptions.dart';
 import '../../../core/routes/pages.dart';
-import '../../../data/sources/firebase/firebase_authentication_source.dart';
+import '../../../data/models/user_model.dart';
 
 class SignInPageController extends GetxController {
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  Future<UserModel?> signInFuture = Future.value(null);
 
   bool _obscureText = true;
   bool get obscureText => _obscureText;
@@ -27,31 +25,43 @@ class SignInPageController extends GetxController {
   }
 
   Future<void> onSubmitPressed() async {
-    if (_formKey.currentState!.saveAndValidate()) {
-      try {
-        _isLoading = true;
-        update();
-
-        await FirebaseAuthenticationSource().signInWithEmailAndPassword(
+    try {
+      if (_formKey.currentState!.saveAndValidate()) {
+        signInFuture = AuthenticationController.instance.signInWithEmailAndPassword(
           _formKey.currentState!.fields['email']!.value as String,
           _formKey.currentState!.fields['password']!.value as String,
         );
 
-        await AuthenticationController.instance.updateUserData();
-
-        Get.offAllNamed(Routes.home);
-      } on AuthenticationException {
-        Get.snackbar(
-          LocaleKeys.alert.tr,
-          LocaleKeys.emailPasswordIncorrect.tr,
-        );
-      } finally {
-        _isLoading = false;
         update();
+
+        var user = await signInFuture;
+
+        if (user != null) {
+          Get.offAllNamed(Routes.home);
+        }
+      } else {
+        _autovalidateMode = AutovalidateMode.onUserInteraction;
       }
-    } else {
-      _autovalidateMode = AutovalidateMode.onUserInteraction;
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        LocaleKeys.alert.tr,
+        LocaleKeys.email_password_incorrect.tr,
+      );
+    } finally {
       update();
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    signInFuture = AuthenticationController.instance.signInWithGoogle();
+
+    update();
+
+    var user = await signInFuture;
+
+    if (user != null) {
+      Get.offAllNamed(Routes.home);
     }
   }
 }
