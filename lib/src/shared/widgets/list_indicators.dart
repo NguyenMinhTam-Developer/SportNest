@@ -8,10 +8,12 @@ class ListIndicator extends StatelessWidget {
     super.key,
     required this.icon,
     required this.label,
+    this.button,
   });
 
   final IconData icon;
   final String label;
+  final Widget? button;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,10 @@ class ListIndicator extends StatelessWidget {
             label,
             style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade100),
           ),
+          if (button != null) ...[
+            const SizedBox(height: 16),
+            button!,
+          ],
         ],
       ),
     );

@@ -13,7 +13,7 @@ class FeedbackPage extends GetView<FeedbackPageController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocaleKeys.sendFeedback.tr),
+        title: Text(LocaleKeys.send_feedback.tr),
       ),
       body: Obx(
         () => Stack(
@@ -28,7 +28,7 @@ class FeedbackPage extends GetView<FeedbackPageController> {
                     FormBuilderTextField(
                       name: 'title',
                       decoration: InputDecoration(
-                        labelText: LocaleKeys.feedbackTitle.tr,
+                        labelText: LocaleKeys.feedback_title.tr,
                         border: const OutlineInputBorder(),
                       ),
                       validator: FormBuilderValidators.compose([
@@ -40,7 +40,7 @@ class FeedbackPage extends GetView<FeedbackPageController> {
                     FormBuilderTextField(
                       name: 'content',
                       decoration: InputDecoration(
-                        labelText: LocaleKeys.feedbackContent.tr,
+                        labelText: LocaleKeys.feedback_content.tr,
                         border: const OutlineInputBorder(),
                         alignLabelWithHint: true,
                       ),
@@ -92,7 +92,7 @@ class FeedbackPage extends GetView<FeedbackPageController> {
             TextButton.icon(
               onPressed: controller.pickImages,
               icon: const Icon(Icons.add_photo_alternate),
-              label: Text(LocaleKeys.addImages.tr),
+              label: Text(LocaleKeys.add_images.tr),
             ),
           ],
         ),
@@ -149,7 +149,7 @@ class FeedbackPage extends GetView<FeedbackPageController> {
             TextButton.icon(
               onPressed: controller.selectedVideo.isEmpty ? controller.pickVideo : null,
               icon: const Icon(Icons.videocam),
-              label: Text(LocaleKeys.addVideo.tr),
+              label: Text(LocaleKeys.add_video.tr),
             ),
           ],
         ),

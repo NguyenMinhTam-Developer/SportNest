@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/color.dart';
 import '../../../../core/design/typography.dart';
@@ -19,7 +19,7 @@ class ProfilePageController extends GetxController {
         style: AppTypography.heading5.semiBold,
       ),
       content: Text(
-        LocaleKeys.areYouSureYouWantToLogout.tr,
+        LocaleKeys.are_you_sure_you_want_to_logout.tr,
         style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
       ),
       actions: [

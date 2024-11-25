@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../../generated/locales.g.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
+import '../../../receipt/pages/receipt_list_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../schedule/presentation/pages/schedule_page.dart';
 import '../controllers/home_page_controller.dart';
@@ -15,9 +16,8 @@ class HomePage extends GetWidget<HomePageController> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const DashboardPage(),
-      // const SizedBox(),
       const SchedulePage(),
-      // const SizedBox(),
+      const ReceiptListPage(),
       const ProfilePage(),
     ];
 
@@ -50,14 +50,14 @@ class HomePage extends GetWidget<HomePageController> {
                 selectedIcon: const Icon(Symbols.calendar_month_rounded, fill: 1),
                 label: LocaleKeys.schedule.tr,
               ),
-              // NavigationDestination(
-              //   icon: Icon(Symbols.notifications_rounded),
-              //   selectedIcon: Icon(Symbols.notifications_rounded, fill: 1),
-              //   label: 'Notifications',
-              // ),
               NavigationDestination(
-                icon: const Icon(Symbols.account_circle),
-                selectedIcon: const Icon(Symbols.account_circle, fill: 1),
+                icon: const Icon(Symbols.receipt_long_rounded),
+                selectedIcon: const Icon(Symbols.receipt_long_rounded, fill: 1),
+                label: LocaleKeys.invoices.tr,
+              ),
+              NavigationDestination(
+                icon: const Icon(Symbols.account_circle_rounded),
+                selectedIcon: const Icon(Symbols.account_circle_rounded, fill: 1),
                 label: LocaleKeys.profile.tr,
               ),
             ],

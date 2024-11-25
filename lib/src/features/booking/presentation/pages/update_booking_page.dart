@@ -5,7 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../data/models/unit_model.dart';
@@ -26,7 +26,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
         return PageLoadingIndicator(
           focedLoading: controller.isLoading,
           scaffold: Scaffold(
-            appBar: AppBar(title: Text(LocaleKeys.updateBooking.tr)),
+            appBar: AppBar(title: Text(LocaleKeys.update_booking.tr)),
             body: SingleChildScrollView(
               clipBehavior: Clip.none,
               padding: EdgeInsets.all(16.w),
@@ -47,7 +47,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             name: "venueId",
                             initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialBooking.venueId)?.id,
                             decoration: InputDecoration(
-                              hintText: LocaleKeys.selectVenue.tr,
+                              hintText: LocaleKeys.select_venue.tr,
                             ),
                             items: (snapshot.data ?? [])
                                 .map((venue) => DropdownMenuItem(
@@ -73,7 +73,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                             name: "unitId",
                             initialValue: (snapshot.data ?? []).firstWhereOrNull((element) => element.id == controller.initialBooking.unitId)?.id,
                             decoration: InputDecoration(
-                              hintText: LocaleKeys.selectSlot.tr,
+                              hintText: LocaleKeys.select_slot.tr,
                             ),
                             items: (snapshot.data ?? [])
                                 .map((unit) => DropdownMenuItem(
@@ -97,7 +97,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                         inputType: InputType.date,
                         // firstDate: DateTime.now(),
                         decoration: InputDecoration(
-                          hintText: LocaleKeys.selectDate.tr,
+                          hintText: LocaleKeys.select_date.tr,
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -110,7 +110,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                       children: [
                         Expanded(
                           child: InputLabel(
-                            labelText: LocaleKeys.startTime.tr,
+                            labelText: LocaleKeys.start_time.tr,
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "startTime",
@@ -129,7 +129,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                         ),
                         Expanded(
                           child: InputLabel(
-                            labelText: LocaleKeys.endTime.tr,
+                            labelText: LocaleKeys.end_time.tr,
                             isRequired: true,
                             child: FormBuilderDateTimePicker(
                               name: "endTime",
@@ -156,7 +156,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
                         readOnly: true,
                         onTap: () => controller.onCustomerPressed(),
                         decoration: InputDecoration(
-                          hintText: LocaleKeys.enterContactName.tr,
+                          hintText: LocaleKeys.enter_contact_name.tr,
                           suffixIcon: const Icon(Symbols.contacts_rounded),
                         ),
                         validator: FormBuilderValidators.compose([
@@ -183,7 +183,7 @@ class UpdateBookingPage extends GetView<UpdateBookingPageController> {
               child: SafeArea(
                 child: ButtonComponent.primary(
                   onPressed: controller.onSubmitPressed,
-                  label: LocaleKeys.updateBooking.tr,
+                  label: LocaleKeys.update_booking.tr,
                 ),
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/create_customer_param.dart';
@@ -27,7 +27,7 @@ class CreateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            createdBy: AuthenticationController.instance.currentUserModel!.id,
+            createdBy: AuthenticationController.instance.currentUserModel.value!.id,
           ),
         );
 
@@ -37,14 +37,14 @@ class CreateCustomerPageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.customerCreatedSuccessfully.tr,
+          LocaleKeys.customer_created_successfully.tr,
         );
 
         update();
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToCreateCustomer.tr,
+          LocaleKeys.failed_to_create_customer.tr,
         );
       }
     } else {

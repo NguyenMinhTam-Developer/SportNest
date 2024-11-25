@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'generated/locales.g.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:get_storage/get_storage.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'firebase_options.dart';
+import 'generated/locales.g.dart';
+import 'src/controllers/application_controller.dart';
+import 'src/controllers/authentication_controller.dart';
+import 'src/controllers/language_service.dart';
 import 'src/core/design/color.dart';
 import 'src/core/design/styles.dart';
 import 'src/core/design/typography.dart';
 import 'src/core/routes/pages.dart';
-import 'src/controllers/application_controller.dart';
-import 'src/controllers/authentication_controller.dart';
 import 'src/core/services/notification_service.dart';
-import 'src/controllers/language_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,8 +89,8 @@ class App extends StatelessWidget {
               inputDecorationTheme: kInputDecoration,
               textSelectionTheme: TextSelectionThemeData(
                 cursorColor: AppColor.neutralColor.shade100,
-                selectionColor: AppColor.neutralColor.shade100,
-                selectionHandleColor: AppColor.neutralColor.shade100,
+                selectionColor: AppColor.neutralColor.shade50,
+                selectionHandleColor: AppColor.primaryColor.main,
               ),
             ),
             initialRoute: AppPages.initialRoute,

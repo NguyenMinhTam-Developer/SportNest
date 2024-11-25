@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 import '../../../../shared/extensions/x_number.dart';
 
 import '../../../../core/design/color.dart';
@@ -41,11 +41,11 @@ class UnitDetailPage extends GetView<UnitDetailPageController> {
                     case "delete":
                       Get.dialog(AlertDialog(
                         title: Text(
-                          LocaleKeys.deleteUnit.tr,
+                          LocaleKeys.delete_unit.tr,
                           style: AppTypography.heading5.semiBold,
                         ),
                         content: Text(
-                          LocaleKeys.areYouSureYouWantToDeleteThisUnit.tr,
+                          LocaleKeys.are_you_sure_you_want_to_delete_this_unit.tr,
                           style: AppTypography.bodyMedium.medium.copyWith(color: AppColor.neutralColor.shade60),
                         ),
                         actions: [

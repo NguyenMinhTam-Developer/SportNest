@@ -26,10 +26,10 @@ class DashboardPage extends GetWidget<DashboardPageController> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                GetBuilder<AuthenticationController>(
-                  builder: (_) {
+                Obx(
+                  () {
                     return Text(
-                      greetingMessage(_.currentUserModel?.firstName ?? ""),
+                      greetingMessage(AuthenticationController.instance.currentUserModel.value?.firstName ?? ""),
                       style: UntitledUiTypography.textXl.semiBold.copyWith(
                         color: UntitledUiColors.primary.lightGrey.shade900,
                       ),
@@ -113,11 +113,11 @@ class DashboardPage extends GetWidget<DashboardPageController> {
     String greeting;
 
     if (hour < 12) {
-      greeting = LocaleKeys.goodMorning.tr;
+      greeting = LocaleKeys.good_morning.tr;
     } else if (hour < 17) {
-      greeting = LocaleKeys.goodAfternoon.tr;
+      greeting = LocaleKeys.good_afternoon.tr;
     } else {
-      greeting = LocaleKeys.goodEvening.tr;
+      greeting = LocaleKeys.good_evening.tr;
     }
 
     return "$greeting, $name!";
@@ -138,7 +138,7 @@ class UpcomingBookings extends GetView<DashboardPageController> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          LocaleKeys.upcomingBookings.tr,
+          LocaleKeys.upcoming_bookings.tr,
           style: UntitledUiTypography.textLg.semiBold.copyWith(
             color: UntitledUiColors.primary.lightGrey.shade900,
           ),
@@ -146,7 +146,7 @@ class UpcomingBookings extends GetView<DashboardPageController> {
         SizedBox(height: UntitledUiSpacing.md),
         if (bookings.isEmpty)
           Text(
-            LocaleKeys.youDontHaveAnyUpcomingBookings.tr,
+            LocaleKeys.you_dont_have_any_upcoming_bookings.tr,
             style: UntitledUiTypography.textMd.regular.copyWith(
               color: UntitledUiColors.primary.lightGrey.shade600,
             ),

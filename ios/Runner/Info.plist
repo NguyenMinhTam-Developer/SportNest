@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>sport_nest_flutter</string>
+	<string>Sport Nest</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,5 +45,30 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Google Sign-in Section -->
+	<key>GIDClientID</key>
+	<!-- TODO Replace this value: -->
+	<!-- Copied from GoogleService-Info.plist key CLIENT_ID -->
+	<string>979201409282-704ig43551gbe2853bjnji585cm6v5o4.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- TODO Replace this value: -->
+				<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+				<string>com.googleusercontent.apps.979201409282-704ig43551gbe2853bjnji585cm6v5o4</string>
+			</array>
+		</dict>
+	</array>
+	<!-- End of the Google Sign-in Section -->
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to upload images.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to upload images.</string>
 </dict>
 </plist>

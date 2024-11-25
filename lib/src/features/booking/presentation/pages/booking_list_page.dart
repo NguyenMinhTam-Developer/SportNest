@@ -32,7 +32,7 @@ class BookingListPage extends GetView<BookingListPageController> {
                     ? [
                         IconButton(
                           icon: const Icon(Symbols.add_rounded),
-                          tooltip: LocaleKeys.addBooking.tr,
+                          tooltip: LocaleKeys.add_booking.tr,
                           onPressed: () => Get.toNamed(Routes.bookingCreate.replaceFirst(':id', snapshot.requireData.first.venueId!)),
                         ),
                       ]
@@ -71,14 +71,14 @@ class BookingListWidget extends StatelessWidget {
         if (snapshot.hasError) {
           return ListIndicator(
             icon: Symbols.today_rounded,
-            label: LocaleKeys.failedToLoadBooking.tr,
+            label: LocaleKeys.failed_to_load_booking.tr,
           );
         }
 
         if (snapshot.data!.isEmpty) {
           return ListIndicator(
             icon: Symbols.today_rounded,
-            label: LocaleKeys.youDontHaveAnyBooking.tr,
+            label: LocaleKeys.you_dont_have_any_booking.tr,
           );
         }
 

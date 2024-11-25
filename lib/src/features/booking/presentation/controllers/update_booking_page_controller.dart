@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 import '../../../../controllers/application_controller.dart';
 import '../../../../core/routes/pages.dart';
 
@@ -34,7 +34,7 @@ class UpdateBookingPageController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
 
-    venues = FirebaseFirestoreSource().fetchVenueList(AuthenticationController.instance.currentUserModel!.id);
+    venues = FirebaseFirestoreSource().fetchVenueList(AuthenticationController.instance.currentUserModel.value!.id);
     formKey.currentState?.fields['venueId']?.didChange(initialBooking.venueId);
     formKey.currentState?.patchValue({"venueId": initialBooking.venueId});
 
@@ -94,7 +94,7 @@ class UpdateBookingPageController extends GetxController {
         customerId: initialBooking.customerId ?? '',
         startTime: startDateTime,
         endTime: endDateTime,
-        updatedBy: AuthenticationController.instance.currentUserModel!.id,
+        updatedBy: AuthenticationController.instance.currentUserModel.value!.id,
         updatedAt: Timestamp.now(),
       );
 
@@ -109,20 +109,20 @@ class UpdateBookingPageController extends GetxController {
 
         await NotificationService().scheduleBookingNotification(
           bookingId: booking.numericId,
-          title: LocaleKeys.upcomingBooking.tr,
-          body: LocaleKeys.upcomingBookingMessage.trParams({"venueName": booking.venue?.name ?? ''}),
+          title: LocaleKeys.upcoming_booking.tr,
+          body: LocaleKeys.upcoming_booking_message.trParams({"venueName": booking.venue?.name ?? ''}),
           scheduledDate: booking.startTime!.toDate().subtract(const Duration(minutes: 10)),
         );
 
         Get.back(result: true);
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.bookingUpdatedSuccessfully.tr,
+          LocaleKeys.booking_updated_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToUpdateBooking.tr,
+          LocaleKeys.failed_to_update_booking.tr,
         );
       } finally {
         isLoading = false;

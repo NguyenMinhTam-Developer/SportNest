@@ -28,12 +28,12 @@ class Metrics extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         MetricItem(
-          title: LocaleKeys.totalRevenue.tr,
+          title: LocaleKeys.total_revenue.tr,
           value: totalRevenue,
           icon: const Icon(Symbols.paid_rounded),
         ),
         MetricItem(
-          title: LocaleKeys.totalBookings.tr,
+          title: LocaleKeys.total_bookings.tr,
           value: totalBookings.toThousandSeparator(),
           icon: const Icon(Symbols.event_available_rounded),
         ),

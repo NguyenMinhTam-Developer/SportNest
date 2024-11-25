@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../core/design/shadow.dart';
 import '../../../../controllers/application_controller.dart';
@@ -23,7 +23,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text(LocaleKeys.createUnit.tr)),
+          appBar: AppBar(title: Text(LocaleKeys.create_unit.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -35,12 +35,12 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: LocaleKeys.slotName.tr,
+                    labelText: LocaleKeys.slot_name.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterSlotName.tr,
+                        hintText: LocaleKeys.enter_slot_name.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -55,7 +55,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                     child: FormBuilderTextField(
                       name: "price",
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterSlotPrice.tr,
+                        hintText: LocaleKeys.enter_slot_price.tr,
                       ),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
@@ -76,7 +76,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
                         name: "type",
                         initialValue: ApplicationController.instance.unitTypes.value.firstOrNull?.id,
                         decoration: InputDecoration(
-                          hintText: LocaleKeys.selectSlotType.tr,
+                          hintText: LocaleKeys.select_slot_type.tr,
                         ),
                         items: ApplicationController.instance.unitTypes.value
                             .map((type) => DropdownMenuItem(
@@ -109,7 +109,7 @@ class CreateUnitPage extends GetView<CreateUnitPageController> {
             child: SafeArea(
               child: ButtonComponent.primary(
                 onPressed: controller.onSubmitPressed,
-                label: LocaleKeys.createUnit.tr,
+                label: LocaleKeys.create_unit.tr,
               ),
             ),
           ),

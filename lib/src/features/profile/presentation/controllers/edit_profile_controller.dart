@@ -16,7 +16,7 @@ class EditProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    initialUser = _authService.currentUserModel!;
+    initialUser = _authService.currentUserModel.value!;
   }
 
   Future<void> updateProfile() async {

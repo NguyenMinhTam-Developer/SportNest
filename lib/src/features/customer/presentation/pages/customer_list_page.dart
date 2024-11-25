@@ -21,7 +21,7 @@ class CustomerListPage extends GetView<CustomerListPageController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(LocaleKeys.myCustomers.tr),
+            title: Text(LocaleKeys.my_customers.tr),
             actions: [
               IconButton(
                 icon: const Icon(Symbols.person_add_alt_rounded),
@@ -36,7 +36,7 @@ class CustomerListPage extends GetView<CustomerListPageController> {
                 child: TextField(
                   onChanged: controller.searchCustomers,
                   decoration: InputDecoration(
-                    hintText: LocaleKeys.searchCustomerHint.tr,
+                    hintText: LocaleKeys.search_customer_hint.tr,
                     prefixIcon: const Icon(Symbols.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
@@ -79,7 +79,7 @@ class CustomerListWidget extends StatelessWidget {
             if (snapshot.hasError) {
               return ListIndicator(
                 icon: Symbols.error_rounded,
-                label: LocaleKeys.failedToLoad.tr,
+                label: LocaleKeys.failed_to_load.tr,
               );
             }
 
@@ -87,7 +87,7 @@ class CustomerListWidget extends StatelessWidget {
               if (customers.isEmpty) {
                 return ListIndicator(
                   icon: Symbols.person_rounded,
-                  label: LocaleKeys.emptyCustomerListLabel.tr,
+                  label: LocaleKeys.empty_customer_list_label.tr,
                 );
               }
 

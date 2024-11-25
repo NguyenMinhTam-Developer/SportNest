@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/unit_model.dart';
@@ -41,12 +41,12 @@ class UpdateUnitPageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.unitUpdatedSuccessfully.tr,
+          LocaleKeys.unit_updated_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToUpdateUnit.tr,
+          LocaleKeys.failed_to_update_unit.tr,
         );
       } finally {
         isLoading = false;

@@ -6,7 +6,7 @@ import '../enums/payment_status_enum.dart';
 class CreateBookingParam {
   final String venueId;
   final String unitId;
-  final String customerId;
+  final String? customerId;
   final Timestamp startTime;
   final Timestamp endTime;
   final num price;

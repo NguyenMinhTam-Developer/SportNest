@@ -40,17 +40,17 @@ class ProfilePage extends GetView<ProfilePageController> {
                     ProfileMenuItem(
                       onPressed: controller.onPersonalInformationPressed,
                       icon: Symbols.person_rounded,
-                      title: LocaleKeys.personalInformation.tr,
+                      title: LocaleKeys.personal_information.tr,
                     ),
                     ProfileMenuItem(
                       onPressed: () => Get.toNamed(Routes.venues),
                       icon: Symbols.store_rounded,
-                      title: LocaleKeys.myVenues.tr,
+                      title: LocaleKeys.my_venues.tr,
                     ),
                     ProfileMenuItem(
                       onPressed: () => Get.toNamed(Routes.customers),
                       icon: Symbols.groups_rounded,
-                      title: LocaleKeys.myCustomers.tr,
+                      title: LocaleKeys.my_customers.tr,
                     ),
                   ],
                 ),
@@ -80,7 +80,7 @@ class ProfilePage extends GetView<ProfilePageController> {
                 // ProfileMenuItem(
                 //   onPressed: () => Get.toNamed(Routes.feedback),
                 //   icon: Symbols.feedback_rounded,
-                //   title: LocaleKeys.sendFeedback.tr,
+                //   title: LocaleKeys.send_feedback.tr,
                 // ),
 
                 // Logout menu item

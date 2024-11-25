@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
-import 'package:sport_nest_flutter/src/controllers/language_service.dart';
+import '../../../../../generated/locales.g.dart';
+import '../../../../controllers/language_service.dart';
 import '../../../../controllers/application_controller.dart';
 import '../../../../shared/extensions/x_datetime.dart';
 
@@ -19,9 +19,11 @@ class SchedulePageController extends GetxController {
   final applicationController = Get.find<ApplicationController>();
 
   List<BookingModel> bookingList = [];
+  List<BookingModel> filteredBookingList = [];
 
   ViewMode viewMode = ViewMode.day;
   VenueModel? selectedVenue;
+  // VenueModel? get selectedVenue => selectedVenue ?? applicationController.venueList.value.firstOrNull;
 
   DateTime selectedDate = DateTime.now();
   String get selectedDateString {
@@ -187,7 +189,6 @@ class SchedulePageController extends GetxController {
   }
 
   Future<void> initializeData() async {
-    print('initializeData');
     selectedDate = DateTime.now();
     selectedVenue = applicationController.venueList.value.firstOrNull;
 

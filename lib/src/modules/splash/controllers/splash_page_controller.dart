@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../../core/routes/pages.dart';
 import '../../../controllers/authentication_controller.dart';
+import '../../../core/routes/pages.dart';
 
 class SplashPageController extends GetxController {
   final AuthenticationController _authController = AuthenticationController.instance;

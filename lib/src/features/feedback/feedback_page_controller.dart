@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sport_nest_flutter/src/data/params/create_feedback_param.dart';
-import 'package:sport_nest_flutter/src/data/sources/firebase/firebase_firestore_source.dart';
-import 'package:sport_nest_flutter/src/data/sources/firebase/firebase_storage_source.dart';
-import 'package:sport_nest_flutter/src/controllers/authentication_controller.dart';
+import '../../data/params/create_feedback_param.dart';
+import '../../data/sources/firebase/firebase_firestore_source.dart';
+import '../../data/sources/firebase/firebase_storage_source.dart';
+import '../../controllers/authentication_controller.dart';
 
 import '../../../generated/locales.g.dart';
 
@@ -42,7 +42,7 @@ class FeedbackPageController extends GetxController {
       final param = CreateFeedbackParam(
         title: values['title'],
         content: values['content'],
-        userId: AuthenticationController.instance.currentUserModel!.id,
+        userId: AuthenticationController.instance.currentUserModel.value!.id,
         imagePaths: selectedImages,
         videoPath: selectedVideo.value,
       );
@@ -72,13 +72,13 @@ class FeedbackPageController extends GetxController {
       Get.back();
       Get.snackbar(
         LocaleKeys.success.tr,
-        LocaleKeys.feedbackSentSuccessfully.tr,
+        LocaleKeys.feedback_sent_successfully.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
       Get.snackbar(
         LocaleKeys.error.tr,
-        LocaleKeys.failedToSendFeedback.tr,
+        LocaleKeys.failed_to_send_feedback.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {

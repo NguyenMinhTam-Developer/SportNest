@@ -1,17 +1,55 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../../data/sources/firebase/firebase_storage_source.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../controllers/application_controller.dart';
 import '../../../../data/models/venue_model.dart';
 import '../../../../controllers/authentication_controller.dart';
+import '../../../../data/models/media_model.dart';
 
 class CreateVenuePageController extends GetxController {
   bool isLoading = false;
 
   final formKey = GlobalKey<FormBuilderState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+
+  final List<File> imageFiles = [];
+  final _picker = ImagePicker();
+  final _storageSource = FirebaseStorageSource();
+
+  Future<void> onAddImagesPressed() async {
+    final List<XFile> images = await _picker.pickMultiImage();
+    if (images.isNotEmpty) {
+      imageFiles.addAll(images.map((image) => File(image.path)));
+      update();
+    }
+  }
+
+  void removeImage(int index) {
+    imageFiles.removeAt(index);
+    update();
+  }
+
+  Future<List<MediaModel>> _uploadImages(String venueId) async {
+    List<MediaModel> mediaList = [];
+
+    for (var i = 0; i < imageFiles.length; i++) {
+      String path = 'venues/$venueId/image_$i.jpg';
+      try {
+        await _storageSource.storage.ref(path).putFile(imageFiles[i]);
+        String url = await _storageSource.storage.ref(path).getDownloadURL();
+        mediaList.add(MediaModel(index: i, url: url));
+      } catch (e) {
+        throw Exception('Failed to upload image: $e');
+      }
+    }
+
+    return mediaList;
+  }
 
   Future<void> onSubmitPressed() async {
     if (formKey.currentState!.saveAndValidate()) {
@@ -30,16 +68,28 @@ class CreateVenuePageController extends GetxController {
         isLoading = true;
         update();
 
-        await ApplicationController.instance.createVenue(
-          VenueModel(
-            name: name,
-            address: address,
-            openTime: openTime,
-            closeTime: closeTime,
-            description: description,
-            createdBy: AuthenticationController.instance.currentUserModel!.id,
-          ),
+        // Create venue first to get the ID
+        final venue = VenueModel(
+          name: name,
+          address: address,
+          openTime: openTime,
+          closeTime: closeTime,
+          description: description,
+          createdBy: AuthenticationController.instance.currentUserModel.value!.id,
         );
+
+        // Upload venue to get the ID
+        final createdVenue = await ApplicationController.instance.createVenue(venue);
+
+        // Upload images
+        if (imageFiles.isNotEmpty) {
+          final mediaList = await _uploadImages(createdVenue.id);
+
+          // Update venue with media list
+          await ApplicationController.instance.updateVenue(
+            createdVenue.copyWith(mediaList: mediaList),
+          );
+        }
 
         isLoading = false;
         update();
@@ -48,12 +98,12 @@ class CreateVenuePageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.venueCreatedSuccessfully.tr,
+          LocaleKeys.venue_created_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToCreateVenue.tr,
+          LocaleKeys.failed_to_create_venue.tr,
         );
       }
     } else {

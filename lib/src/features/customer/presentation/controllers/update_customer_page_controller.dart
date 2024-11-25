@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../data/models/customer_model.dart';
 import '../../../../data/params/update_customer_param.dart';
@@ -34,7 +34,7 @@ class UpdateCustomerPageController extends GetxController {
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            updatedBy: AuthenticationController.instance.currentUserModel!.id,
+            updatedBy: AuthenticationController.instance.currentUserModel.value!.id,
           ),
         );
 
@@ -48,12 +48,12 @@ class UpdateCustomerPageController extends GetxController {
 
         Get.snackbar(
           LocaleKeys.success.tr,
-          LocaleKeys.customerUpdatedSuccessfully.tr,
+          LocaleKeys.customer_updated_successfully.tr,
         );
       } catch (e) {
         Get.snackbar(
           LocaleKeys.alert.tr,
-          LocaleKeys.failedToUpdateCustomer.tr,
+          LocaleKeys.failed_to_update_customer.tr,
         );
       }
     } else {

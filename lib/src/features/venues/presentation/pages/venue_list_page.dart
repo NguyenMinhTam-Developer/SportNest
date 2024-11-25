@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/src/shared/widgets/list_indicators.dart';
 
 import '../../../../../generated/locales.g.dart';
 import '../../../../controllers/application_controller.dart';
@@ -11,6 +10,7 @@ import '../../../../core/design/color.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../core/design/typography.dart';
 import '../../../../shared/layouts/ek_auto_layout.dart';
+import '../../../../shared/widgets/list_indicators.dart';
 import '../controllers/venue_list_page_controller.dart';
 
 class VenueListPage extends GetView<VenueListPageController> {
@@ -22,7 +22,7 @@ class VenueListPage extends GetView<VenueListPageController> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(LocaleKeys.myVenues.tr),
+            title: Text(LocaleKeys.my_venues.tr),
             actions: [
               IconButton(
                 icon: const Icon(Symbols.add_business_rounded),
@@ -37,7 +37,7 @@ class VenueListPage extends GetView<VenueListPageController> {
             if (venues.isEmpty) {
               return ListIndicator(
                 icon: Symbols.store_rounded,
-                label: LocaleKeys.youDontHaveAnyVenue.tr,
+                label: LocaleKeys.you_dont_have_any_venue.tr,
               );
             }
 

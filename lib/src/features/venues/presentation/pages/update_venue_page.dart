@@ -5,8 +5,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
 
+import '../../../../../generated/locales.g.dart';
 import '../../../../core/design/shadow.dart';
 import '../../../../shared/components/button.dart';
 import '../../../../shared/components/input_label.dart';
@@ -23,7 +23,7 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
       return PageLoadingIndicator(
         focedLoading: controller.isLoading,
         scaffold: Scaffold(
-          appBar: AppBar(title: Text(LocaleKeys.updateVenue.tr)),
+          appBar: AppBar(title: Text(LocaleKeys.update_venue.tr)),
           body: SingleChildScrollView(
             clipBehavior: Clip.none,
             padding: EdgeInsets.all(16.w),
@@ -35,13 +35,13 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputLabel(
-                    labelText: LocaleKeys.venueName.tr,
+                    labelText: LocaleKeys.venue_name.tr,
                     isRequired: true,
                     child: FormBuilderTextField(
                       name: "name",
                       initialValue: controller.initialVenue.name,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueName.tr,
+                        hintText: LocaleKeys.enter_venue_name.tr,
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -57,7 +57,7 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
                       name: "address",
                       initialValue: controller.initialVenue.address,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueAddress.tr,
+                        hintText: LocaleKeys.enter_venue_address.tr,
                         suffixIcon: const Icon(Symbols.place_rounded),
                       ),
                       keyboardType: TextInputType.streetAddress,
@@ -73,7 +73,7 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
                     children: [
                       Expanded(
                         child: InputLabel(
-                          labelText: LocaleKeys.openTime.tr,
+                          labelText: LocaleKeys.open_time.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "openTime",
@@ -94,7 +94,7 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
                       ),
                       Expanded(
                         child: InputLabel(
-                          labelText: LocaleKeys.closeTime.tr,
+                          labelText: LocaleKeys.close_time.tr,
                           isRequired: true,
                           child: FormBuilderDateTimePicker(
                             name: "closeTime",
@@ -122,7 +122,7 @@ class UpdateVenuePage extends GetView<UpdateVenuePageController> {
                       name: "description",
                       initialValue: controller.initialVenue.description,
                       decoration: InputDecoration(
-                        hintText: LocaleKeys.enterVenueDescription.tr,
+                        hintText: LocaleKeys.enter_venue_description.tr,
                       ),
                       minLines: 5,
                       maxLines: 5,

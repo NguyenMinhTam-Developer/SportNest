@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:sport_nest_flutter/src/data/models/unit_model.dart';
+import 'package:sport_nest_flutter/src/data/models/receipt_model.dart';
+import '../data/models/unit_model.dart';
 
 import '../data/models/unit_type_model.dart';
 import '../data/models/venue_model.dart';
@@ -17,18 +18,32 @@ class ApplicationController extends GetxController {
 
   Rx<List<UnitTypeModel>> unitTypes = Rx<List<UnitTypeModel>>([]);
 
+  Rx<List<ReceiptModel>> receipts = Rx<List<ReceiptModel>>([]);
+  RxBool isFetchingReceiptList = RxBool(false);
   // Venues & Units
   Future<void> fetchVenueList() async {
-    if (_authController.currentUserModel != null) {
+    if (_authController.currentUserModel.value != null) {
       isFetchingVenueList.value = true;
-      venueList.value = await _firestoreSource.fetchVenueList(_authController.currentUserModel!.id);
+      venueList.value = await _firestoreSource.fetchVenueList(_authController.currentUserModel.value!.id);
       isFetchingVenueList.value = false;
+
+      SchedulePageController.instance?.selectedVenue = venueList.value.firstOrNull;
     }
   }
 
-  Future<void> createVenue(VenueModel venue) async {
+  Future<void> fetchReceiptList() async {
+    if (_authController.currentUserModel.value != null) {
+      isFetchingReceiptList.value = true;
+      receipts.value = await _firestoreSource.fetchReceiptList(_authController.currentUserModel.value!.id);
+      isFetchingReceiptList.value = false;
+    }
+  }
+
+  Future<VenueModel> createVenue(VenueModel venue) async {
     await _firestoreSource.createVenue(venue);
     await fetchVenueList();
+
+    return venue;
   }
 
   Future<void> updateVenue(VenueModel venue) async {
@@ -69,6 +84,7 @@ class ApplicationController extends GetxController {
   Future<void> initializeApplicationData() async {
     await fetchUnitTypes();
     await fetchVenueList();
+    await fetchReceiptList();
 
     SchedulePageController.instance?.initializeData();
   }
@@ -82,6 +98,7 @@ class ApplicationController extends GetxController {
   Future<void> asyncBookingData() async {
     SchedulePageController.instance?.fetchBookingList();
     DashboardPageController.instance.fetchTimeFrameBookings();
+    fetchReceiptList();
   }
 
   static ApplicationController get instance => Get.find<ApplicationController>();

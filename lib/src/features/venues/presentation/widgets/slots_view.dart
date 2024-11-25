@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:sport_nest_flutter/generated/locales.g.dart';
+import '../../../../../generated/locales.g.dart';
 
 import '../../../../shared/widgets/list_indicators.dart';
 import '../../../units/presentation/pages/unit_list_page.dart';
@@ -27,7 +27,7 @@ class _SlotsViewState extends State<SlotsView> with AutomaticKeepAliveClientMixi
           if (units.isEmpty) {
             return ListIndicator(
               icon: Symbols.category_rounded,
-              label: LocaleKeys.noUnitsFound.tr,
+              label: LocaleKeys.no_units_found.tr,
             );
           }
 
